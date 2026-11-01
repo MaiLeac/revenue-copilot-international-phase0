@@ -1,14 +1,87 @@
-"""Risk Manager interface (scheduled for full implementation in Milestone M3)."""
+"""Risk Manager: continuous monitoring of account equity, daily loss, and drawdown limits."""
 
 from __future__ import annotations
+
+import logging
+from dataclasses import dataclass
+from datetime import date, datetime, timezone
 
 from app.config import AppConfig
 from app.risk.kill_switch import KillSwitch
 
+logger = logging.getLogger("trading_agent.risk.manager")
+
+
+@dataclass
+class RiskState:
+    current_day: date
+    day_start_equity: float
+    peak_equity: float
+    current_equity: float
+    daily_pnl_pct: float
+    drawdown_pct: float
+
 
 class RiskManager:
-    """Deterministic risk gatekeeper. Cannot be bypassed by LLM or Strategy Engine."""
+    """Deterministic risk gatekeeper. Enforces hard daily loss and peak-to-trough drawdown limits."""
 
     def __init__(self, config: AppConfig, kill_switch: KillSwitch) -> None:
-        self._config = config
-        self._kill_switch = kill_switch
+        self.config = config
+        self.kill_switch = kill_switch
+        self._current_day: date = datetime.now(timezone.utc).date()
+        self._day_start_equity: float | None = None
+        self._peak_equity: float | None = None
+
+    def evaluate_equity(self, current_equity: float) -> RiskState:
+        """Evaluate account equity against daily loss and maximum drawdown thresholds."""
+        today = datetime.now(timezone.utc).date()
+
+        # Day rollover reset
+        if today != self._current_day or self._day_start_equity is None:
+            self._current_day = today
+            self._day_start_equity = current_equity
+            logger.info(
+                f"RiskManager: Day start initialized for {today} with equity={self._day_start_equity:.2f}"
+            )
+
+        if self._peak_equity is None or current_equity > self._peak_equity:
+            self._peak_equity = current_equity
+
+        # Daily loss calculation
+        daily_loss_cash = self._day_start_equity - current_equity
+        daily_loss_pct = (daily_loss_cash / self._day_start_equity) * 100.0 if self._day_start_equity > 0 else 0.0
+
+        # Drawdown calculation from peak
+        drawdown_cash = self._peak_equity - current_equity
+        drawdown_pct = (drawdown_cash / self._peak_equity) * 100.0 if self._peak_equity > 0 else 0.0
+
+        state = RiskState(
+            current_day=self._current_day,
+            day_start_equity=self._day_start_equity,
+            peak_equity=self._peak_equity,
+            current_equity=current_equity,
+            daily_pnl_pct=-daily_loss_pct,
+            drawdown_pct=drawdown_pct,
+        )
+
+        # Enforce max daily loss
+        if daily_loss_pct >= self.config.risk.max_daily_loss_pct:
+            reason = (
+                f"Max daily loss exceeded: current daily drop = {daily_loss_pct:.2f}% "
+                f"(limit: {self.config.risk.max_daily_loss_pct:.2f}%)"
+            )
+            logger.critical(reason)
+            self.kill_switch.trip(reason=reason, source="RiskManager.DailyLoss")
+            self.kill_switch.assert_healthy()
+
+        # Enforce max peak-to-trough drawdown
+        if drawdown_pct >= self.config.risk.max_drawdown_pct:
+            reason = (
+                f"Max drawdown limit exceeded: current drawdown = {drawdown_pct:.2f}% "
+                f"(limit: {self.config.risk.max_drawdown_pct:.2f}%)"
+            )
+            logger.critical(reason)
+            self.kill_switch.trip(reason=reason, source="RiskManager.MaxDrawdown")
+            self.kill_switch.assert_healthy()
+
+        return state

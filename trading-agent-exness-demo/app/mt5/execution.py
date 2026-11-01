@@ -74,7 +74,9 @@ class DemoExecutionAdapter:
         spec: SymbolSpec,
         account_balance: float,
     ) -> float:
-        """Calculate lot size based on fixed fractional risk and ATR stop distance."""
+        """Calculate lot size based on fixed fractional risk and ATR stop distance with accurate tick value."""
+        import math
+
         if not self._config:
             return 0.01
 
@@ -85,27 +87,49 @@ class DemoExecutionAdapter:
             return 0.01
 
         stop_dist = abs(signal.entry_price - signal.stop_loss)
-        if stop_dist <= 0 or spec.contract_size <= 0:
+        if stop_dist <= 0:
             return 0.01
-
-        cash_risk_per_lot = stop_dist * spec.contract_size
-        raw_lots = risk_cash / cash_risk_per_lot
 
         mt5 = self._connection.backend if self._connection else None
         min_vol = 0.01
         max_vol = 10.0
         step_vol = 0.01
+        tick_size = 0.01
+        tick_value = spec.contract_size * tick_size if spec.contract_size > 0 else 1.0
 
         if mt5:
             info = mt5.symbol_info(spec.broker_symbol)
             if info:
-                min_vol = info.volume_min or 0.01
-                max_vol = info.volume_max or 10.0
-                step_vol = info.volume_step or 0.01
+                min_vol = getattr(info, "volume_min", 0.01) or 0.01
+                max_vol = getattr(info, "volume_max", 10.0) or 10.0
+                step_vol = getattr(info, "volume_step", 0.01) or 0.01
+                info_tick_size = getattr(info, "trade_tick_size", None)
+                if info_tick_size and info_tick_size > 0:
+                    tick_size = info_tick_size
+                elif getattr(info, "digits", None):
+                    tick_size = 10 ** (-info.digits)
+                
+                info_tick_val = getattr(info, "trade_tick_value", None)
+                if info_tick_val and info_tick_val > 0:
+                    tick_value = info_tick_val
+                elif spec.contract_size > 0:
+                    tick_value = spec.contract_size * tick_size
 
-        # Quantize to step
+        if tick_size <= 0:
+            tick_size = 0.01
+        if tick_value <= 0:
+            tick_value = 1.0
+
+        cash_risk_per_lot = (stop_dist / tick_size) * tick_value
+        if cash_risk_per_lot <= 0:
+            return min_vol
+
+        raw_lots = risk_cash / cash_risk_per_lot
+
+        # Quantize to broker volume step dynamically
+        decimals = max(0, -int(math.floor(math.log10(step_vol)))) if step_vol > 0 else 2
         steps = round(raw_lots / step_vol)
-        lots = round(steps * step_vol, 2)
+        lots = round(steps * step_vol, decimals)
         lots = max(min_vol, min(lots, max_vol))
         return lots
 
@@ -183,6 +207,18 @@ class DemoExecutionAdapter:
         order_type = mt5.ORDER_TYPE_BUY if is_buy else mt5.ORDER_TYPE_SELL
         price = tick.ask if is_buy else tick.bid
 
+        # Dynamic filling mode fallback (AUDIT-04)
+        filling_mode = getattr(mt5, "ORDER_FILLING_IOC", 1)
+        sym_info = mt5.symbol_info(spec.broker_symbol)
+        if sym_info:
+            flags = getattr(sym_info, "filling_mode", 0)
+            if flags & 2:  # SYMBOL_FILLING_IOC
+                filling_mode = getattr(mt5, "ORDER_FILLING_IOC", 1)
+            elif flags & 1:  # SYMBOL_FILLING_FOK
+                filling_mode = getattr(mt5, "ORDER_FILLING_FOK", 0)
+            elif hasattr(mt5, "ORDER_FILLING_RETURN"):
+                filling_mode = getattr(mt5, "ORDER_FILLING_RETURN", 2)
+
         request = {
             "action": mt5.TRADE_ACTION_DEAL,
             "symbol": spec.broker_symbol,
@@ -195,7 +231,7 @@ class DemoExecutionAdapter:
             "magic": 889100,
             "comment": "MoneyHQ_AutoTrade",
             "type_time": mt5.ORDER_TIME_GTC,
-            "type_filling": mt5.ORDER_FILLING_IOC,
+            "type_filling": filling_mode,
         }
 
         result = mt5.order_send(request)

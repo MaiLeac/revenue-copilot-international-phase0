@@ -33,8 +33,8 @@
    - **Antigravity:** Primary local operator with direct hands on the repository, shell, browser, and Docker environment.
    - **ChatGPT:** Strategic advisor, prompt architect, and independent auditor (no direct local machine execution).
    - **OpenAI Codex:** Coding and implementation agent when assigned locally/CLI; also provides the OAuth model backend for Agent Zero.
-   - **Claude Code:** Independent architectural, security, and economic reviewer / specialist coding agent when assigned.
-   - **Gemini & DeepSeek:** Independent advisory models (`dsh-superagent-prototype` domain architecture adapted into Money HQ).
+   - **Gemini Independent Reviewer:** Independent architectural, security, risk management, and adversarial auditor via Free Tier Google Gemini API (`tools/run_gemini_audit.py`, $0 cost).
+   - **ChatGPT & DeepSeek:** Independent strategic advisory and research models (`dsh-superagent-prototype` domain architecture adapted into Money HQ).
    - **Agent Zero (`v2.13`):** Local Docker runtime (`http://localhost:5080`) with repo bind-mounted at `/a0/usr/projects/money-hq` (supervised and recovered by the Superagent Watchdog).
 8. **What must agents prioritize and what must they avoid?**  
    - **Prioritize:** Repeatable digital assets, automated payment/fulfillment, compounding distribution, deterministic local Python scripts (`0 VND` marginal cost), and factual verification.
@@ -143,8 +143,8 @@ Full policy: [`agents/AI_ROUTING_POLICY.md`](./agents/AI_ROUTING_POLICY.md) | Co
 | **Antigravity** | **Primary Local Operator (With Hands):** Inspects files, edits code/docs, runs `pytest`, manages Docker/Agent Zero, and pushes commits via `gh`. | **YES** |
 | **ChatGPT** | **Strategic Advisor, Prompt Architect & Independent Auditor:** Defines Level 3 strategy, critiques unit economics, and audits agent output. | **NO** |
 | **OpenAI Codex** | **Coding & Implementation Agent (When Assigned):** Executes scoped code/test implementation when invoked; provides OAuth model backend (`gpt-5.4` / `gpt-5.4-mini`). | **When invoked locally** |
-| **Claude Code** | **Independent Reviewer & Specialist Agent (When Assigned):** Audits architecture, security/privacy exposures, and hidden failure modes. | **When invoked locally** |
-| **Gemini & DeepSeek** | **Independent Advisory Models:** Used for secondary research or cross-checking assumptions (`dsh-superagent-prototype` domain architecture adapted here). | **NO** |
+| **Gemini Independent Reviewer** | **Independent Security & Architectural Auditor (Free Tier API):** Audits architecture, risk management, security exposures, and failure modes via automated read-only API (`tools/run_gemini_audit.py`, $0 cost). | **Via automated API audit runner** |
+| **ChatGPT & DeepSeek** | **Independent Advisory Models:** Strategic critique, second-opinion ideation, or cross-checking assumptions (`dsh-superagent-prototype` domain architecture adapted here). | **NO** |
 | **Agent Zero (`v2.13`)** | **Local Container Runtime (`http://localhost:5080`):** Runs `money-coo` profile with `/a0/usr/projects/money-hq` bind-mounted; supervised by Superagent Watchdog. | **Inside `/a0/usr/projects/money-hq`** |
 
 ---

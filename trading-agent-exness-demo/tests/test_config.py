@@ -49,7 +49,7 @@ def test_load_default_demo_yaml() -> None:
     assert cfg.platform == "mt5"
     assert cfg.account_mode == "demo_only"
     assert cfg.symbols.allowed == ["XAGUSD", "EURUSD", "XAUUSD"]
-    assert cfg.symbols.enabled == []
+    assert set(cfg.symbols.enabled) == {"XAUUSD", "EURUSD", "XAGUSD"}
     assert cfg.safety.block_live_accounts is True
 
 

@@ -32,6 +32,7 @@ from app.mt5.connection import MT5ConnectionManager, MT5ConnectionError, LiveAcc
 from app.mt5.market_data import MT5MarketDataReader
 from app.mt5.execution import DemoExecutionAdapter, OrderResult
 from app.risk.kill_switch import KillSwitch
+from app.risk.manager import RiskManager
 from app.strategies.baseline import BaselineMultiSymbolStrategy
 
 STATE_FILE = AGENT_ROOT / "run_state.json"
@@ -56,7 +57,10 @@ def load_run_state() -> dict[str, Any]:
 
 
 def save_run_state(state: dict[str, Any]) -> None:
-    STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+    """Atomic write for state persistence (AUDIT-07)."""
+    temp_file = STATE_FILE.with_suffix(".tmp")
+    temp_file.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+    temp_file.replace(STATE_FILE)
 
 
 def append_journal_entry(title: str, content: str) -> None:
@@ -82,6 +86,7 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
 
     config = load_config(AGENT_ROOT / config_path)
     kill_switch = KillSwitch(enabled=config.safety.kill_switch)
+    risk_mgr = RiskManager(config=config, kill_switch=kill_switch)
     conn = MT5ConnectionManager(config=config)
 
     account_meta = conn.connect()
@@ -98,6 +103,23 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
     state["status"] = "RUNNING"
     state["active"] = True
     state["account"] = asdict(account_meta)
+
+    # Reconcile open positions from MT5 terminal upon startup (AUDIT-08)
+    initial_positions = adapter.get_open_positions()
+    state["open_positions"] = [
+        {
+            "ticket": p.ticket,
+            "symbol": p.symbol,
+            "type": "BUY" if p.type == 0 else "SELL",
+            "volume": p.volume,
+            "price_open": p.price_open,
+            "sl": p.sl,
+            "tp": p.tp,
+            "profit": p.profit,
+        }
+        for p in initial_positions
+    ]
+    logger.info(f"Reconciled {len(initial_positions)} open positions from MT5 terminal on startup.")
     save_run_state(state)
 
     append_journal_entry(
@@ -118,6 +140,8 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
         f"• Trạng thái: Đang quét thị trường..."
     )
 
+    last_processed_candles: dict[str, str] = {}
+
     try:
         while True:
             state = load_run_state()
@@ -132,12 +156,19 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
             now_utc = datetime.now(timezone.utc)
             state["last_heartbeat_utc"] = now_utc.isoformat()
 
-            # Update account info
+            # Update account info and enforce Risk Manager (AUDIT-05)
             try:
                 acc_info = conn.read_account_metadata()
                 state["account"] = asdict(acc_info)
+                risk_state = risk_mgr.evaluate_equity(acc_info.equity)
+                state["risk"] = {
+                    "daily_pnl_pct": round(risk_state.daily_pnl_pct, 2),
+                    "drawdown_pct": round(risk_state.drawdown_pct, 2),
+                    "peak_equity": round(risk_state.peak_equity, 2),
+                    "day_start_equity": round(risk_state.day_start_equity, 2),
+                }
             except Exception as e:
-                logger.warning(f"Could not refresh account info: {e}")
+                logger.warning(f"Could not refresh account info or evaluate risk: {e}")
 
             # Check open positions
             try:
@@ -168,6 +199,11 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                     # Quality gate check
                     gate.evaluate(base_sym, "M15", tick, candles, now_utc=now_utc)
 
+                    # Guarantee candle bar idempotency (AUDIT-03)
+                    last_bar_time = candles[-1].time_utc.isoformat()
+                    if last_processed_candles.get(base_sym) == last_bar_time:
+                        continue
+
                     # Evaluate strategy
                     signal = strategy.generate_signal(candles)
                     if signal.direction in ("BUY", "SELL"):
@@ -175,6 +211,7 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                         # Place order
                         order_res: OrderResult = adapter.place_order(signal, spec)
                         if order_res.success:
+                            last_processed_candles[base_sym] = last_bar_time
                             trade_msg = (
                                 f"📈 <b>VÀO LỆNH DEMO THÀNH CÔNG!</b>\n\n"
                                 f"• Mã: <b>{order_res.symbol}</b>\n"

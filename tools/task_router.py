@@ -37,7 +37,7 @@ class TaskComplexity(str, Enum):
 class ModelProvider(str, Enum):
     DETERMINISTIC_SCRIPT = "deterministic_script"
     CODEX_CLI = "codex_cli"
-    CLAUDE_CODE = "claude_code"
+    GEMINI_AUDITOR = "gemini_auditor"
     ANTIGRAVITY_GEMINI = "antigravity_gemini"
     FALLBACK_SCRIPT = "fallback_script"
 

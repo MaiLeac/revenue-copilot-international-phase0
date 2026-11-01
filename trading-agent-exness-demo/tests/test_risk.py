@@ -127,3 +127,27 @@ def test_risk_manager_trips_on_corrupted_state_file(tmp_path) -> None:
     assert ks.is_tripped is True
     with pytest.raises(Exception, match="KILL SWITCH ACTIVE"):
         ks.assert_healthy()
+
+
+def test_risk_manager_trips_when_persist_fails(tmp_path) -> None:
+    from app.risk.kill_switch import KillSwitchTrippedError
+
+    # Point state file to a path inside a non-existent unwritable directory
+    unwritable_file = tmp_path / "non_existent_subdir" / "cannot_create" / "risk_state.json"
+    cfg = DummyConfig(daily_loss_pct=1.0, drawdown_pct=5.0)
+    ks = KillSwitch(enabled=True)
+
+    rm = RiskManager(config=cfg, kill_switch=ks, state_file=unwritable_file)
+    with pytest.raises(KillSwitchTrippedError, match="KILL SWITCH ACTIVE"):
+        rm.evaluate_equity(100000.0)
+    assert ks.is_tripped is True
+
+
+def test_kill_switch_raises_when_persist_fails(tmp_path) -> None:
+    from app.risk.kill_switch import KillSwitchTrippedError
+
+    unwritable_file = tmp_path / "non_existent_subdir" / "cannot_create" / "kill_switch.json"
+    ks = KillSwitch(enabled=True, state_file=unwritable_file)
+    with pytest.raises(KillSwitchTrippedError, match="Could not persist KillSwitch state"):
+        ks.trip("Testing persist failure", source="test")
+    assert ks.is_tripped is True

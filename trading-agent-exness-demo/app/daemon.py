@@ -55,6 +55,7 @@ def load_run_state() -> dict[str, Any]:
         "account": None,
         "open_positions": [],
         "recent_trades": [],
+        "processed_candles": {},
     }
 
 
@@ -143,7 +144,9 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
         f"• Trạng thái: Đang quét thị trường..."
     )
 
-    last_processed_candles: dict[str, str] = {}
+    initial_state = load_run_state()
+    last_processed_candles: dict[str, str] = dict(initial_state.get("processed_candles") or {})
+    logger.info(f"Restored {len(last_processed_candles)} processed candle timestamp(s) from run_state.json across restart.")
 
     try:
         while True:
@@ -234,6 +237,11 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                     if last_processed_candles.get(base_sym) == last_bar_time:
                         continue
 
+                    # Mark closed bar as evaluated and persist immediately to run_state.json across restarts
+                    last_processed_candles[base_sym] = last_bar_time
+                    state["processed_candles"] = last_processed_candles
+                    save_run_state(state)
+
                     # Evaluate 4-tier H4/H1 trend pullback strategy
                     signal = strategy.evaluate(base_sym, h4_candles, h1_candles)
                     if signal.direction in ("BUY", "SELL"):
@@ -241,7 +249,6 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                         # Place order
                         order_res: OrderResult = adapter.place_order(signal, spec)
                         if order_res.success:
-                            last_processed_candles[base_sym] = last_bar_time
                             trade_msg = (
                                 f"📈 <b>VÀO LỆNH DEMO THÀNH CÔNG!</b>\n\n"
                                 f"• Mã: <b>{order_res.symbol}</b>\n"

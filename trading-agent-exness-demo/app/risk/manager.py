@@ -80,7 +80,10 @@ class RiskManager:
             tmp.write_text(json.dumps(payload, indent=2), encoding="utf-8")
             tmp.replace(self._state_file)
         except Exception as e:
-            logger.error(f"Failed to persist RiskManager state to {self._state_file}: {e}")
+            err_msg = f"FATAL SAFETY TRIP: Failed to persist RiskManager state to {self._state_file}: {e}. Failing closed."
+            logger.critical(err_msg)
+            self.kill_switch.trip(reason=err_msg, source="RiskManager.StateWriteFailed")
+            self.kill_switch.assert_healthy()
 
     def evaluate_equity(self, current_equity: float) -> RiskState:
         """Evaluate account equity against daily loss and maximum drawdown thresholds."""

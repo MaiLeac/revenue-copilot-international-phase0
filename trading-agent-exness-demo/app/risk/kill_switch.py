@@ -14,6 +14,11 @@ from pathlib import Path
 logger = logging.getLogger("trading_agent.risk.kill_switch")
 
 
+class KillSwitchTrippedError(RuntimeError):
+    """Raised when KillSwitch fails to persist or is asserted while active."""
+    pass
+
+
 @dataclass(frozen=True)
 class KillSwitchEvent:
     triggered_at_utc: datetime
@@ -82,7 +87,9 @@ class KillSwitch:
             tmp.write_text(json.dumps(state_data, indent=2), encoding="utf-8")
             tmp.replace(self._state_file)
         except Exception as e:
-            logger.error(f"Could not persist KillSwitch state to {self._state_file}: {e}")
+            err_msg = f"CRITICAL: Could not persist KillSwitch state to {self._state_file}: {e}. Failing closed."
+            logger.critical(err_msg)
+            raise KillSwitchTrippedError(err_msg) from e
 
     def trip(self, reason: str, source: str = "system") -> KillSwitchEvent:
         """Trip the kill switch, persist to disk, and record the root cause."""
@@ -109,9 +116,9 @@ class KillSwitch:
                 logger.error(f"Could not remove KillSwitch state file: {e}")
 
     def assert_healthy(self) -> None:
-        """Raise RuntimeError if the kill switch has been tripped."""
+        """Raise KillSwitchTrippedError if the kill switch has been tripped."""
         if self._tripped and self._event is not None:
-            raise RuntimeError(
+            raise KillSwitchTrippedError(
                 f"KILL SWITCH ACTIVE [{self._event.source} @ {self._event.triggered_at_utc.isoformat()}]: "
                 f"{self._event.reason}"
             )

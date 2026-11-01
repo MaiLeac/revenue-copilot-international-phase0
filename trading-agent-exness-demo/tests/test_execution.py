@@ -415,3 +415,177 @@ def test_calculate_lot_size_fails_closed_when_order_calc_profit_returns_none() -
     )
     with pytest.raises(ExecutionSafetyError, match="order_calc_profit returned None"):
         adapter.calculate_lot_size(signal, spec, account_balance=100000.0)
+
+
+def test_calculate_lot_size_fails_closed_when_broker_risk_exceeds_budget_after_ratchet() -> None:
+    from app.mt5.execution import ExecutionSafetyError
+
+    class MockMT5BackendPersistentHighRisk:
+        def symbol_info(self, symbol: str):
+            from types import SimpleNamespace
+            return SimpleNamespace(
+                volume_min=0.01,
+                volume_max=10.0,
+                volume_step=0.01,
+                trade_tick_size=0.00001,
+                trade_tick_value=1.0,
+                digits=5,
+            )
+
+        def order_calc_profit(self, action: int, symbol: str, volume: float, price_open: float, price_close: float) -> float:
+            # Even at 0.01 lot, simulated loss is $300 > $250 risk budget
+            return -300.0
+
+    class MockConn:
+        is_connected = True
+        backend = MockMT5BackendPersistentHighRisk()
+
+    adapter = DemoExecutionAdapter(config=DummyAppConfig(risk_pct=0.25), connection=MockConn())
+    signal = StrategySignal(
+        symbol="EURUSD",
+        timeframe="H1",
+        strategy_id="trend_pullback",
+        strategy_version="2.0",
+        direction="BUY",
+        entry_price=1.08000,
+        stop_loss=1.07750,
+        take_profit=1.08500,
+    )
+    spec = SymbolSpec(
+        base_symbol="EURUSD",
+        broker_symbol="EURUSDm",
+        description="EURUSD",
+        currency_base="EUR",
+        currency_profit="USD",
+        currency_margin="USD",
+        digits=5,
+        point=0.00001,
+        tick_size=0.00001,
+        tick_value=1.0,
+        contract_size=100000.0,
+        volume_min=0.01,
+        volume_max=10.0,
+        volume_step=0.01,
+        stops_level=0,
+        spread_points=10,
+        spread_float=True,
+        trade_mode=4,
+        visible=True,
+    )
+    with pytest.raises(ExecutionSafetyError, match="still exceeds risk budget"):
+        adapter.calculate_lot_size(signal, spec, account_balance=100000.0)
+
+
+def test_calculate_lot_size_fails_closed_when_order_calc_profit_returns_non_negative() -> None:
+    from app.mt5.execution import ExecutionSafetyError
+
+    class MockMT5BackendPositiveProfitAtSL:
+        def symbol_info(self, symbol: str):
+            from types import SimpleNamespace
+            return SimpleNamespace(
+                volume_min=0.01,
+                volume_max=10.0,
+                volume_step=0.01,
+                trade_tick_size=0.00001,
+                trade_tick_value=1.0,
+                digits=5,
+            )
+
+        def order_calc_profit(self, action: int, symbol: str, volume: float, price_open: float, price_close: float) -> float:
+            return 25.0  # Anomalous positive profit at Stop Loss!
+
+    class MockConn:
+        is_connected = True
+        backend = MockMT5BackendPositiveProfitAtSL()
+
+    adapter = DemoExecutionAdapter(config=DummyAppConfig(risk_pct=0.25), connection=MockConn())
+    signal = StrategySignal(
+        symbol="EURUSD",
+        timeframe="H1",
+        strategy_id="trend_pullback",
+        strategy_version="2.0",
+        direction="BUY",
+        entry_price=1.08000,
+        stop_loss=1.07750,
+        take_profit=1.08500,
+    )
+    spec = SymbolSpec(
+        base_symbol="EURUSD",
+        broker_symbol="EURUSDm",
+        description="EURUSD",
+        currency_base="EUR",
+        currency_profit="USD",
+        currency_margin="USD",
+        digits=5,
+        point=0.00001,
+        tick_size=0.00001,
+        tick_value=1.0,
+        contract_size=100000.0,
+        volume_min=0.01,
+        volume_max=10.0,
+        volume_step=0.01,
+        stops_level=0,
+        spread_points=10,
+        spread_float=True,
+        trade_mode=4,
+        visible=True,
+    )
+    with pytest.raises(ExecutionSafetyError, match="non-negative PnL"):
+        adapter.calculate_lot_size(signal, spec, account_balance=100000.0)
+
+
+def test_calculate_lot_size_fails_closed_when_backend_missing_order_calc_profit_in_demo_auto() -> None:
+    from app.mt5.execution import ExecutionSafetyError
+
+    class MockMT5BackendWithoutCalc:
+        def symbol_info(self, symbol: str):
+            from types import SimpleNamespace
+            return SimpleNamespace(
+                volume_min=0.01,
+                volume_max=10.0,
+                volume_step=0.01,
+                trade_tick_size=0.00001,
+                trade_tick_value=1.0,
+                digits=5,
+            )
+
+    class MockConn:
+        is_connected = True
+        backend = MockMT5BackendWithoutCalc()
+
+    cfg = DummyAppConfig(risk_pct=0.25)
+    cfg.execution_mode = "demo_auto"
+    adapter = DemoExecutionAdapter(config=cfg, connection=MockConn())
+    signal = StrategySignal(
+        symbol="EURUSD",
+        timeframe="H1",
+        strategy_id="trend_pullback",
+        strategy_version="2.0",
+        direction="BUY",
+        entry_price=1.08000,
+        stop_loss=1.07750,
+        take_profit=1.08500,
+    )
+    spec = SymbolSpec(
+        base_symbol="EURUSD",
+        broker_symbol="EURUSDm",
+        description="EURUSD",
+        currency_base="EUR",
+        currency_profit="USD",
+        currency_margin="USD",
+        digits=5,
+        point=0.00001,
+        tick_size=0.00001,
+        tick_value=1.0,
+        contract_size=100000.0,
+        volume_min=0.01,
+        volume_max=10.0,
+        volume_step=0.01,
+        stops_level=0,
+        spread_points=10,
+        spread_float=True,
+        trade_mode=4,
+        visible=True,
+    )
+    with pytest.raises(ExecutionSafetyError, match="missing required order_calc_profit"):
+        adapter.calculate_lot_size(signal, spec, account_balance=100000.0)

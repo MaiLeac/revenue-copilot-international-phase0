@@ -155,20 +155,29 @@ class DemoExecutionAdapter:
             lots = min_vol
 
         # Cross-validate with MT5 internal order_calc_profit if terminal backend is available
-        if mt5 and hasattr(mt5, "order_calc_profit") and signal.entry_price and signal.stop_loss:
-            mt5_type = 0 if signal.direction == "BUY" else 1
-            try:
-                calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
-            except Exception as e:
-                raise ExecutionSafetyError(f"order_calc_profit check failed with exception: {e}")
+        if mt5 and signal.entry_price and signal.stop_loss:
+            if not hasattr(mt5, "order_calc_profit"):
+                if self._config and self._config.execution_mode == "demo_auto":
+                    raise ExecutionSafetyError("Safety violation: MT5 backend missing required order_calc_profit method in demo_auto mode.")
+            else:
+                mt5_type = 0 if signal.direction == "BUY" else 1
+                try:
+                    calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
+                except Exception as e:
+                    raise ExecutionSafetyError(f"order_calc_profit check failed with exception: {e}")
 
-            if calc_pnl is None:
-                raise ExecutionSafetyError(
-                    f"order_calc_profit returned None for {spec.broker_symbol} (action={mt5_type}, lots={lots}, "
-                    f"entry={signal.entry_price}, sl={signal.stop_loss}). Terminal cannot calculate monetary risk."
-                )
+                if calc_pnl is None:
+                    raise ExecutionSafetyError(
+                        f"order_calc_profit returned None for {spec.broker_symbol} (action={mt5_type}, lots={lots}, "
+                        f"entry={signal.entry_price}, sl={signal.stop_loss}). Terminal cannot calculate monetary risk."
+                    )
 
-            if calc_pnl < 0:
+                if calc_pnl >= 0:
+                    raise ExecutionSafetyError(
+                        f"order_calc_profit returned non-negative PnL ({calc_pnl}) at Stop Loss for {spec.broker_symbol}. "
+                        "Anomalous quote or inverted SL rejected."
+                    )
+
                 sim_cash_risk = abs(calc_pnl)
                 while sim_cash_risk > risk_cash * 1.0001 and steps > 1:
                     steps -= 1
@@ -177,6 +186,13 @@ class DemoExecutionAdapter:
                     if calc_pnl is None:
                         raise ExecutionSafetyError("order_calc_profit returned None during lot size ratcheting.")
                     sim_cash_risk = abs(calc_pnl)
+
+                # Final post-ratchet risk budget verification (AUDIT P0: ensure min step does not exceed budget)
+                if sim_cash_risk > risk_cash * 1.0001:
+                    raise ExecutionSafetyError(
+                        f"Broker-calculated risk (${sim_cash_risk:.2f}) still exceeds risk budget (${risk_cash:.2f}) "
+                        f"after lot reduction to minimum steps ({lots} lots). Order rejected."
+                    )
 
         lots = min(lots, max_vol)
         return lots

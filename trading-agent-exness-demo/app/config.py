@@ -69,6 +69,13 @@ class MT5EnvConfig:
 
 
 @dataclass(frozen=True)
+class SessionConfig:
+    enabled: bool = True
+    start_hour_utc: int = 7
+    end_hour_utc: int = 16
+
+
+@dataclass(frozen=True)
 class AppConfig:
     platform: str
     account_mode: str
@@ -79,6 +86,7 @@ class AppConfig:
     risk: RiskConfig
     safety: SafetyConfig
     mt5_env: MT5EnvConfig
+    session: SessionConfig = field(default_factory=SessionConfig)
 
 
 def load_env_config(env_override: dict[str, str] | None = None) -> MT5EnvConfig:
@@ -237,6 +245,16 @@ def validate_raw_config(raw: dict[str, Any], env_config: MT5EnvConfig | None = N
         max_spread_points={str(k): int(v) for k, v in max_spread.items()},
     )
 
+    # Session configuration
+    session_raw = raw.get("session", {})
+    session_cfg = SessionConfig(
+        enabled=bool(session_raw.get("enabled", True)),
+        start_hour_utc=int(session_raw.get("start_hour_utc", 7)),
+        end_hour_utc=int(session_raw.get("end_hour_utc", 16)),
+    )
+    if not (0 <= session_cfg.start_hour_utc < session_cfg.end_hour_utc <= 24):
+        raise ConfigValidationError("session start_hour_utc must be < end_hour_utc and between 0-24.")
+
     resolved_env = env_config if env_config is not None else load_env_config()
 
     return AppConfig(
@@ -249,6 +267,7 @@ def validate_raw_config(raw: dict[str, Any], env_config: MT5EnvConfig | None = N
         risk=risk,
         safety=safety,
         mt5_env=resolved_env,
+        session=session_cfg,
     )
 
 

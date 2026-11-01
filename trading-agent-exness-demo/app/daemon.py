@@ -207,6 +207,17 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
             except Exception as e:
                 logger.warning(f"Could not read open positions: {e}")
 
+            # Enforce Session Filter: active trading window (London + NY overlap, e.g. 07:00-16:00 UTC)
+            if config.session.enabled and not (config.session.start_hour_utc <= now_utc.hour < config.session.end_hour_utc):
+                logger.info(
+                    f"Session Filter: Current time {now_utc.strftime('%H:%M')} UTC is outside "
+                    f"active window ({config.session.start_hour_utc:02d}:00-{config.session.end_hour_utc:02d}:00 UTC). "
+                    "Skipping market scan."
+                )
+                save_run_state(state)
+                time.sleep(loop_interval_sec)
+                continue
+
             # Scan enabled symbols (EURUSD pilot)
             for base_sym in config.symbols.enabled:
                 try:

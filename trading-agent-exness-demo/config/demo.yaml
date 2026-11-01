@@ -39,3 +39,8 @@ safety:
   reject_excessive_spread: true
   block_live_accounts: true
   kill_switch: true
+
+session:
+  enabled: true
+  start_hour_utc: 7
+  end_hour_utc: 16

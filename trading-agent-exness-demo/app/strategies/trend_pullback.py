@@ -49,16 +49,24 @@ def compute_atr(candles: Sequence[CandleBar], period: int = 14) -> float:
 
 
 def compute_adx(candles: Sequence[CandleBar], period: int = 14) -> float:
-    """Compute directional movement index (ADX) over candles."""
-    if len(candles) < period * 2:
-        return 25.0  # Default neutral trend strength if warmup short
+    """Compute Directional Movement Index (ADX) using Wilder's Smoothing (RMA).
     
-    tr_list, dm_plus_list, dm_minus_list = [], [], []
+    Adheres strictly to Wilder's original recursive formula to prevent rolling-window spike artifacts.
+    """
+    if len(candles) < period + 1:
+        return 20.0  # Default neutral trend strength if warmup short
+
+    tr_list: list[float] = []
+    dm_plus_list: list[float] = []
+    dm_minus_list: list[float] = []
+
     for i in range(1, len(candles)):
         h, l, prev_c = candles[i].high, candles[i].low, candles[i - 1].close
+        prev_h, prev_l = candles[i - 1].high, candles[i - 1].low
+
         tr = max(h - l, abs(h - prev_c), abs(l - prev_c))
-        up_move = h - candles[i - 1].high
-        down_move = candles[i - 1].low - l
+        up_move = h - prev_h
+        down_move = prev_l - l
 
         dm_plus = up_move if up_move > down_move and up_move > 0 else 0.0
         dm_minus = down_move if down_move > up_move and down_move > 0 else 0.0
@@ -67,17 +75,42 @@ def compute_adx(candles: Sequence[CandleBar], period: int = 14) -> float:
         dm_plus_list.append(dm_plus)
         dm_minus_list.append(dm_minus)
 
-    # Simplified Wilder smoothing
-    tr_sum = sum(tr_list[-period:]) or 0.0001
-    dm_plus_sum = sum(dm_plus_list[-period:])
-    dm_minus_sum = sum(dm_minus_list[-period:])
+    if len(tr_list) < period:
+        return 20.0
 
-    di_plus = (dm_plus_sum / tr_sum) * 100.0
-    di_minus = (dm_minus_sum / tr_sum) * 100.0
+    # Wilder's Smoothing initialization (first period is simple sum)
+    smooth_tr = sum(tr_list[:period])
+    smooth_dmp = sum(dm_plus_list[:period])
+    smooth_dmm = sum(dm_minus_list[:period])
 
-    denom = di_plus + di_minus
-    dx = (abs(di_plus - di_minus) / denom * 100.0) if denom > 0 else 0.0
-    return dx
+    dx_list: list[float] = []
+
+    def _calc_dx(tr_val: float, dmp_val: float, dmm_val: float) -> float:
+        if tr_val <= 0:
+            return 0.0
+        di_plus = (dmp_val / tr_val) * 100.0
+        di_minus = (dmm_val / tr_val) * 100.0
+        denom = di_plus + di_minus
+        return (abs(di_plus - di_minus) / denom * 100.0) if denom > 0 else 0.0
+
+    dx_list.append(_calc_dx(smooth_tr, smooth_dmp, smooth_dmm))
+
+    # Wilder's recursive smoothing: S_t = S_{t-1} - (S_{t-1} / period) + X_t
+    for i in range(period, len(tr_list)):
+        smooth_tr = smooth_tr - (smooth_tr / period) + tr_list[i]
+        smooth_dmp = smooth_dmp - (smooth_dmp / period) + dm_plus_list[i]
+        smooth_dmm = smooth_dmm - (smooth_dmm / period) + dm_minus_list[i]
+        dx_list.append(_calc_dx(smooth_tr, smooth_dmp, smooth_dmm))
+
+    if len(dx_list) < period:
+        return sum(dx_list) / len(dx_list)
+
+    # First ADX is simple average of first period DX values
+    adx = sum(dx_list[:period]) / period
+    for i in range(period, len(dx_list)):
+        adx = (adx * (period - 1) + dx_list[i]) / period
+
+    return adx
 
 
 class TrendFollowingPullbackStrategy:
@@ -147,11 +180,30 @@ class TrendFollowingPullbackStrategy:
             # Check if pulled back into Value Zone (between EMA 21 and EMA 50)
             in_value_zone = (last_bar.low <= max(h1_ema21[-1], h1_ema50[-1])) and (last_bar.low >= min(h1_ema21[-1], h1_ema50[-1]) - atr_h1)
             
-            # Rejection Pinbar or Bullish Engulfing
+            # Stringent Rejection Pinbar:
+            # 1. Lower wick >= 60% of candle range
+            # 2. Lower wick >= 2x body
+            # 3. Upper wick <= 25% of candle range
+            body = abs(last_bar.close - last_bar.open)
             lower_wick = min(last_bar.open, last_bar.close) - last_bar.low
-            is_pinbar = (lower_wick / candle_range) >= 0.50 and (last_bar.close >= last_bar.open)
+            upper_wick = last_bar.high - max(last_bar.open, last_bar.close)
+
+            is_pinbar = (
+                (lower_wick / candle_range >= 0.60)
+                and (lower_wick >= 2.0 * body)
+                and (upper_wick / candle_range <= 0.25)
+            )
+
+            # Forex-adapted Bullish Engulfing:
+            # Current candle is bullish, previous candle was bearish.
+            # Current body engulfs previous body AND current close breaks above previous high
             prev_bar = h1_candles[-2]
-            is_engulfing = (last_bar.close > last_bar.open) and (last_bar.close > prev_bar.open) and (last_bar.open <= prev_bar.close)
+            is_engulfing = (
+                (last_bar.close > last_bar.open)
+                and (prev_bar.close < prev_bar.open)
+                and (last_bar.close >= prev_bar.high)
+                and (last_bar.open <= prev_bar.close)
+            )
 
             if in_value_zone and (is_pinbar or is_engulfing):
                 # Structural SL below recent swing low with ATR buffer
@@ -179,10 +231,25 @@ class TrendFollowingPullbackStrategy:
             # Check if pulled back up into Value Zone
             in_value_zone = (last_bar.high >= min(h1_ema21[-1], h1_ema50[-1])) and (last_bar.high <= max(h1_ema21[-1], h1_ema50[-1]) + atr_h1)
 
+            # Stringent Bearish Rejection Pinbar:
+            body = abs(last_bar.close - last_bar.open)
             upper_wick = last_bar.high - max(last_bar.open, last_bar.close)
-            is_pinbar = (upper_wick / candle_range) >= 0.50 and (last_bar.close <= last_bar.open)
+            lower_wick = min(last_bar.open, last_bar.close) - last_bar.low
+
+            is_pinbar = (
+                (upper_wick / candle_range >= 0.60)
+                and (upper_wick >= 2.0 * body)
+                and (lower_wick / candle_range <= 0.25)
+            )
+
+            # Forex-adapted Bearish Engulfing:
             prev_bar = h1_candles[-2]
-            is_engulfing = (last_bar.close < last_bar.open) and (last_bar.close < prev_bar.open) and (last_bar.open >= prev_bar.close)
+            is_engulfing = (
+                (last_bar.close < last_bar.open)
+                and (prev_bar.close > prev_bar.open)
+                and (last_bar.close <= prev_bar.low)
+                and (last_bar.open >= prev_bar.close)
+            )
 
             if in_value_zone and (is_pinbar or is_engulfing):
                 recent_highs = [c.high for c in h1_candles[-5:]]

@@ -80,3 +80,92 @@ def test_trend_pullback_strategy_regime_filtering() -> None:
     assert sig.symbol == "EURUSD"
     assert sig.timeframe == "H1"
     assert sig.direction in ("BUY", "SELL", "FLAT")
+
+
+def test_wilder_adx_filters_choppy_consolidation() -> None:
+    from app.strategies.trend_pullback import compute_adx
+
+    # Oscillating chop with no net movement
+    start = datetime(2026, 1, 1, 0, 0, tzinfo=timezone.utc)
+    chop_candles: list[CandleBar] = []
+    for i in range(80):
+        val = 1.0800 + 0.0010 * math.sin(i * 1.5)
+        chop_candles.append(
+            CandleBar(
+                symbol="EURUSDm",
+                timeframe="H4",
+                open_time_utc=start + timedelta(hours=4 * i),
+                open=round(val, 5),
+                high=round(val + 0.0008, 5),
+                low=round(val - 0.0008, 5),
+                close=round(val + 0.0001, 5),
+                tick_volume=100,
+                spread=15,
+                real_volume=0,
+            )
+        )
+    adx_chop = compute_adx(chop_candles, 14)
+    assert adx_chop < 18.0, f"Expected chop ADX < 18.0, got {adx_chop}"
+
+    # Clear monotonic trending market
+    trend_candles: list[CandleBar] = []
+    for i in range(80):
+        val = 1.0800 + 0.0005 * i
+        trend_candles.append(
+            CandleBar(
+                symbol="EURUSDm",
+                timeframe="H4",
+                open_time_utc=start + timedelta(hours=4 * i),
+                open=round(val - 0.0002, 5),
+                high=round(val + 0.0005, 5),
+                low=round(val - 0.0003, 5),
+                close=round(val + 0.0003, 5),
+                tick_volume=100,
+                spread=15,
+                real_volume=0,
+            )
+        )
+    adx_trend = compute_adx(trend_candles, 14)
+    assert adx_trend > 40.0, f"Expected trend ADX > 40.0, got {adx_trend}"
+
+
+def test_pinbar_requires_dominant_lower_wick_and_small_opposite_wick() -> None:
+    strat = TrendFollowingPullbackStrategy(adx_threshold=15.0)
+
+    # Construct candles where H4 is in strong uptrend and H1 pulls back to EMA 21
+    start = datetime(2026, 1, 1, 0, 0, tzinfo=timezone.utc)
+    h4 = [
+        CandleBar(
+            symbol="EURUSDm",
+            timeframe="H4",
+            open_time_utc=start + timedelta(hours=4 * i),
+            open=round(1.0500 + i * 0.0008, 5),
+            high=round(1.0510 + i * 0.0008, 5),
+            low=round(1.0490 + i * 0.0008, 5),
+            close=round(1.0508 + i * 0.0008, 5),
+            tick_volume=100,
+            spread=15,
+            real_volume=0,
+        )
+        for i in range(80)
+    ]
+
+    # Non-pinbar: equal wicks and large body
+    h1_bad = [
+        CandleBar(
+            symbol="EURUSDm",
+            timeframe="H1",
+            open_time_utc=start + timedelta(hours=i),
+            open=round(1.1000 + i * 0.0002, 5),
+            high=round(1.1010 + i * 0.0002, 5),
+            low=round(1.0990 + i * 0.0002, 5),
+            close=round(1.1008 + i * 0.0002, 5),
+            tick_volume=100,
+            spread=15,
+            real_volume=0,
+        )
+        for i in range(80)
+    ]
+    sig_bad = strat.evaluate("EURUSD", h4, h1_bad)
+    # Shouldn't trigger a buy because no pinbar or engulfing at value zone
+    assert sig_bad.direction == "FLAT"

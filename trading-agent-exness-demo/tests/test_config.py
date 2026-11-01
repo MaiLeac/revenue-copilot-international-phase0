@@ -84,3 +84,10 @@ def test_reject_enabled_symbol_not_in_allowlist() -> None:
     raw["symbols"]["enabled"] = ["BTCUSD"]
     with pytest.raises(ConfigValidationError, match="not in symbols.allowed"):
         validate_raw_config(raw, load_env_config({"DEMO_ONLY": "true"}))
+
+
+def test_reject_invalid_session_config() -> None:
+    raw = copy.deepcopy(_valid_raw())
+    raw["session"] = {"enabled": True, "start_hour_utc": 18, "end_hour_utc": 6}
+    with pytest.raises(ConfigValidationError, match="session start_hour_utc must be < end_hour_utc"):
+        validate_raw_config(raw, load_env_config({"DEMO_ONLY": "true"}))

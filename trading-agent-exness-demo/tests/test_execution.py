@@ -357,3 +357,61 @@ def test_calculate_lot_size_ratchets_down_when_order_calc_profit_exceeds_budget(
     lots = adapter.calculate_lot_size(signal, spec, account_balance=100000.0)
     assert lots < 1.00
     assert lots == 0.92
+
+
+def test_calculate_lot_size_fails_closed_when_order_calc_profit_returns_none() -> None:
+    from app.mt5.execution import ExecutionSafetyError
+
+    class MockMT5BackendNoneProfit:
+        def symbol_info(self, symbol: str):
+            from types import SimpleNamespace
+            return SimpleNamespace(
+                volume_min=0.01,
+                volume_max=10.0,
+                volume_step=0.01,
+                trade_tick_size=0.00001,
+                trade_tick_value=1.0,
+                digits=5,
+            )
+
+        def order_calc_profit(self, action: int, symbol: str, volume: float, price_open: float, price_close: float) -> float | None:
+            return None  # Terminal desynced or calculation failed
+
+    class MockConn:
+        is_connected = True
+        backend = MockMT5BackendNoneProfit()
+
+    adapter = DemoExecutionAdapter(config=DummyAppConfig(risk_pct=0.25), connection=MockConn())
+    signal = StrategySignal(
+        symbol="EURUSD",
+        timeframe="H1",
+        strategy_id="trend_pullback",
+        strategy_version="2.0",
+        direction="BUY",
+        entry_price=1.08000,
+        stop_loss=1.07750,
+        take_profit=1.08500,
+    )
+    spec = SymbolSpec(
+        base_symbol="EURUSD",
+        broker_symbol="EURUSDm",
+        description="EURUSD",
+        currency_base="EUR",
+        currency_profit="USD",
+        currency_margin="USD",
+        digits=5,
+        point=0.00001,
+        tick_size=0.00001,
+        tick_value=1.0,
+        contract_size=100000.0,
+        volume_min=0.01,
+        volume_max=10.0,
+        volume_step=0.01,
+        stops_level=0,
+        spread_points=10,
+        spread_float=True,
+        trade_mode=4,
+        visible=True,
+    )
+    with pytest.raises(ExecutionSafetyError, match="order_calc_profit returned None"):
+        adapter.calculate_lot_size(signal, spec, account_balance=100000.0)

@@ -156,18 +156,27 @@ class DemoExecutionAdapter:
 
         # Cross-validate with MT5 internal order_calc_profit if terminal backend is available
         if mt5 and hasattr(mt5, "order_calc_profit") and signal.entry_price and signal.stop_loss:
+            mt5_type = 0 if signal.direction == "BUY" else 1
             try:
-                mt5_type = 0 if signal.direction == "BUY" else 1
                 calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
-                if calc_pnl is not None and calc_pnl < 0:
-                    sim_cash_risk = abs(calc_pnl)
-                    while sim_cash_risk > risk_cash * 1.0001 and steps > 1:
-                        steps -= 1
-                        lots = round(steps * step_vol, decimals)
-                        calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
-                        sim_cash_risk = abs(calc_pnl) if calc_pnl is not None else 0.0
             except Exception as e:
-                logger.debug(f"order_calc_profit check skipped: {e}")
+                raise ExecutionSafetyError(f"order_calc_profit check failed with exception: {e}")
+
+            if calc_pnl is None:
+                raise ExecutionSafetyError(
+                    f"order_calc_profit returned None for {spec.broker_symbol} (action={mt5_type}, lots={lots}, "
+                    f"entry={signal.entry_price}, sl={signal.stop_loss}). Terminal cannot calculate monetary risk."
+                )
+
+            if calc_pnl < 0:
+                sim_cash_risk = abs(calc_pnl)
+                while sim_cash_risk > risk_cash * 1.0001 and steps > 1:
+                    steps -= 1
+                    lots = round(steps * step_vol, decimals)
+                    calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
+                    if calc_pnl is None:
+                        raise ExecutionSafetyError("order_calc_profit returned None during lot size ratcheting.")
+                    sim_cash_risk = abs(calc_pnl)
 
         lots = min(lots, max_vol)
         return lots

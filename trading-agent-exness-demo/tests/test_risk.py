@@ -115,3 +115,15 @@ def test_risk_manager_persists_across_restart(tmp_path) -> None:
     state = rm2.evaluate_equity(99300.0)
     assert state.day_start_equity == 100000.0
     assert state.daily_pnl_pct == -0.7
+
+
+def test_risk_manager_trips_on_corrupted_state_file(tmp_path) -> None:
+    rm_file = tmp_path / "corrupted_risk_state.json"
+    rm_file.write_text("{invalid json: malformed...", encoding="utf-8")
+    cfg = DummyConfig(daily_loss_pct=1.0, drawdown_pct=5.0)
+    ks = KillSwitch(enabled=True)
+
+    rm = RiskManager(config=cfg, kill_switch=ks, state_file=rm_file)
+    assert ks.is_tripped is True
+    with pytest.raises(Exception, match="KILL SWITCH ACTIVE"):
+        ks.assert_healthy()

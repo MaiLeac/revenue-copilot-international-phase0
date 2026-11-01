@@ -61,7 +61,9 @@ class RiskManager:
                     # New calendar day, keep peak equity but reset day start
                     self._peak_equity = float(data.get("peak_equity", 0.0)) or None
             except Exception as e:
-                logger.warning(f"Could not load RiskManager state from {self._state_file}: {e}")
+                err_msg = f"FATAL SAFETY TRIP: Could not load RiskManager state from {self._state_file}: {e}. Failing closed."
+                logger.critical(err_msg)
+                self.kill_switch.trip(reason=err_msg, source="RiskManager.StateFileCorrupted")
 
     def _persist(self, current_equity: float) -> None:
         if not self._state_file:

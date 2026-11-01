@@ -77,50 +77,52 @@ cachedir: .pytest_cache
 rootdir: C:\Users\ACER\Documents\Codex\revenue-copilot-international-phase0
 configfile: pytest.ini
 plugins: anyio-4.12.1, langsmith-0.14.1
-collecting ... collected 40 items
+collecting ... collected 42 items
 
 tests\test_config.py::test_load_default_demo_yaml PASSED                 [  2%]
-tests\test_config.py::test_reject_demo_only_false_in_env PASSED          [  5%]
+tests\test_config.py::test_reject_demo_only_false_in_env PASSED          [  4%]
 tests\test_config.py::test_reject_live_account_mode PASSED               [  7%]
-tests\test_config.py::test_reject_disabled_live_account_blocker PASSED   [ 10%]
-tests\test_config.py::test_reject_enabled_symbols_in_m0_m1 PASSED        [ 12%]
-tests\test_config.py::test_reject_enabled_symbol_not_in_allowlist PASSED [ 15%]
-tests\test_config.py::test_reject_invalid_session_config PASSED          [ 17%]
-tests\test_data_quality.py::test_valid_tick_and_candles_pass PASSED      [ 20%]
-tests\test_data_quality.py::test_stale_tick_is_rejected PASSED           [ 22%]
-tests\test_data_quality.py::test_excessive_spread_is_rejected PASSED     [ 25%]
-tests\test_data_quality.py::test_missing_intra_session_candle_gap_is_rejected PASSED [ 27%]
-tests\test_data_quality.py::test_stale_candle_series_is_rejected PASSED  [ 30%]
-tests\test_execution.py::test_execution_adapter_blocks_all_order_operations_in_m0_m1 PASSED [ 32%]
-tests\test_execution.py::test_calculate_lot_size_gold_xauusd PASSED      [ 35%]
-tests\test_execution.py::test_calculate_lot_size_forex_eurusd PASSED     [ 37%]
-tests\test_execution.py::test_calculate_lot_size_fails_closed_when_stop_loss_missing PASSED [ 40%]
-tests\test_execution.py::test_calculate_lot_size_strictly_rounds_down PASSED [ 42%]
-tests\test_execution.py::test_calculate_lot_size_rejects_order_if_min_vol_exceeds_risk_budget PASSED [ 45%]
-tests\test_execution.py::test_ensure_can_execute_fails_when_trade_not_allowed PASSED [ 47%]
-tests\test_execution.py::test_ensure_can_execute_fails_when_trade_expert_disabled PASSED [ 50%]
-tests\test_execution.py::test_calculate_lot_size_ratchets_down_when_order_calc_profit_exceeds_budget PASSED [ 52%]
-tests\test_mt5_connection.py::test_unavailable_terminal_raises_clear_error PASSED [ 55%]
+tests\test_config.py::test_reject_disabled_live_account_blocker PASSED   [  9%]
+tests\test_config.py::test_reject_enabled_symbols_in_m0_m1 PASSED        [ 11%]
+tests\test_config.py::test_reject_enabled_symbol_not_in_allowlist PASSED [ 14%]
+tests\test_config.py::test_reject_invalid_session_config PASSED          [ 16%]
+tests\test_data_quality.py::test_valid_tick_and_candles_pass PASSED      [ 19%]
+tests\test_data_quality.py::test_stale_tick_is_rejected PASSED           [ 21%]
+tests\test_data_quality.py::test_excessive_spread_is_rejected PASSED     [ 23%]
+tests\test_data_quality.py::test_missing_intra_session_candle_gap_is_rejected PASSED [ 26%]
+tests\test_data_quality.py::test_stale_candle_series_is_rejected PASSED  [ 28%]
+tests\test_execution.py::test_execution_adapter_blocks_all_order_operations_in_m0_m1 PASSED [ 30%]
+tests\test_execution.py::test_calculate_lot_size_gold_xauusd PASSED      [ 33%]
+tests\test_execution.py::test_calculate_lot_size_forex_eurusd PASSED     [ 35%]
+tests\test_execution.py::test_calculate_lot_size_fails_closed_when_stop_loss_missing PASSED [ 38%]
+tests\test_execution.py::test_calculate_lot_size_strictly_rounds_down PASSED [ 40%]
+tests\test_execution.py::test_calculate_lot_size_rejects_order_if_min_vol_exceeds_risk_budget PASSED [ 42%]
+tests\test_execution.py::test_ensure_can_execute_fails_when_trade_not_allowed PASSED [ 45%]
+tests\test_execution.py::test_ensure_can_execute_fails_when_trade_expert_disabled PASSED [ 47%]
+tests\test_execution.py::test_calculate_lot_size_ratchets_down_when_order_calc_profit_exceeds_budget PASSED [ 50%]
+tests\test_execution.py::test_calculate_lot_size_fails_closed_when_order_calc_profit_returns_none PASSED [ 52%]
+tests\test_mt5_connection.py::test_unavailable_terminal_raises_clear_error PASSED [ 54%]
 tests\test_mt5_connection.py::test_real_account_trade_mode_is_rejected PASSED [ 57%]
-tests\test_mt5_connection.py::test_real_server_name_is_rejected_even_if_trade_mode_demo PASSED [ 60%]
-tests\test_mt5_connection.py::test_symbol_discovery_and_invalid_symbol_error PASSED [ 62%]
-tests\test_mt5_connection.py::test_missing_candles_from_mt5_raises_error PASSED [ 65%]
-tests\test_mt5_connection.py::test_full_diagnostic_runner_passes_with_mock_demo_terminal PASSED [ 67%]
-tests\test_risk.py::test_kill_switch_cannot_be_disabled PASSED           [ 70%]
-tests\test_risk.py::test_kill_switch_trips_and_blocks_operations PASSED  [ 72%]
-tests\test_risk.py::test_risk_manager_healthy_under_limits PASSED        [ 75%]
-tests\test_risk.py::test_risk_manager_trips_on_daily_loss_limit PASSED   [ 77%]
-tests\test_risk.py::test_risk_manager_trips_on_max_drawdown PASSED       [ 80%]
-tests\test_risk.py::test_kill_switch_persists_across_restart PASSED      [ 82%]
-tests\test_risk.py::test_risk_manager_persists_across_restart PASSED     [ 85%]
-tests\test_strategy_backtest.py::test_baseline_strategy_returns_flat_on_insufficient_warmup PASSED [ 87%]
+tests\test_mt5_connection.py::test_real_server_name_is_rejected_even_if_trade_mode_demo PASSED [ 59%]
+tests\test_mt5_connection.py::test_symbol_discovery_and_invalid_symbol_error PASSED [ 61%]
+tests\test_mt5_connection.py::test_missing_candles_from_mt5_raises_error PASSED [ 64%]
+tests\test_mt5_connection.py::test_full_diagnostic_runner_passes_with_mock_demo_terminal PASSED [ 66%]
+tests\test_risk.py::test_kill_switch_cannot_be_disabled PASSED           [ 69%]
+tests\test_risk.py::test_kill_switch_trips_and_blocks_operations PASSED  [ 71%]
+tests\test_risk.py::test_risk_manager_healthy_under_limits PASSED        [ 73%]
+tests\test_risk.py::test_risk_manager_trips_on_daily_loss_limit PASSED   [ 76%]
+tests\test_risk.py::test_risk_manager_trips_on_max_drawdown PASSED       [ 78%]
+tests\test_risk.py::test_kill_switch_persists_across_restart PASSED      [ 80%]
+tests\test_risk.py::test_risk_manager_persists_across_restart PASSED     [ 83%]
+tests\test_risk.py::test_risk_manager_trips_on_corrupted_state_file PASSED [ 85%]
+tests\test_strategy_backtest.py::test_baseline_strategy_returns_flat_on_insufficient_warmup PASSED [ 88%]
 tests\test_strategy_backtest.py::test_backtest_evaluator_separates_in_sample_and_out_of_sample_with_costs PASSED [ 90%]
 tests\test_strategy_backtest.py::test_trend_pullback_strategy_insufficient_warmup PASSED [ 92%]
 tests\test_strategy_backtest.py::test_trend_pullback_strategy_regime_filtering PASSED [ 95%]
 tests\test_strategy_backtest.py::test_wilder_adx_filters_choppy_consolidation PASSED [ 97%]
 tests\test_strategy_backtest.py::test_pinbar_requires_dominant_lower_wick_and_small_opposite_wick PASSED [100%]
 
-============================= 40 passed in 0.58s ==============================
+============================= 42 passed in 0.71s ==============================
 ```
 
 ## 4. MÃ NGUỒN CÁC MODULE TRỌNG YẾU
@@ -633,18 +635,27 @@ class DemoExecutionAdapter:
 
         # Cross-validate with MT5 internal order_calc_profit if terminal backend is available
         if mt5 and hasattr(mt5, "order_calc_profit") and signal.entry_price and signal.stop_loss:
+            mt5_type = 0 if signal.direction == "BUY" else 1
             try:
-                mt5_type = 0 if signal.direction == "BUY" else 1
                 calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
-                if calc_pnl is not None and calc_pnl < 0:
-                    sim_cash_risk = abs(calc_pnl)
-                    while sim_cash_risk > risk_cash * 1.0001 and steps > 1:
-                        steps -= 1
-                        lots = round(steps * step_vol, decimals)
-                        calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
-                        sim_cash_risk = abs(calc_pnl) if calc_pnl is not None else 0.0
             except Exception as e:
-                logger.debug(f"order_calc_profit check skipped: {e}")
+                raise ExecutionSafetyError(f"order_calc_profit check failed with exception: {e}")
+
+            if calc_pnl is None:
+                raise ExecutionSafetyError(
+                    f"order_calc_profit returned None for {spec.broker_symbol} (action={mt5_type}, lots={lots}, "
+                    f"entry={signal.entry_price}, sl={signal.stop_loss}). Terminal cannot calculate monetary risk."
+                )
+
+            if calc_pnl < 0:
+                sim_cash_risk = abs(calc_pnl)
+                while sim_cash_risk > risk_cash * 1.0001 and steps > 1:
+                    steps -= 1
+                    lots = round(steps * step_vol, decimals)
+                    calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
+                    if calc_pnl is None:
+                        raise ExecutionSafetyError("order_calc_profit returned None during lot size ratcheting.")
+                    sim_cash_risk = abs(calc_pnl)
 
         lots = min(lots, max_vol)
         return lots
@@ -907,7 +918,9 @@ class RiskManager:
                     # New calendar day, keep peak equity but reset day start
                     self._peak_equity = float(data.get("peak_equity", 0.0)) or None
             except Exception as e:
-                logger.warning(f"Could not load RiskManager state from {self._state_file}: {e}")
+                err_msg = f"FATAL SAFETY TRIP: Could not load RiskManager state from {self._state_file}: {e}. Failing closed."
+                logger.critical(err_msg)
+                self.kill_switch.trip(reason=err_msg, source="RiskManager.StateFileCorrupted")
 
     def _persist(self, current_equity: float) -> None:
         if not self._state_file:
@@ -2439,6 +2452,64 @@ def test_calculate_lot_size_ratchets_down_when_order_calc_profit_exceeds_budget(
     assert lots < 1.00
     assert lots == 0.92
 
+
+def test_calculate_lot_size_fails_closed_when_order_calc_profit_returns_none() -> None:
+    from app.mt5.execution import ExecutionSafetyError
+
+    class MockMT5BackendNoneProfit:
+        def symbol_info(self, symbol: str):
+            from types import SimpleNamespace
+            return SimpleNamespace(
+                volume_min=0.01,
+                volume_max=10.0,
+                volume_step=0.01,
+                trade_tick_size=0.00001,
+                trade_tick_value=1.0,
+                digits=5,
+            )
+
+        def order_calc_profit(self, action: int, symbol: str, volume: float, price_open: float, price_close: float) -> float | None:
+            return None  # Terminal desynced or calculation failed
+
+    class MockConn:
+        is_connected = True
+        backend = MockMT5BackendNoneProfit()
+
+    adapter = DemoExecutionAdapter(config=DummyAppConfig(risk_pct=0.25), connection=MockConn())
+    signal = StrategySignal(
+        symbol="EURUSD",
+        timeframe="H1",
+        strategy_id="trend_pullback",
+        strategy_version="2.0",
+        direction="BUY",
+        entry_price=1.08000,
+        stop_loss=1.07750,
+        take_profit=1.08500,
+    )
+    spec = SymbolSpec(
+        base_symbol="EURUSD",
+        broker_symbol="EURUSDm",
+        description="EURUSD",
+        currency_base="EUR",
+        currency_profit="USD",
+        currency_margin="USD",
+        digits=5,
+        point=0.00001,
+        tick_size=0.00001,
+        tick_value=1.0,
+        contract_size=100000.0,
+        volume_min=0.01,
+        volume_max=10.0,
+        volume_step=0.01,
+        stops_level=0,
+        spread_points=10,
+        spread_float=True,
+        trade_mode=4,
+        visible=True,
+    )
+    with pytest.raises(ExecutionSafetyError, match="order_calc_profit returned None"):
+        adapter.calculate_lot_size(signal, spec, account_balance=100000.0)
+
 ```
 
 ### File: `tests/test_risk.py`
@@ -2561,6 +2632,18 @@ def test_risk_manager_persists_across_restart(tmp_path) -> None:
     state = rm2.evaluate_equity(99300.0)
     assert state.day_start_equity == 100000.0
     assert state.daily_pnl_pct == -0.7
+
+
+def test_risk_manager_trips_on_corrupted_state_file(tmp_path) -> None:
+    rm_file = tmp_path / "corrupted_risk_state.json"
+    rm_file.write_text("{invalid json: malformed...", encoding="utf-8")
+    cfg = DummyConfig(daily_loss_pct=1.0, drawdown_pct=5.0)
+    ks = KillSwitch(enabled=True)
+
+    rm = RiskManager(config=cfg, kill_switch=ks, state_file=rm_file)
+    assert ks.is_tripped is True
+    with pytest.raises(Exception, match="KILL SWITCH ACTIVE"):
+        ks.assert_healthy()
 
 ```
 

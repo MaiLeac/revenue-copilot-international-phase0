@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, timezone
 from app.evaluation.performance import BacktestCostModel, BacktestEvaluator
 from app.mt5.market_data import CandleBar
 from app.strategies.baseline import BaselineMultiSymbolStrategy
+from app.strategies.trend_pullback import TrendFollowingPullbackStrategy
 
 
 def _synthetic_wave_candles(count: int = 300, symbol: str = "XAUUSDm") -> list[CandleBar]:
@@ -60,3 +61,22 @@ def test_backtest_evaluator_separates_in_sample_and_out_of_sample_with_costs() -
     assert report.out_of_sample.segment == "OUT_OF_SAMPLE"
     assert report.in_sample.total_trades > 0
     assert report.out_of_sample.total_trades > 0
+
+
+def test_trend_pullback_strategy_insufficient_warmup() -> None:
+    strat = TrendFollowingPullbackStrategy()
+    h4 = _synthetic_wave_candles(count=20, symbol="EURUSDm")
+    h1 = _synthetic_wave_candles(count=20, symbol="EURUSDm")
+    sig = strat.evaluate("EURUSD", h4, h1)
+    assert sig.direction == "FLAT"
+    assert "Insufficient warmup" in sig.reason
+
+
+def test_trend_pullback_strategy_regime_filtering() -> None:
+    strat = TrendFollowingPullbackStrategy(adx_threshold=20.0)
+    h4 = _synthetic_wave_candles(count=100, symbol="EURUSDm")
+    h1 = _synthetic_wave_candles(count=100, symbol="EURUSDm")
+    sig = strat.evaluate("EURUSD", h4, h1)
+    assert sig.symbol == "EURUSD"
+    assert sig.timeframe == "H1"
+    assert sig.direction in ("BUY", "SELL", "FLAT")

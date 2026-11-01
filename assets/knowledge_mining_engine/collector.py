@@ -1,6 +1,6 @@
 """TikTok Knowledge Mining System — Collector Engine.
 
-Collects video list, metadata, and auto-captions/subtitles from a TikTok creator profile.
+Collects video list, metadata, and auto-captions/subtitles/audio from a TikTok creator profile.
 """
 
 from __future__ import annotations
@@ -26,6 +26,11 @@ def extract_tiktok_channel_videos(
     """Scan channel profile, extract video URLs, metadata, and subtitles."""
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = output_dir / "videos_manifest.json"
+    subtitles_dir = output_dir / "transcripts"
+    audio_dir = output_dir / "audio"
+    subtitles_dir.mkdir(parents=True, exist_ok=True)
+    if download_audio_if_no_sub:
+        audio_dir.mkdir(parents=True, exist_ok=True)
 
     # Normalize url
     clean_handle = channel_url_or_handle.strip().lstrip("@")
@@ -65,13 +70,53 @@ def extract_tiktok_channel_videos(
                     "duration": entry.get("duration"),
                     "uploader": entry.get("uploader", clean_handle),
                     "timestamp": entry.get("timestamp"),
+                    "has_subtitle": False,
+                    "subtitle_file": None,
                 }
                 videos.append(v_data)
         except Exception as e:
             logger.error(f"Error during video list extraction: {e}")
 
+    # Second pass: download captions or audio for each video
+    logger.info(f"Checking subtitles & transcripts for {len(videos)} videos...")
+    for idx, v in enumerate(videos, start=1):
+        v_url = v["url"]
+        v_id = v["id"]
+        sub_opts: dict[str, Any] = {
+            "skip_download": True,
+            "writeautomaticsub": True,
+            "subtitleslangs": ["vi", "en"],
+            "subtitlesformat": "vtt/json3/srt/best",
+            "outtmpl": str(subtitles_dir / f"{v_id}.%(ext)s"),
+            "quiet": True,
+            "no_warnings": True,
+            "ignoreerrors": True,
+        }
+        try:
+            with yt_dlp.YoutubeDL(sub_opts) as sub_ydl:
+                sub_ydl.download([v_url])
+            
+            # Check if subtitle file was created
+            created_subs = list(subtitles_dir.glob(f"{v_id}*"))
+            if created_subs:
+                v["has_subtitle"] = True
+                v["subtitle_file"] = str(created_subs[0])
+            elif download_audio_if_no_sub:
+                # Fallback to audio download
+                audio_opts: dict[str, Any] = {
+                    "format": "bestaudio/best",
+                    "outtmpl": str(audio_dir / f"{v_id}.%(ext)s"),
+                    "quiet": True,
+                    "no_warnings": True,
+                    "ignoreerrors": True,
+                }
+                with yt_dlp.YoutubeDL(audio_opts) as aud_ydl:
+                    aud_ydl.download([v_url])
+        except Exception as err:
+            logger.warning(f"Could not download transcript/audio for {v_id}: {err}")
+
     manifest_path.write_text(json.dumps(videos, indent=2, ensure_ascii=False), encoding="utf-8")
-    logger.info(f"Saved metadata for {len(videos)} videos to {manifest_path}")
+    logger.info(f"Saved complete manifest for {len(videos)} videos to {manifest_path}")
     return videos
 
 
@@ -82,4 +127,4 @@ if __name__ == "__main__":
 
     target = sys.argv[1]
     out_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else Path(__file__).parent / "data"
-    extract_tiktok_channel_videos(target, out_dir)
+    extract_tiktok_channel_videos(target, out_dir, download_audio_if_no_sub=True)

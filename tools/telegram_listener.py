@@ -63,18 +63,45 @@ def handle_command(cmd: str) -> str:
     cmd_strip = cmd.strip()
     cmd_lower = cmd_strip.lower()
 
-    # 0. Exness / Trading questions
-    if any(k in cmd_lower for k in ["exness", "mt5", "metatrader", "trade", "trading"]):
-        return (
-            "📈 <b>VỀ KẾT NỐI EXNESS & GIAO DỊCH TỰ ĐỘNG:</b>\n\n"
-            "Em chào Mai! Về trang web Exness Mai đang mở trên Chrome (<code>my.exness.com</code>):\n\n"
-            "• Trang web đó là <b>Khu vực cá nhân</b> để người xem quản lý tài khoản thủ công.\n"
-            "• Để bot Python/Agent Zero tự động kết nối và chạy chiến lược (ở <b>chế độ DEMO khóa vốn 100%</b>, tuyệt đối không dùng tiền thật), hệ thống cần bắt sóng IPC qua phần mềm <b>MetaTrader 5 (MT5)</b> cài đặt trực tiếp trên máy Windows.\n\n"
-            "👉 <b>Cách kích hoạt siêu nhanh:</b>\n"
-            "1. Trên web Exness Mai đang mở, bấm vào mục <b>Giao dịch</b> (hoặc biểu tượng 3 chấm ở tài khoản Demo) -> Chọn <b>Tải MetaTrader 5</b>.\n"
-            "2. Cài đặt file tải về (khoảng 30 giây).\n\n"
-            "Sau khi cài xong, bot trading Python sẽ tự động bắt sóng tài khoản Demo qua thư viện <code>MetaTrader5</code> và báo cáo lệnh/rủi ro cho Mai ngay tại đây!"
-        )
+    # 0. Exness / Trading commands
+    if any(k in cmd_lower for k in ["bắt đầu trade", "bật trade", "bật bot", "start trade", "start bot"]):
+        try:
+            res = subprocess.run(
+                ["python", str(REPO_ROOT / "tools" / "trading_ctl.py"), "start"],
+                capture_output=True,
+                text=True,
+                cwd=str(REPO_ROOT),
+                timeout=10,
+            )
+            return res.stdout.strip()
+        except Exception as exc:
+            return f"⚠️ Lỗi khởi động bot: {exc}"
+
+    if any(k in cmd_lower for k in ["dừng trade", "dừng bot", "tắt bot", "stop trade"]):
+        try:
+            res = subprocess.run(
+                ["python", str(REPO_ROOT / "tools" / "trading_ctl.py"), "stop"],
+                capture_output=True,
+                text=True,
+                cwd=str(REPO_ROOT),
+                timeout=10,
+            )
+            return res.stdout.strip()
+        except Exception as exc:
+            return f"⚠️ Lỗi dừng bot: {exc}"
+
+    if any(k in cmd_lower for k in ["exness", "mt5", "metatrader", "trade", "trading", "lệnh"]):
+        try:
+            res = subprocess.run(
+                ["python", str(REPO_ROOT / "tools" / "trading_ctl.py"), "status"],
+                capture_output=True,
+                text=True,
+                cwd=str(REPO_ROOT),
+                timeout=10,
+            )
+            return res.stdout.strip()
+        except Exception as exc:
+            return f"⚠️ Lỗi kiểm tra bot: {exc}"
 
     # 1. Long task prompt or instructions from owner
     if len(cmd_strip) > 60 or cmd_lower.startswith(("#", "task", "lệnh:", "chỉ thị:", "yêu cầu:")):

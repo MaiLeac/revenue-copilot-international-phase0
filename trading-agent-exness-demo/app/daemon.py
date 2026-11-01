@@ -33,10 +33,12 @@ from app.mt5.market_data import MT5MarketDataReader
 from app.mt5.execution import DemoExecutionAdapter, OrderResult
 from app.risk.kill_switch import KillSwitch
 from app.risk.manager import RiskManager
-from app.strategies.baseline import BaselineMultiSymbolStrategy
+from app.strategies.trend_pullback import TrendFollowingPullbackStrategy
 
 STATE_FILE = AGENT_ROOT / "run_state.json"
 JOURNAL_FILE = AGENT_ROOT / "research" / "LIVE_DEMO_JOURNAL.md"
+KILL_SWITCH_FILE = AGENT_ROOT / "kill_switch_state.json"
+RISK_STATE_FILE = AGENT_ROOT / "risk_state.json"
 
 
 def load_run_state() -> dict[str, Any]:
@@ -85,18 +87,19 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
     logger.info("Initializing Autonomous Trading Daemon on Windows host...")
 
     config = load_config(AGENT_ROOT / config_path)
-    kill_switch = KillSwitch(enabled=config.safety.kill_switch)
-    risk_mgr = RiskManager(config=config, kill_switch=kill_switch)
+    kill_switch = KillSwitch(enabled=config.safety.kill_switch, state_file=KILL_SWITCH_FILE)
+    risk_mgr = RiskManager(config=config, kill_switch=kill_switch, state_file=RISK_STATE_FILE)
     conn = MT5ConnectionManager(config=config)
 
     account_meta = conn.connect()
     reader = MT5MarketDataReader(connection=conn, config=config)
     gate = DataQualityGate(config=config)
     adapter = DemoExecutionAdapter(config=config, connection=conn, kill_switch=kill_switch)
-    strategy = BaselineMultiSymbolStrategy()
+    strategy = TrendFollowingPullbackStrategy()
 
     logger.info(
-        f"Connected to MT5 Demo: #{account_meta.login} ({account_meta.server}) Balance=${account_meta.balance:.2f}"
+        f"Connected to MT5 Demo: #{account_meta.login} ({account_meta.server}) Balance=${account_meta.balance:.2f} "
+        f"| Strategy: {strategy.strategy_id} v{strategy.version}"
     )
 
     state = load_run_state()
@@ -156,6 +159,21 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
             now_utc = datetime.now(timezone.utc)
             state["last_heartbeat_utc"] = now_utc.isoformat()
 
+            if state.get("command") == "pause":
+                if state.get("status") != "PAUSED":
+                    logger.info("Received 'pause' command. Pausing trade scan.")
+                    state["status"] = "PAUSED"
+                    state["active"] = False
+                    send_alert_safe("⏸️ <b>AUTONOMOUS TRADING DAEMON ĐÃ TẠM DỪNG QUÉT (PAUSED)!</b>")
+                save_run_state(state)
+                time.sleep(loop_interval_sec)
+                continue
+            elif state.get("command") == "start" and state.get("status") == "PAUSED":
+                state["status"] = "RUNNING"
+                state["active"] = True
+                logger.info("Resumed trading daemon from pause.")
+                send_alert_safe("▶️ <b>AUTONOMOUS TRADING DAEMON ĐÃ TIẾP TỤC QUÉT TÍN HIỆU!</b>")
+
             # Update account info and enforce Risk Manager (AUDIT-05)
             try:
                 acc_info = conn.read_account_metadata()
@@ -189,25 +207,26 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
             except Exception as e:
                 logger.warning(f"Could not read open positions: {e}")
 
-            # Scan enabled symbols
+            # Scan enabled symbols (EURUSD pilot)
             for base_sym in config.symbols.enabled:
                 try:
                     spec = reader.read_symbol_spec(base_sym)
                     tick = reader.read_tick(base_sym)
-                    candles = reader.read_candles(base_sym, "M15", count=60)
+                    h4_candles = reader.read_candles(base_sym, "H4", count=60)
+                    h1_candles = reader.read_candles(base_sym, "H1", count=60)
 
-                    # Quality gate check
-                    gate.evaluate(base_sym, "M15", tick, candles, now_utc=now_utc)
+                    # Quality gate check on H1 candles
+                    gate.evaluate(base_sym, "H1", tick, h1_candles, now_utc=now_utc)
 
-                    # Guarantee candle bar idempotency (AUDIT-03)
-                    last_bar_time = candles[-1].open_time_utc.isoformat()
+                    # Guarantee candle bar idempotency (AUDIT-03) on closed H1 bar
+                    last_bar_time = h1_candles[-1].open_time_utc.isoformat()
                     if last_processed_candles.get(base_sym) == last_bar_time:
                         continue
 
-                    # Evaluate strategy
-                    signal = strategy.generate_signal(candles)
+                    # Evaluate 4-tier H4/H1 trend pullback strategy
+                    signal = strategy.evaluate(base_sym, h4_candles, h1_candles)
                     if signal.direction in ("BUY", "SELL"):
-                        logger.info(f"Signal detected for {spec.broker_symbol}: {signal.direction} @ {signal.entry_price}")
+                        logger.info(f"Signal detected for {spec.broker_symbol}: {signal.direction} @ {signal.entry_price} ({signal.reason})")
                         # Place order
                         order_res: OrderResult = adapter.place_order(signal, spec)
                         if order_res.success:
@@ -215,12 +234,14 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                             trade_msg = (
                                 f"📈 <b>VÀO LỆNH DEMO THÀNH CÔNG!</b>\n\n"
                                 f"• Mã: <b>{order_res.symbol}</b>\n"
+                                f"• Chiến thuật: <b>H4/H1 Trend-Following Pullback</b>\n"
                                 f"• Chiều: <b>{order_res.direction}</b>\n"
                                 f"• Khối lượng: <b>{order_res.volume} lot</b>\n"
                                 f"• Giá khớp: <b>{order_res.price}</b>\n"
                                 f"• Chặn lỗ (SL): <code>{order_res.stop_loss}</code>\n"
                                 f"• Chốt lời (TP): <code>{order_res.take_profit}</code>\n"
-                                f"• Vé lệnh: <code>#{order_res.ticket}</code>"
+                                f"• Vé lệnh: <code>#{order_res.ticket}</code>\n"
+                                f"• Lý do: <i>{signal.reason}</i>"
                             )
                             send_alert_safe(trade_msg)
                             append_journal_entry(

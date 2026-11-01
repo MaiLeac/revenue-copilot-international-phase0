@@ -74,21 +74,25 @@ class DemoExecutionAdapter:
         spec: SymbolSpec,
         account_balance: float,
     ) -> float:
-        """Calculate lot size based on fixed fractional risk and ATR stop distance with accurate tick value."""
+        """Calculate lot size based on fixed fractional risk and ATR stop distance with accurate tick value.
+        
+        Strictly rounds DOWN (floor) to ensure cash risk never exceeds the configured risk budget.
+        Fails closed if configuration, entry price, or stop loss is missing.
+        """
         import math
 
         if not self._config:
-            return 0.01
-
-        risk_pct = self._config.risk.risk_per_trade_pct
-        risk_cash = account_balance * (risk_pct / 100.0)
+            raise ExecutionSafetyError("Safety violation: ExecutionAdapter has no AppConfig configured.")
 
         if signal.entry_price is None or signal.stop_loss is None:
-            return 0.01
+            raise ExecutionSafetyError("Safety violation: Signal must have explicit entry_price and stop_loss.")
 
         stop_dist = abs(signal.entry_price - signal.stop_loss)
         if stop_dist <= 0:
-            return 0.01
+            raise ExecutionSafetyError(f"Safety violation: Stop distance must be positive, got {stop_dist}")
+
+        risk_pct = self._config.risk.risk_per_trade_pct
+        risk_cash = account_balance * (risk_pct / 100.0)
 
         mt5 = self._connection.backend if self._connection else None
         min_vol = 0.01
@@ -122,15 +126,27 @@ class DemoExecutionAdapter:
 
         cash_risk_per_lot = (stop_dist / tick_size) * tick_value
         if cash_risk_per_lot <= 0:
-            return min_vol
+            raise ExecutionSafetyError(f"Safety violation: Cash risk per lot is non-positive ({cash_risk_per_lot})")
 
         raw_lots = risk_cash / cash_risk_per_lot
 
-        # Quantize to broker volume step dynamically
+        # Strictly floor (round DOWN) to volume step so risk budget is never breached
+        # Using round(..., 8) avoids binary floating-point representation errors (e.g. 1.0 / 0.01 == 99.99999999999999)
         decimals = max(0, -int(math.floor(math.log10(step_vol)))) if step_vol > 0 else 2
-        steps = round(raw_lots / step_vol)
+        steps = math.floor(round(raw_lots / step_vol, 8))
         lots = round(steps * step_vol, decimals)
-        lots = max(min_vol, min(lots, max_vol))
+
+        # Enforce minimum broker volume constraint: if min_vol risks more than risk_cash, reject order!
+        if lots < min_vol:
+            min_lot_cash_risk = min_vol * cash_risk_per_lot
+            if min_lot_cash_risk > risk_cash:
+                raise ExecutionSafetyError(
+                    f"Risk limit rejected: Minimum broker volume ({min_vol}) risks ${min_lot_cash_risk:.2f}, "
+                    f"which exceeds the maximum allowed risk budget of ${risk_cash:.2f}."
+                )
+            lots = min_vol
+
+        lots = min(lots, max_vol)
         return lots
 
     def get_open_positions(self, broker_symbol: str | None = None) -> list[Any]:
@@ -261,8 +277,38 @@ class DemoExecutionAdapter:
         )
         return order_res
 
-    def modify_order(self, *args: Any, **kwargs: Any) -> None:
-        self._ensure_can_execute()
+    def modify_order(
+        self,
+        ticket: int,
+        sl: float | None = None,
+        tp: float | None = None,
+    ) -> bool:
+        """Modify existing position SL/TP on MT5 Demo terminal."""
+        mt5 = self._ensure_can_execute()
+        positions = mt5.positions_get(ticket=ticket)
+        if not positions:
+            logger.warning(f"Cannot modify position #{ticket}: ticket not found.")
+            return False
+
+        pos = positions[0]
+        new_sl = float(sl) if sl is not None else float(getattr(pos, "sl", 0.0))
+        new_tp = float(tp) if tp is not None else float(getattr(pos, "tp", 0.0))
+
+        request = {
+            "action": mt5.TRADE_ACTION_SLTP,
+            "position": ticket,
+            "symbol": pos.symbol,
+            "sl": new_sl,
+            "tp": new_tp,
+        }
+        res = mt5.order_send(request)
+        success = res is not None and res.retcode in (10008, 10009)
+        if success:
+            logger.info(f"Modified position #{ticket}: sl={new_sl}, tp={new_tp}")
+        else:
+            err = res.comment if res else mt5.last_error()
+            logger.warning(f"Failed to modify position #{ticket}: {err}")
+        return success
 
     def close_position(self, ticket: int) -> bool:
         mt5 = self._ensure_can_execute()

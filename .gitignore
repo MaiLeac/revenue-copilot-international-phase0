@@ -1,0 +1,22 @@
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Environment & Secrets
+.env
+*.key
+*.token
+
+# Local run state & temporary outputs
+run_state.json
+*.tmp
+assets/knowledge_mining_engine/data/
+trading-agent-exness-demo/run_state.json
+trading-agent-exness-demo/risk_state.json
+trading-agent-exness-demo/kill_switch_state.json

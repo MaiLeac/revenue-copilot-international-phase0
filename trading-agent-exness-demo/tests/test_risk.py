@@ -78,3 +78,40 @@ def test_risk_manager_trips_on_max_drawdown() -> None:
 
     assert ks.is_tripped
     assert "MaxDrawdown" in ks.last_event.source
+
+
+def test_kill_switch_persists_across_restart(tmp_path) -> None:
+    ks_file = tmp_path / "kill_switch_state.json"
+    ks1 = KillSwitch(enabled=True, state_file=ks_file)
+    assert not ks1.is_tripped
+    ks1.trip(reason="Excessive spread spike", source="DataQualityGate")
+    assert ks1.is_tripped
+
+    # Simulate process restart
+    ks2 = KillSwitch(enabled=True, state_file=ks_file)
+    assert ks2.is_tripped
+    with pytest.raises(RuntimeError, match="KILL SWITCH ACTIVE"):
+        ks2.assert_healthy()
+
+    # Operator manual reset
+    ks2.reset_state(reason="Market stabilized", operator="admin")
+    assert not ks2.is_tripped
+    ks2.assert_healthy()
+
+
+def test_risk_manager_persists_across_restart(tmp_path) -> None:
+    rm_file = tmp_path / "risk_state.json"
+    cfg = DummyConfig(daily_loss_pct=1.0, drawdown_pct=5.0)
+    ks = KillSwitch(enabled=True)
+
+    rm1 = RiskManager(config=cfg, kill_switch=ks, state_file=rm_file)
+    rm1.evaluate_equity(100000.0)  # Day start = 100k, peak = 100k
+    rm1.evaluate_equity(99500.0)
+
+    # Simulate process restart
+    rm2 = RiskManager(config=cfg, kill_switch=ks, state_file=rm_file)
+    assert rm2._day_start_equity == 100000.0
+    assert rm2._peak_equity == 100000.0
+    state = rm2.evaluate_equity(99300.0)
+    assert state.day_start_equity == 100000.0
+    assert state.daily_pnl_pct == -0.7

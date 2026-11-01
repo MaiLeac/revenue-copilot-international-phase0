@@ -184,9 +184,9 @@ def validate_raw_config(raw: dict[str, Any], env_config: MT5EnvConfig | None = N
         raise ConfigValidationError(
             f"symbols.enabled contains symbols not in symbols.allowed: {sorted(unknown_enabled)}"
         )
-    if enabled:
+    if enabled and execution_mode == "read_only":
         raise ConfigValidationError(
-            "Milestone M0-M1 safety lock: symbols.enabled must be empty ([]). Trading is not enabled yet."
+            "Milestone M0-M1 safety lock: symbols.enabled must be empty ([]). Trading is not enabled yet in read_only mode."
         )
 
     # Timeframes validation

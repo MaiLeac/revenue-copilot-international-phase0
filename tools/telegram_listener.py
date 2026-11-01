@@ -15,6 +15,12 @@ import time
 import urllib.request
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -57,6 +63,19 @@ def handle_command(cmd: str) -> str:
     cmd_strip = cmd.strip()
     cmd_lower = cmd_strip.lower()
 
+    # 0. Exness / Trading questions
+    if any(k in cmd_lower for k in ["exness", "mt5", "metatrader", "trade", "trading"]):
+        return (
+            "📈 <b>VỀ KẾT NỐI EXNESS & GIAO DỊCH TỰ ĐỘNG:</b>\n\n"
+            "Em chào Mai! Về trang web Exness Mai đang mở trên Chrome (<code>my.exness.com</code>):\n\n"
+            "• Trang web đó là <b>Khu vực cá nhân</b> để người xem quản lý tài khoản thủ công.\n"
+            "• Để bot Python/Agent Zero tự động kết nối và chạy chiến lược (ở <b>chế độ DEMO khóa vốn 100%</b>, tuyệt đối không dùng tiền thật), hệ thống cần bắt sóng IPC qua phần mềm <b>MetaTrader 5 (MT5)</b> cài đặt trực tiếp trên máy Windows.\n\n"
+            "👉 <b>Cách kích hoạt siêu nhanh:</b>\n"
+            "1. Trên web Exness Mai đang mở, bấm vào mục <b>Giao dịch</b> (hoặc biểu tượng 3 chấm ở tài khoản Demo) -> Chọn <b>Tải MetaTrader 5</b>.\n"
+            "2. Cài đặt file tải về (khoảng 30 giây).\n\n"
+            "Sau khi cài xong, bot trading Python sẽ tự động bắt sóng tài khoản Demo qua thư viện <code>MetaTrader5</code> và báo cáo lệnh/rủi ro cho Mai ngay tại đây!"
+        )
+
     # 1. Long task prompt or instructions from owner
     if len(cmd_strip) > 60 or cmd_lower.startswith(("#", "task", "lệnh:", "chỉ thị:", "yêu cầu:")):
         log_file = REPO_ROOT / "operations" / "OWNER_TELEGRAM_LOG.md"
@@ -74,8 +93,8 @@ def handle_command(cmd: str) -> str:
             "📥 <b>ĐÃ TIẾP NHẬN CHỈ THỊ VÀO MONEY HQ:</b>\n\n"
             f"<i>\"{snippet}...\"</i>\n\n"
             "⚙️ <b>Lưu ý:</b> Bot Telegram này là kênh nhận lệnh & báo cáo nhanh. "
-            "Tác vụ kiến trúc chuyên sâu này đã được chuyển tiếp sang <b>Antigravity / Control Plane</b> trên máy để thực thi trực tiếp.\n\n"
-            "Gõ <code>link</code> để lấy danh sách link web, hoặc <code>báo cáo</code> để xem số dư ví."
+            "Tác vụ đã được ghi vào hệ thống và kích hoạt Task Router tự động!\n\n"
+            "Gõ <code>link</code> để lấy danh sách link web, hoặc <code>báo cáo</code> để xem tình hình tài chính."
         )
 
     # 2. Financial report
@@ -114,7 +133,7 @@ def handle_command(cmd: str) -> str:
             return f"⚠️ Lỗi chạy test: {exc}"
 
     # 4. Product links
-    if "link" in cmd_lower or "web" in cmd_lower or cmd_lower in ["/links", "/web"]:
+    if "link" in cmd_lower or cmd_lower in ["/links", "/web", "web"]:
         return (
             "🌐 <b>CÁC ĐƯỜNG LINK TRẢI NGHIỆM TRỰC TIẾP:</b>\n\n"
             "1. 🌸 Web Trắc Nghiệm Dưỡng Nhan (69k):\nhttps://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/\n\n"
@@ -136,7 +155,7 @@ def handle_command(cmd: str) -> str:
     return (
         f"🫡 <b>ĐÃ TIẾP NHẬN CHỈ ĐẠO CỦA MAI:</b>\n\n"
         f"<i>\"{cmd_strip}\"</i>\n\n"
-        f"📝 Đã ghi nhận vào <code>operations/OWNER_TELEGRAM_LOG.md</code> và tạo Trigger trong Superagent Control Plane!\n\n"
+        f"📝 Đã ghi nhận vào <code>operations/OWNER_TELEGRAM_LOG.md</code> và chuyển giao qua Task Router!\n\n"
         "Gõ <code>link</code> để lấy danh sách link web, hoặc <code>báo cáo</code> để xem tình hình tài chính."
     )
 
@@ -160,11 +179,17 @@ def main() -> None:
                 text = msg.get("text", "")
                 if not text or text == "/start":
                     continue
-                print(f"Received instruction: {text}")
+                try:
+                    print(f"Received instruction: {text}")
+                except Exception:
+                    pass
                 reply = handle_command(text)
                 send_message(reply)
         except Exception as exc:
-            print("Loop error:", exc)
+            try:
+                print("Loop error:", exc)
+            except Exception:
+                pass
             time.sleep(3)
 
 

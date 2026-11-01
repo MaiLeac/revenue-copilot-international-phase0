@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cẩm Nang & Trợ Lý Dưỡng Nhan Cá Nhân Hóa Theo 7 Thể Chất Đông Y</title>
+<title>Tủ Sách Dưỡng Nhan Bản Thảo • Chuẩn 7 Thể Chất Đông Y</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap&subset=vietnamese" rel="stylesheet">
@@ -253,11 +253,55 @@
     cursor: pointer;
     color: var(--muted);
   }
-  footer {
+  footer.page-footer {
+    background: #2b181e;
+    color: #f3dce3;
+    padding: 44px 0 32px;
+    margin-top: 56px;
+    font-size: 0.9rem;
+    border-top: 2px solid #541d2d;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+  .footer-col h4 {
+    color: #ffffff;
+    margin: 0 0 12px;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .footer-col p {
+    margin: 0;
+    line-height: 1.6;
+    color: #f0d5dd;
+  }
+  .footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .footer-col li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .footer-col a {
+    color: #ffd6e3;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .footer-col a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 20px;
     text-align: center;
-    padding: 32px 0 48px;
-    font-size: 13px;
-    color: var(--muted);
+    color: #c4a9b2;
+    font-size: 0.85rem;
   }
 </style>
 </head>
@@ -266,7 +310,7 @@
 <header class="topbar">
   <div class="container topbar-inner">
     <div class="brand-wrap">
-      <a href="index.html" class="brand">🌸 TỦ SÁCH DƯỠNG SINH AI</a>
+      <a href="index.html" class="brand">🌸 TỦ SÁCH DƯỠNG NHAN BẢN THẢO</a>
       <span class="brand-sub">Chuẩn 7 Thể Chất Đông Y</span>
     </div>
     <div class="top-actions">
@@ -400,7 +444,7 @@
 <div class="modal-backdrop" id="checkout-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeCheckout()">&times;</button>
-    <h3 style="margin:0 0 6px 0; color:var(--primary); font-family:'Plus Jakarta Sans', sans-serif;">Kích Hoạt Trọn Bộ Dưỡng Nhan AI</h3>
+    <h3 style="margin:0 0 6px 0; color:var(--primary); font-family:'Plus Jakarta Sans', sans-serif;">Kích Hoạt Trọn Bộ Cẩm Nang Dưỡng Nhan Bản Thảo</h3>
     <p style="font-size:13px; color:var(--muted); margin:0 0 14px 0;">Quét mã VietQR (69.000₫) để hệ thống cấp quyền truy cập trọn đời Lộ trình 28 Ngày & Sổ tay PDF:</p>
     
     <div style="background:var(--bg-alt); padding:14px; border-radius:12px; text-align:center;">
@@ -429,9 +473,38 @@
   </div>
 </div>
 
-<footer>
+<footer class="page-footer">
   <div class="container">
-    © 2026 Tủ Sách Dưỡng Sinh AI (Money HQ PROD-01 MVP) • Giáo dục dưỡng sinh chủ động, minh bạch nguyên liệu & giới hạn an toàn.
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Về Tủ Sách Dưỡng Nhan Bản Thảo</h4>
+        <p>Hệ thống cẩm nang và thực đơn dưỡng nhan, dưỡng sinh ẩm thực cổ truyền phương Đông chuẩn hóa theo 7 thể chất. Tích hợp audio và biểu mẫu in ấn tiện lợi cho cả gia đình.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Liên Kết Nhanh</h4>
+        <ul>
+          <li><a href="#trac-nghiem">Trắc Nghiệm 7 Thể Chất (60s)</a></li>
+          <li><a href="#tro-ly-tra-cuu">Tra Cứu Thực Đơn Dưỡng Nhan</a></li>
+          <li><a href="handbook.html">Cẩm Nang Có Khóa Bản Quyền</a></li>
+          <li><a href="javascript:void(0)" onclick="openCheckout()">Mở Khóa Trọn Bộ 69.000₫</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Hỗ Trợ & Thanh Toán Tự Động</h4>
+        <ul>
+          <li>Thanh toán tự động: VietQR & Thẻ quốc tế</li>
+          <li>Hỗ trợ khách hàng: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a></li>
+          <li>Giao nhận tài liệu: Mở tức thì trên trình duyệt sau khi xác nhận</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Tuyên Bố Miễn Trừ Y Khoa</h4>
+        <p style="font-size:0.82rem; line-height:1.55;">Tài liệu mang tính chất giáo dục dưỡng sinh ẩm thực cổ truyền, nâng cao thói quen sinh hoạt. Không thay thế chẩn đoán, toa thuốc hay điều trị của bác sĩ chuyên khoa.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 Tủ Sách Dưỡng Nhan Bản Thảo • Bảo lưu mọi quyền • Xuất bản số hóa độc quyền.
+    </div>
   </div>
 </footer>
 
@@ -596,7 +669,7 @@ function openCheckout() {
   currentMemo = ref ? `DUONGNHAN ${orderId} REF ${ref}` : `DUONGNHAN ${orderId}`;
   document.getElementById("order-memo").textContent = currentMemo;
   document.getElementById("vietqr-img").src =
-    `https://img.vietqr.io/image/MB-0000000000-compact2.png?amount=69000&addInfo=${encodeURIComponent(currentMemo)}&accountName=TU%20SACH%20DUONG%20SINH`;
+    `https://img.vietqr.io/image/MB-0000000000-compact2.png?amount=69000&addInfo=${encodeURIComponent(currentMemo)}&accountName=DUONG%20NHAN%20BAN%20THAO`;
   const badge = document.getElementById("affiliate-badge");
   if (ref) {
     badge.style.display = "block";

@@ -235,3 +235,125 @@ def test_calculate_lot_size_rejects_order_if_min_vol_exceeds_risk_budget() -> No
     )
     with pytest.raises(ExecutionSafetyError, match="Risk limit rejected"):
         adapter.calculate_lot_size(signal, spec, account_balance=1000.0)
+
+
+def test_ensure_can_execute_fails_when_trade_not_allowed() -> None:
+    from app.mt5.connection import AccountMetadata
+    from app.mt5.execution import ExecutionSafetyError
+
+    class MockConn:
+        is_connected = True
+        backend = object()
+
+        def read_account_metadata(self) -> AccountMetadata:
+            return AccountMetadata(
+                login=464160066,
+                server="Exness-MT5Trial17",
+                trade_mode=0,
+                trade_mode_label="DEMO",
+                currency="USD",
+                balance=100000.0,
+                equity=100000.0,
+                margin=0.0,
+                margin_free=100000.0,
+                margin_mode=2,
+                leverage=500,
+                trade_allowed=False,  # Blocked!
+                trade_expert=True,
+                is_verified_demo=True,
+            )
+
+    adapter = DemoExecutionAdapter(config=DummyAppConfig(), connection=MockConn())
+    with pytest.raises(ExecutionSafetyError, match="Trade is not allowed"):
+        adapter._ensure_can_execute()
+
+
+def test_ensure_can_execute_fails_when_trade_expert_disabled() -> None:
+    from app.mt5.connection import AccountMetadata
+    from app.mt5.execution import ExecutionSafetyError
+
+    class MockConn:
+        is_connected = True
+        backend = object()
+
+        def read_account_metadata(self) -> AccountMetadata:
+            return AccountMetadata(
+                login=464160066,
+                server="Exness-MT5Trial17",
+                trade_mode=0,
+                trade_mode_label="DEMO",
+                currency="USD",
+                balance=100000.0,
+                equity=100000.0,
+                margin=0.0,
+                margin_free=100000.0,
+                margin_mode=2,
+                leverage=500,
+                trade_allowed=True,
+                trade_expert=False,  # Expert Advisors / Algo trading disabled!
+                is_verified_demo=True,
+            )
+
+    adapter = DemoExecutionAdapter(config=DummyAppConfig(), connection=MockConn())
+    with pytest.raises(ExecutionSafetyError, match="Automated trading"):
+        adapter._ensure_can_execute()
+
+
+def test_calculate_lot_size_ratchets_down_when_order_calc_profit_exceeds_budget() -> None:
+    class MockMT5BackendWithProfitCalc:
+        def symbol_info(self, symbol: str):
+            from types import SimpleNamespace
+            return SimpleNamespace(
+                volume_min=0.01,
+                volume_max=10.0,
+                volume_step=0.01,
+                trade_tick_size=0.00001,
+                trade_tick_value=1.0,
+                digits=5,
+            )
+
+        def order_calc_profit(self, action: int, symbol: str, volume: float, price_open: float, price_close: float) -> float:
+            # Simulate a scenario where broker pricing causes $270 loss for 1.00 lot instead of $250
+            return -270.0 * (volume / 1.00)
+
+    class MockConn:
+        is_connected = True
+        backend = MockMT5BackendWithProfitCalc()
+
+    adapter = DemoExecutionAdapter(config=DummyAppConfig(risk_pct=0.25), connection=MockConn())
+    signal = StrategySignal(
+        symbol="EURUSD",
+        timeframe="H1",
+        strategy_id="trend_pullback",
+        strategy_version="2.0",
+        direction="BUY",
+        entry_price=1.08000,
+        stop_loss=1.07750,
+        take_profit=1.08500,
+    )
+    spec = SymbolSpec(
+        base_symbol="EURUSD",
+        broker_symbol="EURUSDm",
+        description="EURUSD",
+        currency_base="EUR",
+        currency_profit="USD",
+        currency_margin="USD",
+        digits=5,
+        point=0.00001,
+        tick_size=0.00001,
+        tick_value=1.0,
+        contract_size=100000.0,
+        volume_min=0.01,
+        volume_max=10.0,
+        volume_step=0.01,
+        stops_level=0,
+        spread_points=10,
+        spread_float=True,
+        trade_mode=4,
+        visible=True,
+    )
+    # Risk budget is $250. 1.00 lot would lose $270.
+    # The ratchet loop will decrement lots step by step until volume loss <= $250 (i.e. 0.92 lot = -$248.40)
+    lots = adapter.calculate_lot_size(signal, spec, account_balance=100000.0)
+    assert lots < 1.00
+    assert lots == 0.92

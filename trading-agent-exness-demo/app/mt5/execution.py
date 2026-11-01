@@ -66,6 +66,14 @@ class DemoExecutionAdapter:
             raise ExecutionSafetyError(
                 f"SAFETY LOCK: Live/real accounts are strictly blocked. Got trade_mode={account_meta.trade_mode_label}"
             )
+        if not account_meta.trade_allowed:
+            raise ExecutionSafetyError(
+                f"SAFETY LOCK: Trade is not allowed for account #{account_meta.login} on MT5 terminal."
+            )
+        if not account_meta.trade_expert:
+            raise ExecutionSafetyError(
+                "SAFETY LOCK: Automated trading (Expert Advisors / Algo) is disabled in MT5 terminal."
+            )
         return self._connection.backend
 
     def calculate_lot_size(
@@ -145,6 +153,21 @@ class DemoExecutionAdapter:
                     f"which exceeds the maximum allowed risk budget of ${risk_cash:.2f}."
                 )
             lots = min_vol
+
+        # Cross-validate with MT5 internal order_calc_profit if terminal backend is available
+        if mt5 and hasattr(mt5, "order_calc_profit") and signal.entry_price and signal.stop_loss:
+            try:
+                mt5_type = 0 if signal.direction == "BUY" else 1
+                calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
+                if calc_pnl is not None and calc_pnl < 0:
+                    sim_cash_risk = abs(calc_pnl)
+                    while sim_cash_risk > risk_cash * 1.0001 and steps > 1:
+                        steps -= 1
+                        lots = round(steps * step_vol, decimals)
+                        calc_pnl = mt5.order_calc_profit(mt5_type, spec.broker_symbol, lots, signal.entry_price, signal.stop_loss)
+                        sim_cash_risk = abs(calc_pnl) if calc_pnl is not None else 0.0
+            except Exception as e:
+                logger.debug(f"order_calc_profit check skipped: {e}")
 
         lots = min(lots, max_vol)
         return lots

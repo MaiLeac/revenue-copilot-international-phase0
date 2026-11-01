@@ -54,9 +54,34 @@ def get_updates(offset: int | None = None) -> list[dict]:
 
 
 def handle_command(cmd: str) -> str:
-    cmd_lower = cmd.strip().lower()
+    cmd_strip = cmd.strip()
+    cmd_lower = cmd_strip.lower()
 
-    if "báo cáo" in cmd_lower or "status" in cmd_lower or "tình hình" in cmd_lower:
+    # 1. Long task prompt or instructions from owner
+    if len(cmd_strip) > 60 or cmd_lower.startswith(("#", "task", "lệnh:", "chỉ thị:", "yêu cầu:")):
+        log_file = REPO_ROOT / "operations" / "OWNER_TELEGRAM_LOG.md"
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        snippet = cmd_strip[:120].replace("\n", " ")
+        entry = (
+            f"\n- **[{timestamp}] Chỉ thị từ Mai:**\n"
+            f"  ```text\n{cmd_strip}\n  ```\n"
+            f"  *Trạng thái:* Đã ghi nhận qua Source `telegram_owner` vào Superagent Control Plane.\n"
+        )
+        with log_file.open("a", encoding="utf-8") as fh:
+            fh.write(entry)
+
+        return (
+            "📥 <b>ĐÃ TIẾP NHẬN CHỈ THỊ VÀO MONEY HQ:</b>\n\n"
+            f"<i>\"{snippet}...\"</i>\n\n"
+            "⚙️ <b>Lưu ý:</b> Bot Telegram này là kênh nhận lệnh & báo cáo nhanh. "
+            "Tác vụ kiến trúc chuyên sâu này đã được chuyển tiếp sang <b>Antigravity / Control Plane</b> trên máy để thực thi trực tiếp.\n\n"
+            "Gõ <code>link</code> để lấy danh sách link web, hoặc <code>báo cáo</code> để xem số dư ví."
+        )
+
+    # 2. Financial report
+    if cmd_lower in ["báo cáo", "status", "/status", "tình hình", "doanh thu", "tiền"] or (
+        len(cmd_strip) < 30 and any(k in cmd_lower for k in ["báo cáo", "status", "doanh thu"])
+    ):
         try:
             res = subprocess.run(
                 ["python", str(REPO_ROOT / "tools" / "money_hq_dashboard.py")],
@@ -74,7 +99,8 @@ def handle_command(cmd: str) -> str:
         except Exception as exc:
             return f"⚠️ Lỗi chạy báo cáo: {exc}"
 
-    if "test" in cmd_lower or "kiểm tra" in cmd_lower:
+    # 3. Test suite
+    if cmd_lower in ["test", "/test", "kiểm tra"]:
         try:
             res = subprocess.run(
                 ["python", "-m", "pytest", "-q"],
@@ -87,19 +113,21 @@ def handle_command(cmd: str) -> str:
         except Exception as exc:
             return f"⚠️ Lỗi chạy test: {exc}"
 
-    if "link" in cmd_lower or "web" in cmd_lower:
+    # 4. Product links
+    if "link" in cmd_lower or "web" in cmd_lower or cmd_lower in ["/links", "/web"]:
         return (
-            "🌐 <b>CÁC ĐƯỜNG LINK TÀI SẢN MONEY HQ ĐANG CHẠY:</b>\n\n"
-            "1. Hub Tài Sản Số Money HQ:\nhttps://maileac.github.io/revenue-copilot-international-phase0/\n\n"
-            "2. Cẩm Nang Dưỡng Nhan (299k):\nhttps://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/\n\n"
-            "3. Global CSV Fixer ($9 / 199k):\nhttps://maileac.github.io/revenue-copilot-international-phase0/experiments/exp02-catalogue-qa-pilot/\n\n"
-            "4. Google Sheet Money HQ:\nhttps://docs.google.com/spreadsheets/d/1UPReETEtQJVYTEXHyzLbOOm5aNVJpjzEYr6aJKWIals/edit?gid=66015035#gid=66015035"
+            "🌐 <b>CÁC ĐƯỜNG LINK TRẢI NGHIỆM TRỰC TIẾP:</b>\n\n"
+            "1. 🌸 Web Trắc Nghiệm Dưỡng Nhan (69k):\nhttps://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/\n\n"
+            "2. 📖 Cẩm Nang Có Khóa Bản Quyền:\nhttps://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/handbook.html\n\n"
+            "3. 🧹 Web Clean CSV (199k / $9 USD):\nhttps://maileac.github.io/revenue-copilot-international-phase0/experiments/exp02-catalogue-qa-pilot/\n\n"
+            "4. 🏰 Loser Kingdom (Máy này):\nhttp://localhost:8891/today.html\n\n"
+            "5. 📊 Bảng Google Sheet tab Money HQ:\nhttps://docs.google.com/spreadsheets/d/1UPReETEtQJVYTEXHyzLbOOm5aNVJpjzEYr6aJKWIals/edit?gid=66015035#gid=66015035"
         )
 
     log_file = REPO_ROOT / "operations" / "OWNER_TELEGRAM_LOG.md"
     timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
     entry = (
-        f"\n- **[{timestamp}] Lệnh từ Mai:** {cmd}\n"
+        f"\n- **[{timestamp}] Lệnh từ Mai:** {cmd_strip}\n"
         f"  *Trạng thái:* Đã tiếp nhận qua Source `telegram_owner` và đưa vào hàng đợi Superagent Control Plane.\n"
     )
     with log_file.open("a", encoding="utf-8") as fh:
@@ -107,8 +135,9 @@ def handle_command(cmd: str) -> str:
 
     return (
         f"🫡 <b>ĐÃ TIẾP NHẬN CHỈ ĐẠO CỦA MAI:</b>\n\n"
-        f"<i>\"{cmd}\"</i>\n\n"
-        f"📝 Đã ghi nhận vào <code>operations/OWNER_TELEGRAM_LOG.md</code> và tạo Trigger trong Superagent Control Plane!"
+        f"<i>\"{cmd_strip}\"</i>\n\n"
+        f"📝 Đã ghi nhận vào <code>operations/OWNER_TELEGRAM_LOG.md</code> và tạo Trigger trong Superagent Control Plane!\n\n"
+        "Gõ <code>link</code> để lấy danh sách link web, hoặc <code>báo cáo</code> để xem tình hình tài chính."
     )
 
 

@@ -8,24 +8,22 @@ symbols:
     - EURUSD
     - XAUUSD
   enabled:
-    - XAUUSD
     - EURUSD
-    - XAGUSD
 
 timeframes:
-  - M15
   - H1
+  - H4
 
 data_quality:
   max_candle_age_seconds:
-    M15: 1800   # 30 minutes max staleness for closed M15 candle
     H1: 7200    # 2 hours max staleness for closed H1 candle
+    H4: 28800   # 8 hours max staleness for closed H4 candle
   max_tick_age_seconds: 60
   min_candle_count: 50
   max_spread_points:
     XAUUSD: 500
     XAGUSD: 400
-    EURUSD: 30
+    EURUSD: 25
     default: 100
 
 risk:

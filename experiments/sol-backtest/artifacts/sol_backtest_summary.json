@@ -1,0 +1,160 @@
+{
+  "coverage": {
+    "source": "OKX public REST /api/v5/market/history-candles",
+    "instrument": "SOL-USDT",
+    "bar": "1Dutc",
+    "raw_rows": 2188,
+    "raw_start_utc": "2020-10-01T00:00:00+00:00",
+    "raw_end_utc": "2026-09-27T00:00:00+00:00",
+    "requested_rows": 2096,
+    "requested_start_utc": "2021-01-01T00:00:00+00:00",
+    "requested_end_utc": "2026-09-27T00:00:00+00:00",
+    "warmup_rows_before_2021": 92,
+    "oos_rows": 635,
+    "oos_start_utc": "2025-01-01T00:00:00+00:00",
+    "oos_end_utc": "2026-09-27T00:00:00+00:00",
+    "fee_each_side": 0.001,
+    "slippage_each_side": 0.0005,
+    "leverage": 1,
+    "funding_rate": 0,
+    "execution": "signals from completed close bars; target executed at next daily open; equity marked at close net of exit cost if long"
+  },
+  "results": {
+    "buy_hold": {
+      "total_return": 79.54607835446225,
+      "cagr": 1.1474393150303732,
+      "max_drawdown": -0.962696446543315,
+      "sharpe": 1.2426186203435563,
+      "trade_count": 1,
+      "start_equity_date": "2021-01-01T00:00:00+00:00",
+      "end_equity_date": "2026-09-27T00:00:00+00:00",
+      "start_equity": 1.0,
+      "first_close_marked_equity": 1.214892894271748,
+      "end_equity": 80.54607835446225
+    },
+    "ema50_ema200": {
+      "total_return": 9.960898963708193,
+      "cagr": 0.5173301337240417,
+      "max_drawdown": -0.671230981312657,
+      "sharpe": 0.9293649426087864,
+      "trade_count": 9,
+      "start_equity_date": "2021-01-01T00:00:00+00:00",
+      "end_equity_date": "2026-09-27T00:00:00+00:00",
+      "start_equity": 1.0,
+      "first_close_marked_equity": 1.0,
+      "end_equity": 10.960898963708193,
+      "trade_log": [
+        {
+          "timestamp_utc": "2021-04-19T00:00:00+00:00",
+          "action": "buy",
+          "price": 32.32,
+          "signal_bar": "2021-04-18T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2022-02-03T00:00:00+00:00",
+          "action": "sell",
+          "price": 101.94,
+          "signal_bar": "2022-02-02T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2023-08-11T00:00:00+00:00",
+          "action": "buy",
+          "price": 24.629,
+          "signal_bar": "2023-08-10T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2023-08-24T00:00:00+00:00",
+          "action": "sell",
+          "price": 21.729,
+          "signal_bar": "2023-08-23T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2023-10-22T00:00:00+00:00",
+          "action": "buy",
+          "price": 29.31,
+          "signal_bar": "2023-10-21T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2025-03-05T00:00:00+00:00",
+          "action": "sell",
+          "price": 144.79,
+          "signal_bar": "2025-03-04T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2025-07-23T00:00:00+00:00",
+          "action": "buy",
+          "price": 205.73,
+          "signal_bar": "2025-07-22T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2025-11-15T00:00:00+00:00",
+          "action": "sell",
+          "price": 138.92,
+          "signal_bar": "2025-11-14T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2026-09-13T00:00:00+00:00",
+          "action": "buy",
+          "price": 101.77,
+          "signal_bar": "2026-09-12T00:00:00+00:00"
+        }
+      ]
+    },
+    "buy_hold_oos": {
+      "total_return": -0.3575714223788401,
+      "cagr": -0.22457978367340437,
+      "max_drawdown": -0.7625119297575873,
+      "sharpe": 0.05889202601046362,
+      "trade_count": 1,
+      "start_equity_date": "2025-01-01T00:00:00+00:00",
+      "end_equity_date": "2026-09-27T00:00:00+00:00",
+      "start_equity": 1.0,
+      "first_close_marked_equity": 1.0232303683235624,
+      "end_equity": 0.6424285776211599
+    },
+    "ema50_ema200_oos": {
+      "total_return": -0.3865134774144452,
+      "cagr": -0.2448562003842708,
+      "max_drawdown": -0.6467837074709766,
+      "sharpe": -0.2538112589888029,
+      "trade_count": 5,
+      "start_equity_date": "2025-01-01T00:00:00+00:00",
+      "end_equity_date": "2026-09-27T00:00:00+00:00",
+      "start_equity": 1.0,
+      "first_close_marked_equity": 1.0232303683235624,
+      "end_equity": 0.6134865225855548,
+      "trade_log": [
+        {
+          "timestamp_utc": "2025-01-01T00:00:00+00:00",
+          "action": "buy",
+          "price": 189.32,
+          "signal_bar": "2024-12-31T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2025-03-05T00:00:00+00:00",
+          "action": "sell",
+          "price": 144.79,
+          "signal_bar": "2025-03-04T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2025-07-23T00:00:00+00:00",
+          "action": "buy",
+          "price": 205.73,
+          "signal_bar": "2025-07-22T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2025-11-15T00:00:00+00:00",
+          "action": "sell",
+          "price": 138.92,
+          "signal_bar": "2025-11-14T00:00:00+00:00"
+        },
+        {
+          "timestamp_utc": "2026-09-13T00:00:00+00:00",
+          "action": "buy",
+          "price": 101.77,
+          "signal_bar": "2026-09-12T00:00:00+00:00"
+        }
+      ]
+    }
+  }
+}

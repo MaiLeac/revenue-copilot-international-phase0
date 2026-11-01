@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catalogue QA Executive Audit — synthetic_dirty_catalogue_120rows.csv</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --muted: #475569;
+    --border: #e2e8f0;
+    --critical: #dc2626;
+    --warning: #d97706;
+    --autofix: #0284c7;
+    --ok: #059669;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .container { max-width: 1120px; margin: 0 auto; }
+  .header {
+    background: #0f172a;
+    color: #fff;
+    padding: 28px 32px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .header h1 { margin: 0 0 6px 0; font-size: 22px; }
+  .header .meta { color: #cbd5e1; font-size: 13px; }
+  .gate-badge {
+    background: #991b1b;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+  .kpi .value { font-size: 26px; font-weight: 800; margin-top: 4px; }
+  .kpi .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-top: 20px;
+  }
+  .section h2 { margin: 0 0 12px 0; font-size: 17px; }
+  .policy-note {
+    background: #fffbeb;
+    border-left: 4px solid var(--warning);
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    border-radius: 4px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+  th { background: #f1f5f9; font-weight: 700; color: #334155; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.empty { text-align: center; color: var(--muted); padding: 18px; }
+  code { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-size: 12px; }
+  .pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .pill.critical { background: #fee2e2; color: #991b1b; }
+  .pill.warning { background: #fef3c7; color: #92400e; }
+  .pill.auto_fixed { background: #e0f2fe; color: #075985; }
+  .footer {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>E-Commerce Catalogue QA &amp; Reconciliation Audit</h1>
+      <div class="meta">Client / Batch: <strong>Synthetic Apparel &amp; Home Demo Batch (120 SKUs)</strong> &bull; Source: <code>synthetic_dirty_catalogue_120rows.csv</code> &bull; Generated: 2026-11-01 10:15 UTC</div>
+    </div>
+    <div class="gate-badge">HOLD IMPORT: 4 CRITICAL ROWS NEED CLIENT SIGN-OFF</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="label">Pre-Clean Health Score</div>
+      <div class="value">20/100</div>
+      <div class="sub">Deterministic audit index</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Rows Reconciled</div>
+      <div class="value">120/120</div>
+      <div class="sub">20 handles &bull; 118 unique SKUs</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Auto-Fixed Issues</div>
+      <div class="value" style="color: var(--autofix);">117</div>
+      <div class="sub">Leading zeros, slugs, prices, status</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Critical Blockers</div>
+      <div class="value" style="color: var(--critical);">4</div>
+      <div class="sub">Never guessed; client sign-off required</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Warnings &amp; PII Flags</div>
+      <div class="value" style="color: var(--warning);">2</div>
+      <div class="sub">1 PII leaks auto-redacted</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>1. Critical Unresolved Rows (Requires Client Confirmation Before Import)</h2>
+    <div class="policy-note">
+      <strong>Zero-Hallucination Guarantee:</strong> Our deterministic QA engine never invents missing SKUs, never guesses business prices, and never deletes duplicate variants silently. Please confirm the desired values for the 4 critical findings below.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th class="num">Row</th>
+          <th>Handle</th>
+          <th>SKU</th>
+          <th>Field</th>
+          <th>Issue Code</th>
+          <th>Original &rarr; Remediated</th>
+          <th>Action Needed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class='num'>13</td><td><code>bamboo-lounge-set</code></td><td><code>004111</code></td><td>Variant SKU</td><td><span class='pill critical'>DUPLICATE_SKU</span></td><td><code>004111</code> &rarr; <code>004111</code></td><td>Duplicate Variant SKU &#x27;004111&#x27; (first seen on row 12).</td></tr>
+<tr><td class='num'>28</td><td><code>canvas-weekender-tote</code></td><td><code>—</code></td><td>Variant SKU</td><td><span class='pill critical'>MISSING_SKU</span></td><td><code>—</code> &rarr; <code>—</code></td><td>Variant SKU is empty; never invent missing SKUs without client mapping.</td></tr>
+<tr><td class='num'>34</td><td><code>organic-cotton-tee</code></td><td><code>004133</code></td><td>Option1 Value</td><td><span class='pill critical'>MISSING_OPTION_VALUE</span></td><td><code>—</code> &rarr; <code>—</code></td><td>Option1 Value is empty; Shopify/WooCommerce imports fail when variant option is blank.</td></tr>
+<tr><td class='num'>49</td><td><code>minimalist-card-holder</code></td><td><code>004148</code></td><td>Variant Price</td><td><span class='pill critical'>INVALID_OR_NON_POSITIVE_PRICE</span></td><td><code>0.00</code> &rarr; <code>0.00</code></td><td>Variant Price is missing, non-numeric, or &lt;= 0. Business prices are never guessed.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>2. Warnings &amp; Privacy Redactions (2)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th class="num">Row</th>
+          <th>Handle</th>
+          <th>SKU</th>
+          <th>Field</th>
+          <th>Issue Code</th>
+          <th>Original &rarr; Remediated</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class='num'>56</td><td><code>stainless-thermal-flask</code></td><td><code>004155</code></td><td>Variant Compare At Price</td><td><span class='pill warning'>COMPARE_AT_LOWER_THAN_PRICE</span></td><td><code>15.00</code> &rarr; <code>15.00</code></td><td>Compare At Price (15.00) is lower than Variant Price (31.00).</td></tr>
+<tr><td class='num'>65</td><td><code>woven-market-basket</code></td><td><code>004164</code></td><td>Body (HTML)</td><td><span class='pill warning'>PII_DETECTED_IN_DESCRIPTION</span></td><td><code>[REDACTED_PII_IN_ORIGINAL]</code> &rarr; <code>&lt;p&gt;Supplier contact: [REDACTED_EMAIL] or [REDACTED_PHONE] before reorder.&lt;/p&gt;</code></td><td>Potential email or phone number detected in product description; flagged/redacted per privacy rule.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>3. Issue Code Distribution Summary</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Issue Code</th>
+          <th class="num">Occurrences</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>WHITESPACE_CLEANED</code></td><td class='num'>100</td></tr><tr><td><code>SKU_LEADING_ZERO_RESTORED</code></td><td class='num'>8</td></tr><tr><td><code>PRICE_NUMBER_FORMATTED</code></td><td class='num'>3</td></tr><tr><td><code>HANDLE_NORMALIZED</code></td><td class='num'>2</td></tr><tr><td><code>OPTION_NAME_NORMALIZED</code></td><td class='num'>2</td></tr><tr><td><code>STATUS_CASED_LOWER</code></td><td class='num'>2</td></tr><tr><td><code>COMPARE_AT_LOWER_THAN_PRICE</code></td><td class='num'>1</td></tr><tr><td><code>DUPLICATE_SKU</code></td><td class='num'>1</td></tr><tr><td><code>INVALID_OR_NON_POSITIVE_PRICE</code></td><td class='num'>1</td></tr><tr><td><code>MISSING_OPTION_VALUE</code></td><td class='num'>1</td></tr><tr><td><code>MISSING_SKU</code></td><td class='num'>1</td></tr><tr><td><code>PII_DETECTED_IN_DESCRIPTION</code></td><td class='num'>1</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>4. Sample Auto-Fixed Remediations (Showing first 25 of 117)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th class="num">Row</th>
+          <th>Handle</th>
+          <th>SKU</th>
+          <th>Field</th>
+          <th>Issue Code</th>
+          <th>Original &rarr; Remediated</th>
+          <th>Rule Applied</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class='num'>2</td><td><code>linen-resort-shirt</code></td><td><code>004101</code></td><td>Variant SKU</td><td><span class='pill auto_fixed'>SKU_LEADING_ZERO_RESTORED</span></td><td><code>4101</code> &rarr; <code>004101</code></td><td>Restored leading zeros on numeric SKU to 6 digits.</td></tr>
+<tr><td class='num'>3</td><td><code>linen-resort-shirt</code></td><td><code>004102</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Linen Resort Shirt  </code> &rarr; <code>Linen Resort Shirt</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>4</td><td><code>linen-resort-shirt</code></td><td><code>004103</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Linen Resort Shirt  </code> &rarr; <code>Linen Resort Shirt</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>5</td><td><code>linen-resort-shirt</code></td><td><code>004104</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Linen Resort Shirt  </code> &rarr; <code>Linen Resort Shirt</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>6</td><td><code>linen-resort-shirt</code></td><td><code>004105</code></td><td>Handle</td><td><span class='pill auto_fixed'>HANDLE_NORMALIZED</span></td><td><code>LINEN RESORT SHIRT</code> &rarr; <code>linen-resort-shirt</code></td><td>Normalized handle slug to lowercase hyphenated ASCII.</td></tr>
+<tr><td class='num'>6</td><td><code>linen-resort-shirt</code></td><td><code>004105</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Linen Resort Shirt  </code> &rarr; <code>Linen Resort Shirt</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>7</td><td><code>linen-resort-shirt</code></td><td><code>004106</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Linen Resort Shirt  </code> &rarr; <code>Linen Resort Shirt</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>8</td><td><code>bamboo-lounge-set</code></td><td><code>004107</code></td><td>Variant SKU</td><td><span class='pill auto_fixed'>SKU_LEADING_ZERO_RESTORED</span></td><td><code>4107</code> &rarr; <code>004107</code></td><td>Restored leading zeros on numeric SKU to 6 digits.</td></tr>
+<tr><td class='num'>9</td><td><code>bamboo-lounge-set</code></td><td><code>004108</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Bamboo Lounge Set  </code> &rarr; <code>Bamboo Lounge Set</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>10</td><td><code>bamboo-lounge-set</code></td><td><code>004109</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Bamboo Lounge Set  </code> &rarr; <code>Bamboo Lounge Set</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>11</td><td><code>bamboo-lounge-set</code></td><td><code>004110</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Bamboo Lounge Set  </code> &rarr; <code>Bamboo Lounge Set</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>11</td><td><code>bamboo-lounge-set</code></td><td><code>004110</code></td><td>Variant Price</td><td><span class='pill auto_fixed'>PRICE_NUMBER_FORMATTED</span></td><td><code>$45.00</code> &rarr; <code>45.00</code></td><td>Removed currency symbols/commas and formatted to 2 decimal places.</td></tr>
+<tr><td class='num'>12</td><td><code>bamboo-lounge-set</code></td><td><code>004111</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Bamboo Lounge Set  </code> &rarr; <code>Bamboo Lounge Set</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>13</td><td><code>bamboo-lounge-set</code></td><td><code>004111</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Bamboo Lounge Set  </code> &rarr; <code>Bamboo Lounge Set</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>14</td><td><code>ceramic-pour-over-mug</code></td><td><code>004113</code></td><td>Variant SKU</td><td><span class='pill auto_fixed'>SKU_LEADING_ZERO_RESTORED</span></td><td><code>4113</code> &rarr; <code>004113</code></td><td>Restored leading zeros on numeric SKU to 6 digits.</td></tr>
+<tr><td class='num'>15</td><td><code>ceramic-pour-over-mug</code></td><td><code>004114</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Ceramic Pour Over Mug  </code> &rarr; <code>Ceramic Pour Over Mug</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>15</td><td><code>ceramic-pour-over-mug</code></td><td><code>004114</code></td><td>Option1 Name</td><td><span class='pill auto_fixed'>OPTION_NAME_NORMALIZED</span></td><td><code>  size </code> &rarr; <code>Size</code></td><td>Standardized Option1 Name casing/whitespace.</td></tr>
+<tr><td class='num'>16</td><td><code>ceramic-pour-over-mug</code></td><td><code>004115</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Ceramic Pour Over Mug  </code> &rarr; <code>Ceramic Pour Over Mug</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>17</td><td><code>ceramic-pour-over-mug</code></td><td><code>004116</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Ceramic Pour Over Mug  </code> &rarr; <code>Ceramic Pour Over Mug</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>18</td><td><code>ceramic-pour-over-mug</code></td><td><code>004117</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Ceramic Pour Over Mug  </code> &rarr; <code>Ceramic Pour Over Mug</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>19</td><td><code>ceramic-pour-over-mug</code></td><td><code>004118</code></td><td>Handle</td><td><span class='pill auto_fixed'>HANDLE_NORMALIZED</span></td><td><code>CERAMIC POUR OVER MUG</code> &rarr; <code>ceramic-pour-over-mug</code></td><td>Normalized handle slug to lowercase hyphenated ASCII.</td></tr>
+<tr><td class='num'>19</td><td><code>ceramic-pour-over-mug</code></td><td><code>004118</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Ceramic Pour Over Mug  </code> &rarr; <code>Ceramic Pour Over Mug</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>20</td><td><code>merino-travel-hoodie</code></td><td><code>004119</code></td><td>Variant SKU</td><td><span class='pill auto_fixed'>SKU_LEADING_ZERO_RESTORED</span></td><td><code>4119</code> &rarr; <code>004119</code></td><td>Restored leading zeros on numeric SKU to 6 digits.</td></tr>
+<tr><td class='num'>21</td><td><code>merino-travel-hoodie</code></td><td><code>004120</code></td><td>Title</td><td><span class='pill auto_fixed'>WHITESPACE_CLEANED</span></td><td><code>  Merino Travel Hoodie  </code> &rarr; <code>Merino Travel Hoodie</code></td><td>Trimmed redundant whitespace in Title.</td></tr>
+<tr><td class='num'>21</td><td><code>merino-travel-hoodie</code></td><td><code>004120</code></td><td>Status</td><td><span class='pill auto_fixed'>STATUS_CASED_LOWER</span></td><td><code>ACTIVE</code> &rarr; <code>active</code></td><td>Normalized Status value to lowercase.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    Generated deterministically by Money HQ Catalogue QA Engine (SVC-01) &bull; Zero External LLM Exposure &bull; 100% Row Reconciliation
+  </div>
+</div>
+</body>
+</html>

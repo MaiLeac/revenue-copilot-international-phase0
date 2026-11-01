@@ -1,0 +1,2 @@
+{"symbol": "SOL-USDT", "timestamp": "2025-01-01T16:00:00", "bar_idx": 0, "action": "open", "signed_quantity": 52.032399, "notional": 9990.00987678405, "execution_price": 191.99595, "fee": 9.99000987678405, "margin": 9990.00987678405, "reason": "signal", "holding_bars": null}
+{"symbol": "SOL-USDT", "timestamp": "2026-09-26T16:00:00", "bar_idx": 633, "action": "close", "signed_quantity": -52.032399, "notional": 6332.817233616885, "execution_price": 121.709115, "fee": 6.332817233616884, "margin": 6332.817233616885, "reason": "end_of_backtest", "holding_bars": 633.0}

@@ -1,0 +1,16 @@
+{
+  "status": "ok",
+  "exit_code": 0,
+  "stdout": "{\n  \"final_value\": 136435.78514131514,\n  \"total_return\": 12.643578514131514,\n  \"annual_return\": 0.5766385356061834,\n  \"max_drawdown\": -0.6782165412715778,\n  \"sharpe\": 0.9776775861394122,\n  \"calmar\": 0.8502,\n  \"sortino\": 1.0915,\n  \"win_rate\": 0.6,\n  \"profit_loss_ratio\": 2.5184,\n  \"profit_factor\": 3.7776,\n  \"max_consecutive_loss\": 1,\n  \"avg_holding_days\": 186.4,\n  \"trade_count\": 5,\n  \"benchmark_return\": 72.8,\n  \"excess_return\": -60.156421,\n  \"information_ratio\": -0.7573,\n  \"tracking_error\": 0.793864,\n  \"benchmark_beta\": 0.4696,\n  \"avg_turnover\": 0.002376,\n  \"total_turnover\": 4.977507,\n  \"unfilled_plan_rejections\": 0,\n  \"target_change_count\": 9,\n  \"rebalance_executed_bars\": 0,\n  \"rebalance_executed_fills\": 0,\n  \"rebalance_realized_turnover\": 0.0,\n  \"rebalance_turnover_mean\": 0.5,\n  \"rebalance_turnover_max\": 0.5,\n  \"position_adjustment\": \"hold\",\n  \"rebalance_tolerance\": 0.0,\n  \"dropped_target_adjustment_count\": 0,\n  \"dropped_target_adjustments\": [],\n  \"risk_xray_hhi\": 1.0,\n  \"risk_xray_effective_n\": 1.0,\n  \"risk_xray_annualized_vol\": 1.0888351974855472,\n  \"risk_xray_max_drawdown\": -0.9629315111778182,\n  \"risk_xray_avg_invested\": 0.4448687349396754\n}\n",
+  "stderr": "",
+  "artifacts": {
+    "equity": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema\\artifacts\\equity.csv",
+    "metrics": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema\\artifacts\\metrics.csv",
+    "trades": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema\\artifacts\\trades.csv",
+    "positions": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema\\artifacts\\positions.csv",
+    "target_positions": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema\\artifacts\\target_positions.csv",
+    "run_card_json": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema\\run_card.json",
+    "run_card_md": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema\\run_card.md"
+  },
+  "run_dir": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema"
+}

@@ -1,0 +1,32 @@
+{
+  "asset_id": "EXP-02",
+  "product_name": "Global E-Commerce Catalogue CSV Fixer & Profit Auditor",
+  "live_url": "https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp02-catalogue-qa-pilot/",
+  "pricing": {
+    "vnd": 199000,
+    "usd": 9,
+    "checkout_channels": [
+      "Payoneer",
+      "VietQR"
+    ]
+  },
+  "external_publish_mode": "observe_dry_run",
+  "compliant_acquisition_channels": [
+    {
+      "channel": "GitHub Topic & Organic Search Indexing",
+      "status": "active_via_sitemap",
+      "target_keywords": [
+        "shopify csv import error fixer browser",
+        "chuẩn hóa file csv sản phẩm shopee tiktok shop",
+        "ecommerce catalogue profit margin auditor tool"
+      ]
+    },
+    {
+      "channel": "Shopify / Seller Community Helpful Answer Template",
+      "status": "observe_dry_run_staged",
+      "hook_title": "Client-side tool to audit SKU margin leaks, fix HTML/UTF-8 corruption, and normalize variants before bulk CSV import (100% browser-local)",
+      "cta_url": "https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp02-catalogue-qa-pilot/"
+    }
+  ],
+  "generated_at": "2026-11-01T15:45:38+00:00"
+}

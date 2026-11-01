@@ -1,0 +1,128 @@
+{
+  "artifacts": [
+    {
+      "path": "artifacts/equity.csv",
+      "sha256": "c9f1dcbae19fb4daf5764812568324eeb46269aaeacc0e8db4c535ef8398da9f",
+      "size_bytes": 229572
+    },
+    {
+      "path": "artifacts/fills.jsonl",
+      "sha256": "e3e4faaa18830c1cffcf446e2c5665fa30a6eb8012a781cc83e2ef7e56af6f46",
+      "size_bytes": 2900
+    },
+    {
+      "path": "artifacts/metrics.csv",
+      "sha256": "3c131599d851feaa454ec32f04d542aeadc58be93252f6b77fd5e5daa4caf0ed",
+      "size_bytes": 945
+    },
+    {
+      "path": "artifacts/ohlcv_SOL-USDT.csv",
+      "sha256": "150c233bacca71fe48bd274edd8ef3a895d6aee6d1e2790118dddb446cec6d2f",
+      "size_bytes": 132862
+    },
+    {
+      "path": "artifacts/positions.csv",
+      "sha256": "a48893d308d08968142805955e79b258cd7f0ec191f134f9abeef0ebf7c0dc8d",
+      "size_bytes": 66251
+    },
+    {
+      "path": "artifacts/rebalance_notes.json",
+      "sha256": "37d02b1956ef0e011fd2efc9f8e384ec113b7c4504054dd504beb4a94fefce52",
+      "size_bytes": 3473
+    },
+    {
+      "path": "artifacts/rebalance_notes.md",
+      "sha256": "7e460808e62deec4f5dc2858a1ad83f38730202dd4d99a99fedc7c5ce0dbd535",
+      "size_bytes": 1085
+    },
+    {
+      "path": "artifacts/risk_xray.json",
+      "sha256": "c8020d0407e9ef9c1a21f4e5c0f0b0c873580181ac3454b87591aa84b3317a9d",
+      "size_bytes": 1317
+    },
+    {
+      "path": "artifacts/risk_xray.md",
+      "sha256": "4b655bd90561affadae70c2a4b564c3ff18d062d8e55a3f44a268ae549ad6053",
+      "size_bytes": 294
+    },
+    {
+      "path": "artifacts/target_positions.csv",
+      "sha256": "1bd6ddbcce30f1b292f3813a21ecb292bfa7a373dc7b59e1b9b09de4e945ab4a",
+      "size_bytes": 52395
+    },
+    {
+      "path": "artifacts/trades.csv",
+      "sha256": "d5c1c32fbd96dc32daf5ed5692a5149b3c02db2592d7ca4aaa06fc58ea115ba7",
+      "size_bytes": 832
+    },
+    {
+      "path": "code/signal_engine.py",
+      "sha256": "4085f15b1afe745e738c1d135b7484f2eddc159922ef1ab90ccee22a1525a9ed",
+      "size_bytes": 406
+    },
+    {
+      "path": "config.json",
+      "sha256": "2890a5ede935e6135de5738c2e841cbdaf6f31a7caaf88b3cf7f30e16ff2dd2a",
+      "size_bytes": 446
+    }
+  ],
+  "backtest": {
+    "codes": [
+      "SOL-USDT"
+    ],
+    "end_date": "2026-09-27",
+    "engine": "daily",
+    "initial_cash": 10000,
+    "interval": "1D",
+    "source": "okx",
+    "start_date": "2020-06-15"
+  },
+  "data_sources": [
+    "okx"
+  ],
+  "generated_at": "2026-09-28T11:32:20.038759Z",
+  "metrics": {
+    "annual_return": 0.5766385356061834,
+    "avg_holding_days": 186.4,
+    "avg_turnover": 0.002376,
+    "benchmark_beta": 0.4696,
+    "benchmark_return": 72.8,
+    "calmar": 0.8502,
+    "dropped_target_adjustment_count": 0,
+    "excess_return": -60.156421,
+    "final_value": 136435.78514131514,
+    "information_ratio": -0.7573,
+    "max_consecutive_loss": 1,
+    "max_drawdown": -0.6782165412715778,
+    "position_adjustment": "hold",
+    "profit_factor": 3.7776,
+    "profit_loss_ratio": 2.5184,
+    "rebalance_executed_bars": 0,
+    "rebalance_executed_fills": 0,
+    "rebalance_realized_turnover": 0.0,
+    "rebalance_tolerance": 0.0,
+    "rebalance_turnover_max": 0.5,
+    "rebalance_turnover_mean": 0.5,
+    "risk_xray_annualized_vol": 1.0888351974855472,
+    "risk_xray_avg_invested": 0.4448687349396754,
+    "risk_xray_effective_n": 1.0,
+    "risk_xray_hhi": 1.0,
+    "risk_xray_max_drawdown": -0.9629315111778182,
+    "sharpe": 0.9776775861394122,
+    "sortino": 1.0915,
+    "target_change_count": 9,
+    "total_return": 12.643578514131514,
+    "total_turnover": 4.977507,
+    "tracking_error": 0.793864,
+    "trade_count": 5,
+    "unfilled_plan_rejections": 0,
+    "win_rate": 0.6
+  },
+  "reproducibility": {
+    "config_hash": "2890a5ede935e6135de5738c2e841cbdaf6f31a7caaf88b3cf7f30e16ff2dd2a",
+    "strategy_hash": "4085f15b1afe745e738c1d135b7484f2eddc159922ef1ab90ccee22a1525a9ed"
+  },
+  "run_dir": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema",
+  "schema_version": "0.1",
+  "warnings": []
+}

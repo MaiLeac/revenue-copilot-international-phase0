@@ -1,0 +1,7 @@
+timestamp,code,side,price,qty,reason,pnl,holding_days,holding_bars,return_pct
+2025-01-01,SOL-USDT,buy,191.9959,52.032399,signal,0.0,0,0.0,0.0
+2025-03-04,SOL-USDT,sell,138.5507,52.032399,signal,-2780.8851,62,62.0,-27.84
+2025-07-23,SOL-USDT,buy,192.8064,37.315787,signal,0.0,0,0.0,0.0
+2025-11-14,SOL-USDT,sell,142.1589,37.315787,signal,-1889.9502,114,114.0,-26.27
+2026-09-13,SOL-USDT,buy,100.3101,52.778038,signal,0.0,0,0.0,0.0
+2026-09-26,SOL-USDT,sell,121.7091,52.778038,end_of_backtest,1129.3964,13,13.0,21.33

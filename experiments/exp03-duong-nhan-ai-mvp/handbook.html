@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cẩm Nang & Trợ Lý Dưỡng Nhan 7 Thể Chất Đông Y (Lộ Trình 28 Ngày + In PDF)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap&subset=vietnamese" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/web_capability_library/tokens.css" />
+<style>
+  :root {
+    --bg: #fdfaf6;
+    --card: #ffffff;
+    --ink: #2b1e1c;
+    --muted: #6e5a56;
+    --primary: #8c2d4b;
+    --primary-dark: #681d35;
+    --accent: #c88a4b;
+    --border: #eadcd1;
+    --ok: #1f6f50;
+    --warn: #b45309;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    letter-spacing: normal;
+  }
+  .access-pill {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .access-pill.locked { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  .access-pill.unlocked { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+  .locked-blur {
+    filter: blur(5px);
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.35;
+    transition: filter 0.3s, opacity 0.3s;
+  }
+  .lock-gate {
+    background: #fffdfa;
+    border: 2px dashed var(--primary);
+    border-radius: 16px;
+    padding: 26px 20px;
+    text-align: center;
+    margin: 24px 0;
+    box-shadow: 0 8px 24px rgba(140, 45, 75, 0.06);
+  }
+  .lock-gate h3 { margin: 0 0 6px 0; color: var(--primary); font-size: 18px; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .unlock-bar { display: inline-flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+  .unlock-input { padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13.5px; min-width: 220px; }
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(25, 12, 16, 0.65);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal {
+    background: #fff;
+    border-radius: 18px;
+    max-width: 480px;
+    width: 100%;
+    padding: 26px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header.topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 12px 0;
+  }
+  .topbar-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .brand { font-weight: 800; color: var(--primary); font-size: 1.05rem; text-decoration: none; }
+  .btn {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  .btn:hover { background: var(--primary-dark); }
+  .btn-outline {
+    background: #fff;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+  }
+  .btn-outline:hover { background: #fdf2f4; }
+  .hero {
+    background: linear-gradient(135deg, #f9efe6 0%, #f3dfce 100%);
+    padding: 36px 28px;
+    border-radius: 18px;
+    margin: 24px 0;
+    border: 1px solid var(--border);
+  }
+  .hero h1 { margin: 0 0 10px; font-size: 1.85rem; color: #3a1a24; }
+  .section-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px;
+    margin-bottom: 26px;
+  }
+  .const-card {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+    background: #fffdfb;
+  }
+  .const-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .const-badge {
+    background: var(--primary);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .const-header h3 { margin: 0; font-size: 1.15rem; }
+  .const-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin-top: 10px;
+  }
+  .const-grid h4 { margin: 0 0 6px; font-size: 0.92rem; color: var(--primary); }
+  .const-grid ul { margin: 0; padding-left: 18px; font-size: 0.9rem; }
+  .avoid-col { background: #fff5f5; padding: 10px 12px; border-radius: 10px; border: 1px solid #fecaca; }
+  .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .filter-bar select, .filter-bar input {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    flex: 1;
+    min-width: 200px;
+  }
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 16px;
+  }
+  .recipe-item {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .recipe-top { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .tag-const { background: #f4e6eb; color: var(--primary); padding: 2px 9px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; }
+  .tag-cat { background: #fef3c7; color: #92400e; padding: 2px 9px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; }
+  .tag-code { color: var(--muted); font-size: 0.76rem; margin-left: auto; }
+  .recipe-item h4 { margin: 4px 0 10px; font-size: 1.08rem; color: #3a1a24; }
+  .recipe-item p { margin: 5px 0; font-size: 0.9rem; }
+  .benefit-line { color: var(--ok); }
+  .contra-alert {
+    margin-top: 8px;
+    background: #fffbeb;
+    border-left: 3px solid var(--warn);
+    padding: 8px 10px;
+    font-size: 0.84rem;
+    color: #92400e;
+    border-radius: 4px;
+  }
+  .audio-btn {
+    margin-top: 12px;
+    background: #f8efe6;
+    color: var(--primary-dark);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .audio-btn:hover { background: #efe0d1; }
+  table.tracker { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem; }
+  table.tracker th, table.tracker td { border: 1px solid var(--border); padding: 10px; text-align: left; }
+  table.tracker th { background: #f6efe8; color: #3a1a24; }
+  footer.page-footer {
+    background: #2b181e;
+    color: #f3dce3;
+    padding: 40px 0 30px;
+    margin-top: 40px;
+    font-size: 0.88rem;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .footer-col h4 { color: #fff; margin: 0 0 10px; font-size: 1rem; }
+  .footer-col ul { list-style: none; padding: 0; margin: 0; }
+  .footer-col li { margin-bottom: 6px; }
+  .footer-col a { color: #ffd6e3; text-decoration: none; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 20px;
+    text-align: center;
+    color: #c4a9b2;
+    font-size: 0.82rem;
+  }
+  @media print {
+    header.topbar, .filter-bar, .audio-btn, footer.page-footer, .no-print { display: none !important; }
+    body { background: #fff; }
+    .section-box, .const-card, .recipe-item { break-inside: avoid; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="index.html" class="brand">⬅ Quay lại Trang Chủ Trắc Nghiệm</a>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <span id="access-badge" class="access-pill locked">🔒 Bản Xem Thử (Đang Khóa)</span>
+      <button class="btn btn-outline" onclick="triggerPrint()">In / Lưu PDF Trọn Bộ (A4)</button>
+      <button id="topbar-unlock-btn" class="btn" onclick="openUnlockGate()">Mở Khóa Toàn Bộ (69k)</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <h1>Cẩm Nang & Thực Đơn Dưỡng Nhan 7 Thể Chất Đông Y (Bản Điện Tử Tự Động)</h1>
+    <p>Hệ thống hóa <strong>7 Thể Chất Đông Y</strong>, <strong>Bảng Chống Chỉ Định An Toàn</strong>, <strong>Kho Thực Đơn Trà - Canh - Cháo - Chè - Ngũ Cốc Có Định Lượng</strong> tích hợp <strong>Audio đọc tự động</strong> và <strong>Lộ trình 28 ngày in PDF</strong>.</p>
+  </section>
+
+  <section class="section-box" id="constitutions">
+    <h2>1. Bản Đồ 7 Thể Chất Đông Y & Quy Tắc Cấm Kỵ</h2>
+    <p style="color:var(--muted);">Nguyên tắc vàng của dưỡng sinh Đông Y: <strong>Không có món bổ cho tất cả mọi người — chỉ có món đúng với thể chất của bạn.</strong></p>
+    
+            <article class="const-card" id="const-huyet_hu">
+              <div class="const-header">
+                <span class="const-badge">HUYET_HU</span>
+                <h3>Huyết Hư (Thiếu hụt khí huyết nuôi dưỡng)</h3>
+              </div>
+              <p class="const-summary"><strong>Cơ chế cốt lõi:</strong> Da vàng xỉn thiếu sức sống, môi nhạt, tóc khô rụng, hay hoa mắt khó vào giấc.</p>
+              <div class="const-grid">
+                <div>
+                  <h4>Dấu hiệu nhận diện</h4>
+                  <ul><li>Sắc mặt vàng sạm hoặc trắng nhợt thiếu hồng hào</li><li>Môi nhạt màu, quầng mắt thâm nhẹ</li><li>Da khô, dễ xuất hiện nếp nhăn mảnh</li><li>Tóc khô xơ, dễ gãy rụng</li><li>Hay hoa mắt khi đứng lên ngồi xuống, ngủ nông</li><li>Lượng kinh nguyệt ít, màu nhạt, dễ mệt sau kỳ kinh</li></ul>
+                </div>
+                <div>
+                  <h4>Nguyên tắc & Dược thiện khuyên dùng</h4>
+                  <p><em>Dưỡng huyết – Kiện tỳ – An thần nhẹ nhàng (Không dùng đồ đại bổ gây nóng trong).</em></p>
+                  <ul><li>Táo đỏ (Hồng táo)</li><li>Kỷ tử</li><li>Long nhãn</li><li>Đương quy</li><li>Đậu đen xanh lòng</li><li>Mè đen</li></ul>
+                </div>
+                <div class="avoid-col">
+                  <h4>⚠️ Cấm kỵ / Cần tránh</h4>
+                  <ul><li>Trà đặc, cà phê lúc bụng rỗng</li><li>Đồ ăn sống lạnh, nước đá</li><li>Thức khuya sau 23h (giờ Can Đởm tàng huyết)</li></ul>
+                </div>
+              </div>
+            </article>
+    <div class="lock-gate" id="lock-gate-box">
+      <div style="font-size:32px; margin-bottom:8px;">🔐</div>
+      <h3>Bản Xem Thử Miễn Phí (Đang Khóa 6 Thể Chất & Lộ Trình 28 Ngày)</h3>
+      <p style="color:var(--muted); max-width:620px; margin:0 auto 12px; font-size:13.5px;">
+        Bạn đang xem trước Thể Chất Huyết Hư. Để mở khóa toàn bộ 7 thể chất (Khí Hư, Âm Hư, Dương Hư, Huyết Ứ, Đàm Thấp, Khí Uất), Kho thực đơn 10+ bài có Audio và File Sổ tay In ấn PDF A4, vui lòng nhập mã kích hoạt hoặc quét VietQR (69.000₫):
+      </p>
+      <div class="unlock-bar">
+        <input type="text" id="unlock-code-input" class="unlock-input" placeholder="Nhập mã đơn hàng hoặc DUONGNHAN28...">
+        <button class="btn" onclick="applyUnlockCode()">Kích Hoạt Ngay</button>
+        <button class="btn btn-outline" onclick="openVietQRModal()">Quét VietQR (69k)</button>
+      </div>
+      <div id="unlock-feedback" style="font-size:13px; margin-top:10px; display:none;"></div>
+    </div>
+
+            
+            <article class="const-card locked-target" id="const-khi_hu">
+              <div class="const-header">
+                <span class="const-badge">KHI_HU</span>
+                <h3>Khí Hư (Năng lượng Tỳ Phế suy giảm)</h3>
+              </div>
+              <p class="const-summary"><strong>Cơ chế cốt lõi:</strong> Người nhanh hụt hơi, giọng nhỏ, da kém săn chắc, dễ đổ mồ hôi vặt.</p>
+              <div class="const-grid">
+                <div>
+                  <h4>Dấu hiệu nhận diện</h4>
+                  <ul><li>Gương mặt thiếu độ căng bóng, cơ mặt dễ chảy xệ</li><li>Sắc mặt trắng bệch hoặc vàng nhạt</li><li>Mí mắt dễ sưng nhẹ buổi sáng</li><li>Hay mệt mỏi dù không làm việc nặng</li><li>Ăn nhanh no, đầy bụng sau ăn</li><li>Dễ cảm lạnh khi đổi thời tiết</li></ul>
+                </div>
+                <div>
+                  <h4>Nguyên tắc & Dược thiện khuyên dùng</h4>
+                  <p><em>Bổ khí – Kiện tỳ – Nâng đỡ cơ biểu.</em></p>
+                  <ul><li>Hoàng kỳ</li><li>Đảng sâm</li><li>Hoài sơn (Củ mài)</li><li>Hạt sen</li><li>Gạo lứt, táo đỏ</li></ul>
+                </div>
+                <div class="avoid-col">
+                  <h4>⚠️ Cấm kỵ / Cần tránh</h4>
+                  <ul><li>Đồ chiên rán nhiều dầu mỡ gây trệ Tỳ</li><li>Nước ngọt có ga, đồ lạnh</li><li>Nhịn ăn sáng</li></ul>
+                </div>
+              </div>
+            </article>
+            
+            <article class="const-card locked-target" id="const-am_hu">
+              <div class="const-header">
+                <span class="const-badge">AM_HU</span>
+                <h3>Âm Hư (Thiếu tân dịch, nóng trong âm ỉ)</h3>
+              </div>
+              <p class="const-summary"><strong>Cơ chế cốt lõi:</strong> Hai gò má dễ ửng đỏ chiều tối, da khô thiếu nước, lòng bàn tay chân ấm nóng.</p>
+              <div class="const-grid">
+                <div>
+                  <h4>Dấu hiệu nhận diện</h4>
+                  <ul><li>Da khô căng từ bên trong, dễ bong tróc vùng mũi má</li><li>Môi khô, dễ nứt nẻ, sắc mặt hơi đỏ về chiều</li><li>Dễ nổi mụn nhỏ li ti do nhiệt độc tích tụ</li><li>Lòng bàn tay, bàn chân ấm nóng (ngũ tâm phiền nhiệt)</li><li>Miệng họng khô, thích uống nước mát</li><li>Khó ngủ sâu, hay mơ, dễ bốc hỏa ở tuổi 35+</li></ul>
+                </div>
+                <div>
+                  <h4>Nguyên tắc & Dược thiện khuyên dùng</h4>
+                  <p><em>Tư âm – Nhuận táo – Thanh nhiệt dịu nhẹ.</em></p>
+                  <ul><li>Mạch môn</li><li>Ngọc trúc</li><li>Bách hợp</li><li>Nấm tuyết (Ngân nhĩ)</li><li>Lê hấp, kỷ tử, hạt chia</li></ul>
+                </div>
+                <div class="avoid-col">
+                  <h4>⚠️ Cấm kỵ / Cần tránh</h4>
+                  <ul><li>Đồ cay nóng (ớt, tiêu, gừng khô lượng nhiều)</li><li>Đồ nướng, rượu bia</li><li>Xông hơi quá lâu làm mất tân dịch</li></ul>
+                </div>
+              </div>
+            </article>
+            
+            <article class="const-card locked-target" id="const-duong_hu">
+              <div class="const-header">
+                <span class="const-badge">DUONG_HU</span>
+                <h3>Dương Hư (Thiếu hơi ấm ôn煦 cơ thể)</h3>
+              </div>
+              <p class="const-summary"><strong>Cơ chế cốt lõi:</strong> Tay chân lạnh quanh năm, sợ gió lạnh, sắc mặt trắng, dễ phù nhẹ và đau bụng kỳ kinh.</p>
+              <div class="const-grid">
+                <div>
+                  <h4>Dấu hiệu nhận diện</h4>
+                  <ul><li>Sắc mặt trắng sáng nhưng thiếu huyết sắc hồng</li><li>Quầng mắt hơi sẫm, mặt dễ tích nước buổi sáng</li><li>Môi nhạt hoặc hơi tím nhẹ khi trời lạnh</li><li>Bàn tay bàn chân lạnh, mùa hè ngồi điều hòa dễ lạnh sống lưng</li><li>Ăn đồ mát/sống lạnh dễ đau bụng, đi ngoài</li><li>Đau bụng kinh âm ỉ, chườm ấm thì dễ chịu</li></ul>
+                </div>
+                <div>
+                  <h4>Nguyên tắc & Dược thiện khuyên dùng</h4>
+                  <p><em>Ôn dương – Tán hàn – Thông kinh hoạt lạc.</em></p>
+                  <ul><li>Gừng già (Sinh khương/Can khương)</li><li>Quế chi / Nhục quế</li><li>Đường nâu nguyên chất</li><li>Long nhãn, táo đỏ, kỷ tử</li></ul>
+                </div>
+                <div class="avoid-col">
+                  <h4>⚠️ Cấm kỵ / Cần tránh</h4>
+                  <ul><li>Trà xanh đặc, khổ qua, rau má sống lượng nhiều</li><li>Nước đá, kem lạnh, trái cây lấy trực tiếp từ tủ lạnh</li><li>Ngâm chân nước lạnh hoặc tắm đêm</li></ul>
+                </div>
+              </div>
+            </article>
+            
+            <article class="const-card locked-target" id="const-huyet_u">
+              <div class="const-header">
+                <span class="const-badge">HUYET_U</span>
+                <h3>Huyết Ứ (Tuần hoàn khí huyết kém lưu thông)</h3>
+              </div>
+              <p class="const-summary"><strong>Cơ chế cốt lõi:</strong> Da dễ sạm nám, quầng mắt đậm, môi thâm, đau bụng kinh kèm cục máu đông.</p>
+              <div class="const-grid">
+                <div>
+                  <h4>Dấu hiệu nhận diện</h4>
+                  <ul><li>Đốm nâu, nám mảng hoặc vết thâm mụn rất lâu mờ</li><li>Môi hơi sẫm màu, quầng thâm mắt rõ</li><li>Sắc da tối màu, kém tươi nhuận</li><li>Đau bụng dữ dội ngày đầu kỳ kinh, máu kinh sẫm màu</li><li>Vai gáy dễ căng cứng, tê mỏi tay chân khi ngồi lâu</li><li>Dễ bầm tím dưới da</li></ul>
+                </div>
+                <div>
+                  <h4>Nguyên tắc & Dược thiện khuyên dùng</h4>
+                  <p><em>Hoạt huyết – Hóa ứ – Làm sáng sắc diện.</em></p>
+                  <ul><li>Nụ hoa hồng (Mai khôi hoa)</li><li>Đan sâm / Đương quy</li><li>Sơn tra (Táo mèo)</li><li>Nghệ vàng, đường đỏ, kỷ tử</li></ul>
+                </div>
+                <div class="avoid-col">
+                  <h4>⚠️ Cấm kỵ / Cần tránh</h4>
+                  <ul><li>Đồ ăn quá lạnh làm ngưng trệ huyết mạch</li><li>Ngồi bất động liên tục > 2 giờ không vận động</li><li>Đồ ăn nhiều đường tinh luyện và mỡ bão hòa</li></ul>
+                </div>
+              </div>
+            </article>
+            
+            <article class="const-card locked-target" id="const-dam_thap">
+              <div class="const-header">
+                <span class="const-badge">DAM_THAP</span>
+                <h3>Đàm Thấp / Thấp Nhiệt (Tích nước, dầu mụn, nặng nề)</h3>
+              </div>
+              <p class="const-summary"><strong>Cơ chế cốt lõi:</strong> Da đổ dầu nhiều, dễ lên mụn bọc/mụn ẩn, người nặng nề, dễ tích mỡ bụng dưới.</p>
+              <div class="const-grid">
+                <div>
+                  <h4>Dấu hiệu nhận diện</h4>
+                  <ul><li>Vùng chữ T bóng dầu, lỗ chân lông to</li><li>Dễ nổi mụn viêm, mụn ẩn vùng cằm và quai hàm</li><li>Mặt và mí mắt dễ phù nhẹ, cảm giác nặng mặt</li><li>Người nặng nề, uể oải sau bữa trưa</li><li>Dễ tích mỡ bụng dưới dù ăn không nhiều</li><li>Rêu lưỡi dày, miệng hơi dính hoặc đắng nhẹ</li></ul>
+                </div>
+                <div>
+                  <h4>Nguyên tắc & Dược thiện khuyên dùng</h4>
+                  <p><em>Kiện tỳ – Trừ thấp – Thanh lọc dầu thừa.</em></p>
+                  <ul><li>Ý dĩ (Bo bo)</li><li>Đậu đỏ nhỏ hạt (Xích tiểu đậu)</li><li>Vỏ quýt lâu năm (Trần bì)</li><li>Phục linh, trà lá sen, bí đao</li></ul>
+                </div>
+                <div class="avoid-col">
+                  <h4>⚠️ Cấm kỵ / Cần tránh</h4>
+                  <ul><li>Trà sữa, bánh ngọt, phô mai, đồ nếp</li><li>Các bài thuốc đại bổ nhiều đường/mật ong đặc</li><li>Ăn tối quá muộn sau 20h30</li></ul>
+                </div>
+              </div>
+            </article>
+            
+            <article class="const-card locked-target" id="const-khi_uat">
+              <div class="const-header">
+                <span class="const-badge">KHI_UAT</span>
+                <h3>Khí Uất (Căng thẳng làm Can khí uất kết)</h3>
+              </div>
+              <p class="const-summary"><strong>Cơ chế cốt lõi:</strong> Hay thở dài, căng tức ngực sườn trước kỳ kinh, nám hai bên gò má, khó ngủ do suy nghĩ.</p>
+              <div class="const-grid">
+                <div>
+                  <h4>Dấu hiệu nhận diện</h4>
+                  <ul><li>Sắc mặt lúc sáng lúc xỉn theo tâm trạng và giấc ngủ</li><li>Dễ xuất hiện nám cánh bướm hai bên gò má</li><li>Nếp nhăn vùng ấn đường (giữa hai chân mày)</li><li>Hay thở dài vô thức, cảm giác nghẹn nhẹ ở cổ họng</li><li>Căng tức ngực và dễ cáu gắt 5–7 ngày trước kỳ kinh</li><li>Đầu óc khó tắt suy nghĩ khi nằm xuống giường</li></ul>
+                </div>
+                <div>
+                  <h4>Nguyên tắc & Dược thiện khuyên dùng</h4>
+                  <p><em>Sơ can – Giải uất – Điều hòa khí huyết.</em></p>
+                  <ul><li>Nụ hoa hồng</li><li>Hoa cúc chi</li><li>Trần bì (Vỏ quýt)</li><li>Hoa nhài, kỷ tử, táo đỏ</li></ul>
+                </div>
+                <div class="avoid-col">
+                  <h4>⚠️ Cấm kỵ / Cần tránh</h4>
+                  <ul><li>Cà phê đậm khi đang căng thẳng</li><li>Bỏ bữa hoặc ăn uống thất thường khi làm việc</li><li>Kìm nén cảm xúc và thức khuya xem màn hình</li></ul>
+                </div>
+              </div>
+            </article>
+            
+  </section>
+
+  <section class="section-box" id="recipes">
+    <h2>2. Kho Thực Đơn Dược Thiện Định Lượng (Tích Hợp Audio Nghe Khi Nấu)</h2>
+    <div class="filter-bar">
+      <select id="constFilter" onchange="filterHandbookRecipes()">
+        <option value="all">-- Tất cả 7 Thể Chất --</option>
+        <option value="khi_hu">Khí Hư (Mệt mỏi, hụt hơi)</option>
+        <option value="huyet_hu">Huyết Hư (Da xanh, rụng tóc, ngủ nông)</option>
+        <option value="duong_hu">Dương Hư (Tay chân lạnh, đau bụng kinh)</option>
+        <option value="am_hu">Âm Hư (Nóng trong, khô da, bốc hỏa)</option>
+        <option value="dam_thap">Đàm Thấp (Tích nước, da dầu, nặng người)</option>
+        <option value="thap_nhiet">Thấp Nhiệt (Mụn viêm đỏ, miệng đắng)</option>
+        <option value="khi_uat_huyet_u">Khí Uất / Huyết Ứ (Stress, nám sạm)</option>
+      </select>
+      <select id="catFilter" onchange="filterHandbookRecipes()">
+        <option value="all">-- Tất cả Nhóm Món --</option>
+        <option value="Trà Dưỡng Nhan">Trà Dưỡng Nhan</option>
+        <option value="Cháo Dưỡng Sinh">Cháo Dưỡng Sinh</option>
+        <option value="Canh Thực Dưỡng">Canh Thực Dưỡng</option>
+        <option value="Chè Cổ Truyền">Chè Cổ Truyền</option>
+        <option value="Ngũ Cốc & Sữa Hạt">Ngũ Cốc & Sữa Hạt</option>
+      </select>
+      <input type="text" id="kwFilter" placeholder="Tìm nguyên liệu, triệu chứng (VD: táo đỏ, rụng tóc, mụn, mất ngủ)..." oninput="filterHandbookRecipes()">
+    </div>
+    <div class="recipe-grid" id="handbookRecipeGrid">
+      
+            <div class="recipe-item" data-constitution="khi_hu" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Khí Hư</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#KH-01</span>
+              </div>
+              <h4>Trà Hoàng Kỳ Táo Đỏ Kỷ Tử (Bổ Khí Nâng Cơ)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Hoàng kỳ 8g, Táo đỏ Tân Cương 4 quả (bỏ hạt), Kỷ tử 6g, Gừng tươi 1 lát mỏng, 400ml nước sôi.</p>
+              <p><strong>Cách chế biến:</strong> Tráng nhanh dược liệu bằng nước ấm. Hãm trong bình giữ nhiệt 20 phút, uống ấm vào buổi sáng sau ăn 30 phút.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Bổ trung ích khí, giảm mệt mỏi hụt hơi, cải thiện sắc mặt nhợt nhạt và chảy xệ cơ mặt.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Không uống khi đang sốt cao, viêm họng cấp hoặc huyết áp đang tăng cao.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Trà Hoàng Kỳ Táo Đỏ Kỷ Tử (Bổ Khí Nâng Cơ), dành cho thể chất Khí Hư. Nguyên liệu gồm: Hoàng kỳ 8g, Táo đỏ Tân Cương 4 quả (bỏ hạt), Kỷ tử 6g, Gừng tươi 1 lát mỏng, 400ml nước sôi. Cách chế biến: Tráng nhanh dược liệu bằng nước ấm. Hãm trong bình giữ nhiệt 20 phút, uống ấm vào buổi sáng sau ăn 30 phút. Công dụng: Bổ trung ích khí, giảm mệt mỏi hụt hơi, cải thiện sắc mặt nhợt nhạt và chảy xệ cơ mặt. Lưu ý chống chỉ định: Không uống khi đang sốt cao, viêm họng cấp hoặc huyết áp đang tăng cao.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="khi_hu" data-category="Cháo Dưỡng Sinh">
+              <div class="recipe-top">
+                <span class="tag-const">Khí Hư</span>
+                <span class="tag-cat">Cháo Dưỡng Sinh</span>
+                <span class="tag-code">#KH-02</span>
+              </div>
+              <h4>Cháo Sơn Dược Hạt Sen Long Nhãn (Kiện Tỳ Dưỡng Khí)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Hoài sơn (Sơn dược) khô 15g, Hạt sen 15g, Long nhãn 8g, Gạo tẻ 40g.</p>
+              <p><strong>Cách chế biến:</strong> Ngâm hoài sơn và hạt sen 30 phút. Ninh cùng gạo tẻ 45 phút đến khi nhừ, thêm long nhãn 5 phút cuối.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Kiện tỳ ích vị, giúp hấp thu dinh dưỡng tốt, giảm chướng bụng sau ăn, da dẻ hồng hào săn chắc.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Người tiểu đường hoặc đang táo bón nhiệt cần giảm lượng long nhãn.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Cháo Sơn Dược Hạt Sen Long Nhãn (Kiện Tỳ Dưỡng Khí), dành cho thể chất Khí Hư. Nguyên liệu gồm: Hoài sơn (Sơn dược) khô 15g, Hạt sen 15g, Long nhãn 8g, Gạo tẻ 40g. Cách chế biến: Ngâm hoài sơn và hạt sen 30 phút. Ninh cùng gạo tẻ 45 phút đến khi nhừ, thêm long nhãn 5 phút cuối. Công dụng: Kiện tỳ ích vị, giúp hấp thu dinh dưỡng tốt, giảm chướng bụng sau ăn, da dẻ hồng hào săn chắc. Lưu ý chống chỉ định: Người tiểu đường hoặc đang táo bón nhiệt cần giảm lượng long nhãn.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="khi_hu" data-category="Canh Thực Dưỡng">
+              <div class="recipe-top">
+                <span class="tag-const">Khí Hư</span>
+                <span class="tag-cat">Canh Thực Dưỡng</span>
+                <span class="tag-code">#KH-03</span>
+              </div>
+              <h4>Canh Gà Ác Hầm Đảng Sâm Kỷ Tử</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Nửa con gà ác (hoặc 150g ức gà ta), Đảng sâm 10g, Kỷ tử 8g, Táo đỏ 4 quả, 2 lát gừng.</p>
+              <p><strong>Cách chế biến:</strong> Chần sơ gà với gừng, sau đó tiềm cách thủy cùng đảng sâm, táo đỏ 60 phút, rắc kỷ tử trước khi tắt bếp.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Đại bổ nguyên khí, phục hồi thể lực sau ốm hoặc sau kỳ kinh nguyệt, chống lão hóa sớm.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Không dùng khi đang cảm cúm phong nhiệt hoặc đầy bụng khó tiêu cấp.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Canh Gà Ác Hầm Đảng Sâm Kỷ Tử, dành cho thể chất Khí Hư. Nguyên liệu gồm: Nửa con gà ác (hoặc 150g ức gà ta), Đảng sâm 10g, Kỷ tử 8g, Táo đỏ 4 quả, 2 lát gừng. Cách chế biến: Chần sơ gà với gừng, sau đó tiềm cách thủy cùng đảng sâm, táo đỏ 60 phút, rắc kỷ tử trước khi tắt bếp. Công dụng: Đại bổ nguyên khí, phục hồi thể lực sau ốm hoặc sau kỳ kinh nguyệt, chống lão hóa sớm. Lưu ý chống chỉ định: Không dùng khi đang cảm cúm phong nhiệt hoặc đầy bụng khó tiêu cấp.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="khi_hu" data-category="Ngũ Cốc & Sữa Hạt">
+              <div class="recipe-top">
+                <span class="tag-const">Khí Hư</span>
+                <span class="tag-cat">Ngũ Cốc & Sữa Hạt</span>
+                <span class="tag-code">#KH-04</span>
+              </div>
+              <h4>Sữa Hạt Kê Đậu Đỏ Táo Đỏ Ấm</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Hạt kê vàng 25g, Đậu đỏ 20g, Táo đỏ bỏ hạt 4 quả, 500ml nước lọc.</p>
+              <p><strong>Cách chế biến:</strong> Ngâm đậu đỏ 4 tiếng, nấu bằng máy làm sữa hạt chế độ sữa thảo mộc 25 phút, uống ấm buổi sáng.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Bổ khí kiện tỳ, êm dạ dày, thay thế trà sữa lạnh gây hại tỳ vị.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Tránh thêm đường tinh luyện; người đầy hơi nặng chỉ uống 150ml/lần.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Sữa Hạt Kê Đậu Đỏ Táo Đỏ Ấm, dành cho thể chất Khí Hư. Nguyên liệu gồm: Hạt kê vàng 25g, Đậu đỏ 20g, Táo đỏ bỏ hạt 4 quả, 500ml nước lọc. Cách chế biến: Ngâm đậu đỏ 4 tiếng, nấu bằng máy làm sữa hạt chế độ sữa thảo mộc 25 phút, uống ấm buổi sáng. Công dụng: Bổ khí kiện tỳ, êm dạ dày, thay thế trà sữa lạnh gây hại tỳ vị. Lưu ý chống chỉ định: Tránh thêm đường tinh luyện; người đầy hơi nặng chỉ uống 150ml/lần.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="huyet_hu" data-category="Chè Cổ Truyền">
+              <div class="recipe-top">
+                <span class="tag-const">Huyết Hư</span>
+                <span class="tag-cat">Chè Cổ Truyền</span>
+                <span class="tag-code">#HH-01</span>
+              </div>
+              <h4>Chè Ngũ Hồng Bổ Huyết Nhuận Sắc (5 Vị Đỏ)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Đậu đỏ 25g, Lạc đỏ (đậu phộng vỏ đỏ) 15g, Táo đỏ 5 quả, Kỷ tử 8g, Đường đỏ nguyên chất 8g.</p>
+              <p><strong>Cách chế biến:</strong> Ngâm đậu đỏ 2 giờ. Ninh đậu đỏ, lạc đỏ và táo đỏ 40 phút cho mềm, thêm kỷ tử và đường đỏ đun thêm 5 phút.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Dưỡng huyết điều kinh, làm hồng môi và má, giảm rụng tóc và khô da sau kỳ kinh.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Người đang có đờm thấp nặng, mụn bọc sưng đỏ hoặc đường huyết cao không thêm đường đỏ.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Chè Ngũ Hồng Bổ Huyết Nhuận Sắc (5 Vị Đỏ), dành cho thể chất Huyết Hư. Nguyên liệu gồm: Đậu đỏ 25g, Lạc đỏ (đậu phộng vỏ đỏ) 15g, Táo đỏ 5 quả, Kỷ tử 8g, Đường đỏ nguyên chất 8g. Cách chế biến: Ngâm đậu đỏ 2 giờ. Ninh đậu đỏ, lạc đỏ và táo đỏ 40 phút cho mềm, thêm kỷ tử và đường đỏ đun thêm 5 phút. Công dụng: Dưỡng huyết điều kinh, làm hồng môi và má, giảm rụng tóc và khô da sau kỳ kinh. Lưu ý chống chỉ định: Người đang có đờm thấp nặng, mụn bọc sưng đỏ hoặc đường huyết cao không thêm đường đỏ.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="huyet_hu" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Huyết Hư</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#HH-02</span>
+              </div>
+              <h4>Trà Long Nhãn Kỷ Tử Hoa Hồng Đỏ</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Long nhãn 8g, Kỷ tử 8g, Nụ hoa hồng đỏ sấy lạnh 4 nụ, Táo đỏ thái lát 3 quả.</p>
+              <p><strong>Cách chế biến:</strong> Hãm với 350ml nước sôi 90°C trong 10-15 phút. Uống ấm buổi chiều giúp an thần dưỡng huyết.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Bổ tâm tỳ huyết, cải thiện mất ngủ hay quên, giảm quầng thâm mắt do thiếu máu.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Phụ nữ mang thai và người đang nhiệt miệng, chảy máu cam không dùng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Trà Long Nhãn Kỷ Tử Hoa Hồng Đỏ, dành cho thể chất Huyết Hư. Nguyên liệu gồm: Long nhãn 8g, Kỷ tử 8g, Nụ hoa hồng đỏ sấy lạnh 4 nụ, Táo đỏ thái lát 3 quả. Cách chế biến: Hãm với 350ml nước sôi 90°C trong 10-15 phút. Uống ấm buổi chiều giúp an thần dưỡng huyết. Công dụng: Bổ tâm tỳ huyết, cải thiện mất ngủ hay quên, giảm quầng thâm mắt do thiếu máu. Lưu ý chống chỉ định: Phụ nữ mang thai và người đang nhiệt miệng, chảy máu cam không dùng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="huyet_hu" data-category="Cháo Dưỡng Sinh">
+              <div class="recipe-top">
+                <span class="tag-const">Huyết Hư</span>
+                <span class="tag-cat">Cháo Dưỡng Sinh</span>
+                <span class="tag-code">#HH-03</span>
+              </div>
+              <h4>Cháo Đương Quy Trứng Gà Táo Đỏ</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Đương quy lát 4g, Táo đỏ 5 quả, Kỷ tử 6g, Trứng gà ta 1 quả, Gạo tẻ 40g.</p>
+              <p><strong>Cách chế biến:</strong> Sắc đương quy lấy nước nấu cháo cùng táo đỏ, khi cháo chín đập trứng gà khuấy đều và thêm kỷ tử.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Hoạt huyết bổ huyết kinh điển, giảm đau đầu chóng mặt và da khô bong tróc mùa hanh.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Không dùng trong những ngày kinh nguyệt đang ra nhiều hoặc người tiêu chảy phân lỏng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Cháo Đương Quy Trứng Gà Táo Đỏ, dành cho thể chất Huyết Hư. Nguyên liệu gồm: Đương quy lát 4g, Táo đỏ 5 quả, Kỷ tử 6g, Trứng gà ta 1 quả, Gạo tẻ 40g. Cách chế biến: Sắc đương quy lấy nước nấu cháo cùng táo đỏ, khi cháo chín đập trứng gà khuấy đều và thêm kỷ tử. Công dụng: Hoạt huyết bổ huyết kinh điển, giảm đau đầu chóng mặt và da khô bong tróc mùa hanh. Lưu ý chống chỉ định: Không dùng trong những ngày kinh nguyệt đang ra nhiều hoặc người tiêu chảy phân lỏng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="huyet_hu" data-category="Ngũ Cốc & Sữa Hạt">
+              <div class="recipe-top">
+                <span class="tag-const">Huyết Hư</span>
+                <span class="tag-cat">Ngũ Cốc & Sữa Hạt</span>
+                <span class="tag-code">#HH-04</span>
+              </div>
+              <h4>Sữa Đen Tam Hắc (Đậu Đen - Mè Đen - Dâu Tằm)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Đậu đen xanh lòng rang thơm 20g, Mè đen rang 10g, Dâu tằm khô (Tang thầm) 8g, Gạo lứt đen 15g.</p>
+              <p><strong>Cách chế biến:</strong> Xay nấu bằng máy sữa hạt 25 phút với 500ml nước, uống ấm vào buổi sáng hoặc xế chiều.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Bổ can thận tinh huyết, dưỡng tóc đen bóng, giảm gãy rụng và khô móng tay.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Người tỳ vị quá yếu hay đi ngoài phân lỏng chỉ uống lượng nhỏ ấm.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Sữa Đen Tam Hắc (Đậu Đen - Mè Đen - Dâu Tằm), dành cho thể chất Huyết Hư. Nguyên liệu gồm: Đậu đen xanh lòng rang thơm 20g, Mè đen rang 10g, Dâu tằm khô (Tang thầm) 8g, Gạo lứt đen 15g. Cách chế biến: Xay nấu bằng máy sữa hạt 25 phút với 500ml nước, uống ấm vào buổi sáng hoặc xế chiều. Công dụng: Bổ can thận tinh huyết, dưỡng tóc đen bóng, giảm gãy rụng và khô móng tay. Lưu ý chống chỉ định: Người tỳ vị quá yếu hay đi ngoài phân lỏng chỉ uống lượng nhỏ ấm.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="duong_hu" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Dương Hư</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#DH-01</span>
+              </div>
+              <h4>Trà Gừng Táo Đỏ Quế Chi Đường Đỏ (Ôn Dương Tán Hàn)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Gừng già thái sợi 5g, Táo đỏ 4 quả, Quế thanh nhỏ 1g, Đường đỏ 6g.</p>
+              <p><strong>Cách chế biến:</strong> Đun sôi nhỏ lửa gừng, táo đỏ và quế trong 10 phút, hòa đường đỏ. Uống trước 11h trưa.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Làm ấm tử cung và tứ chi, giảm đau bụng kinh do lạnh, tiêu phù nề mặt buổi sáng.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Tuyệt đối không uống sau 17h chiều; người âm hư bốc hỏa, nhiệt miệng không dùng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Trà Gừng Táo Đỏ Quế Chi Đường Đỏ (Ôn Dương Tán Hàn), dành cho thể chất Dương Hư. Nguyên liệu gồm: Gừng già thái sợi 5g, Táo đỏ 4 quả, Quế thanh nhỏ 1g, Đường đỏ 6g. Cách chế biến: Đun sôi nhỏ lửa gừng, táo đỏ và quế trong 10 phút, hòa đường đỏ. Uống trước 11h trưa. Công dụng: Làm ấm tử cung và tứ chi, giảm đau bụng kinh do lạnh, tiêu phù nề mặt buổi sáng. Lưu ý chống chỉ định: Tuyệt đối không uống sau 17h chiều; người âm hư bốc hỏa, nhiệt miệng không dùng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="duong_hu" data-category="Canh Thực Dưỡng">
+              <div class="recipe-top">
+                <span class="tag-const">Dương Hư</span>
+                <span class="tag-cat">Canh Thực Dưỡng</span>
+                <span class="tag-code">#DH-02</span>
+              </div>
+              <h4>Canh Sườn Non Củ Sen Hạt Dẻ Óc Chó</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Sườn non 150g, Củ sen 100g, Hạt dẻ tươi 6 hạt, Nhân óc chó 3 quả, Gừng 3 lát.</p>
+              <p><strong>Cách chế biến:</strong> Hầm sườn non với gừng 25 phút, cho củ sen, hạt dẻ và óc chó vào ninh thêm 25 phút, nêm nhạt.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Ôn bổ thận dương, mạnh lưng gối, giảm tiểu đêm và lạnh bàn chân mùa mưa lạnh.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Người đang sốt, táo bón nhiệt hoặc mỡ máu cao cần hớt sạch váng mỡ.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Canh Sườn Non Củ Sen Hạt Dẻ Óc Chó, dành cho thể chất Dương Hư. Nguyên liệu gồm: Sườn non 150g, Củ sen 100g, Hạt dẻ tươi 6 hạt, Nhân óc chó 3 quả, Gừng 3 lát. Cách chế biến: Hầm sườn non với gừng 25 phút, cho củ sen, hạt dẻ và óc chó vào ninh thêm 25 phút, nêm nhạt. Công dụng: Ôn bổ thận dương, mạnh lưng gối, giảm tiểu đêm và lạnh bàn chân mùa mưa lạnh. Lưu ý chống chỉ định: Người đang sốt, táo bón nhiệt hoặc mỡ máu cao cần hớt sạch váng mỡ.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="duong_hu" data-category="Cháo Dưỡng Sinh">
+              <div class="recipe-top">
+                <span class="tag-const">Dương Hư</span>
+                <span class="tag-cat">Cháo Dưỡng Sinh</span>
+                <span class="tag-code">#DH-03</span>
+              </div>
+              <h4>Cháo Gạo Nếp Cẩm Long Nhãn Gừng Tươi</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Gạo nếp cẩm 35g, Long nhãn 8g, Táo đỏ 4 quả, Gừng tươi 3 lát.</p>
+              <p><strong>Cách chế biến:</strong> Ngâm nếp cẩm 3 giờ, ninh nhừ với gừng và táo đỏ, thêm long nhãn 5 phút trước khi tắt bếp.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Ấm bụng kiện tỳ, cải thiện tuần hoàn ngoại vi giúp gò má hồng tự nhiên.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Người đang viêm dạ dày cấp hoặc trào ngược axit nặng ăn lượng nhỏ.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Cháo Gạo Nếp Cẩm Long Nhãn Gừng Tươi, dành cho thể chất Dương Hư. Nguyên liệu gồm: Gạo nếp cẩm 35g, Long nhãn 8g, Táo đỏ 4 quả, Gừng tươi 3 lát. Cách chế biến: Ngâm nếp cẩm 3 giờ, ninh nhừ với gừng và táo đỏ, thêm long nhãn 5 phút trước khi tắt bếp. Công dụng: Ấm bụng kiện tỳ, cải thiện tuần hoàn ngoại vi giúp gò má hồng tự nhiên. Lưu ý chống chỉ định: Người đang viêm dạ dày cấp hoặc trào ngược axit nặng ăn lượng nhỏ.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="am_hu" data-category="Chè Cổ Truyền">
+              <div class="recipe-top">
+                <span class="tag-const">Âm Hư</span>
+                <span class="tag-cat">Chè Cổ Truyền</span>
+                <span class="tag-code">#AH-01</span>
+              </div>
+              <h4>Chè Tuyết Nhĩ Hạt Sen Bách Hợp (Tư Âm Cấp Ẩm Sâu)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Nấm tuyết (Tuyết nhĩ) khô 8g, Bách hợp khô 10g, Hạt sen 15g, Kỷ tử 6g, Lê tươi 1/2 quả, Đường phèn 6g.</p>
+              <p><strong>Cách chế biến:</strong> Ngâm nở nấm tuyết, cắt nhỏ. Ninh cùng hạt sen, bách hợp 35 phút cho sánh collagen thực vật, thêm lê và kỷ tử đun 10 phút.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Tư âm nhuận phế, cấp ẩm nội sinh cho làn da khô căng, giảm bốc hỏa gò má và mất ngủ.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Người dương hư sợ lạnh, đang cảm lạnh ho đờm loãng trắng hoặc tiêu chảy không dùng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Chè Tuyết Nhĩ Hạt Sen Bách Hợp (Tư Âm Cấp Ẩm Sâu), dành cho thể chất Âm Hư. Nguyên liệu gồm: Nấm tuyết (Tuyết nhĩ) khô 8g, Bách hợp khô 10g, Hạt sen 15g, Kỷ tử 6g, Lê tươi 1/2 quả, Đường phèn 6g. Cách chế biến: Ngâm nở nấm tuyết, cắt nhỏ. Ninh cùng hạt sen, bách hợp 35 phút cho sánh collagen thực vật, thêm lê và kỷ tử đun 10 phút. Công dụng: Tư âm nhuận phế, cấp ẩm nội sinh cho làn da khô căng, giảm bốc hỏa gò má và mất ngủ. Lưu ý chống chỉ định: Người dương hư sợ lạnh, đang cảm lạnh ho đờm loãng trắng hoặc tiêu chảy không dùng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="am_hu" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Âm Hư</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#AH-02</span>
+              </div>
+              <h4>Trà Mạch Môn Ngọc Trúc Kỷ Tử (Dưỡng Âm Sinh Tân)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Mạch môn 6g, Ngọc trúc 6g, Kỷ tử 6g, Hoa cúc vàng 4 bông.</p>
+              <p><strong>Cách chế biến:</strong> Hãm với 400ml nước sôi trong 15 phút. Uống ấm rải rác trong ngày.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Làm dịu họng khô khát nước, giảm nóng trong người, làm sáng da và mờ nếp nhăn li ti do thiếu nước.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Người tỳ vị hư hàn, đầy bụng lạnh bụng tránh dùng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Trà Mạch Môn Ngọc Trúc Kỷ Tử (Dưỡng Âm Sinh Tân), dành cho thể chất Âm Hư. Nguyên liệu gồm: Mạch môn 6g, Ngọc trúc 6g, Kỷ tử 6g, Hoa cúc vàng 4 bông. Cách chế biến: Hãm với 400ml nước sôi trong 15 phút. Uống ấm rải rác trong ngày. Công dụng: Làm dịu họng khô khát nước, giảm nóng trong người, làm sáng da và mờ nếp nhăn li ti do thiếu nước. Lưu ý chống chỉ định: Người tỳ vị hư hàn, đầy bụng lạnh bụng tránh dùng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="am_hu" data-category="Canh Thực Dưỡng">
+              <div class="recipe-top">
+                <span class="tag-const">Âm Hư</span>
+                <span class="tag-cat">Canh Thực Dưỡng</span>
+                <span class="tag-code">#AH-03</span>
+              </div>
+              <h4>Canh Sườn Hầm Củ Mài Ngọc Trúc Kỷ Tử</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Sườn thăn 150g, Củ mài (Hoài sơn tươi) 120g, Ngọc trúc 8g, Kỷ tử 6g.</p>
+              <p><strong>Cách chế biến:</strong> Hầm sườn và ngọc trúc 30 phút, thêm củ mài cắt khúc đun 15 phút, cho kỷ tử vào cuối cùng.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Bổ phế tỳ thận âm mà không gây béo trệ, phục hồi độ đàn hồi da sau thức khuya.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Không cho các gia vị cay nóng như ớt, tiêu nhiều.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Canh Sườn Hầm Củ Mài Ngọc Trúc Kỷ Tử, dành cho thể chất Âm Hư. Nguyên liệu gồm: Sườn thăn 150g, Củ mài (Hoài sơn tươi) 120g, Ngọc trúc 8g, Kỷ tử 6g. Cách chế biến: Hầm sườn và ngọc trúc 30 phút, thêm củ mài cắt khúc đun 15 phút, cho kỷ tử vào cuối cùng. Công dụng: Bổ phế tỳ thận âm mà không gây béo trệ, phục hồi độ đàn hồi da sau thức khuya. Lưu ý chống chỉ định: Không cho các gia vị cay nóng như ớt, tiêu nhiều.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="dam_thap" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Đàm Thấp</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#DT-01</span>
+              </div>
+              <h4>Nước Đậu Đỏ Ý Dĩ Sao Trần Bì (Trừ Thấp Tiêu Phù)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Xích tiểu đậu (đậu đỏ hạt nhỏ dài) 20g, Ý dĩ đã sao vàng 20g, Trần bì (vỏ quýt lâu năm) 3g, Phục linh 8g.</p>
+              <p><strong>Cách chế biến:</strong> Đun sôi nhỏ lửa với 800ml nước trong 30 phút, chắt lấy nước uống ấm thay trà trong ngày (không cần ăn xác nếu đầy bụng).</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Kiện tỳ thẩm thấp, giảm tích nước mặt và bắp chân, giảm dầu nhờn vùng chữ T và mụn ẩn.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Tuyệt đối không dùng cho phụ nữ mang thai (do có Ý dĩ) và người âm hư津 khô táo bón.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Nước Đậu Đỏ Ý Dĩ Sao Trần Bì (Trừ Thấp Tiêu Phù), dành cho thể chất Đàm Thấp. Nguyên liệu gồm: Xích tiểu đậu (đậu đỏ hạt nhỏ dài) 20g, Ý dĩ đã sao vàng 20g, Trần bì (vỏ quýt lâu năm) 3g, Phục linh 8g. Cách chế biến: Đun sôi nhỏ lửa với 800ml nước trong 30 phút, chắt lấy nước uống ấm thay trà trong ngày (không cần ăn xác nếu đầy bụng). Công dụng: Kiện tỳ thẩm thấp, giảm tích nước mặt và bắp chân, giảm dầu nhờn vùng chữ T và mụn ẩn. Lưu ý chống chỉ định: Tuyệt đối không dùng cho phụ nữ mang thai (do có Ý dĩ) và người âm hư津 khô táo bón.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="dam_thap" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Đàm Thấp</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#DT-02</span>
+              </div>
+              <h4>Trà Lá Sen Sơn Tra Trần Bì (Thanh Nhẹ Giảm Mỡ Nội Tạng)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Lá sen khô (Hà diệp) 5g, Sơn tra khô 5g, Trần bì 3g.</p>
+              <p><strong>Cách chế biến:</strong> Hãm với 400ml nước sôi 15 phút, uống sau bữa trưa nhiều dầu mỡ 30 phút.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Tiêu thực hóa đàm, giảm cảm giác nặng đầu buồn ngủ sau ăn trưa, hỗ trợ vòng eo thon gọn.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Không uống lúc đói cồn cào hoặc người đau dạ dày dư axit nặng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Trà Lá Sen Sơn Tra Trần Bì (Thanh Nhẹ Giảm Mỡ Nội Tạng), dành cho thể chất Đàm Thấp. Nguyên liệu gồm: Lá sen khô (Hà diệp) 5g, Sơn tra khô 5g, Trần bì 3g. Cách chế biến: Hãm với 400ml nước sôi 15 phút, uống sau bữa trưa nhiều dầu mỡ 30 phút. Công dụng: Tiêu thực hóa đàm, giảm cảm giác nặng đầu buồn ngủ sau ăn trưa, hỗ trợ vòng eo thon gọn. Lưu ý chống chỉ định: Không uống lúc đói cồn cào hoặc người đau dạ dày dư axit nặng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="dam_thap" data-category="Canh Thực Dưỡng">
+              <div class="recipe-top">
+                <span class="tag-const">Đàm Thấp</span>
+                <span class="tag-cat">Canh Thực Dưỡng</span>
+                <span class="tag-code">#DT-03</span>
+              </div>
+              <h4>Canh Bí Đao Ý Dĩ Nấm Hương</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Bí đao xanh (cả vỏ rửa sạch) 200g, Ý dĩ sao 15g, Nấm hương 4 tai, Gừng 2 lát.</p>
+              <p><strong>Cách chế biến:</strong> Ninh ý dĩ và nấm hương 25 phút, cho bí đao và gừng vào nấu thêm 10 phút, nêm thanh đạm.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Lợi thủy tiêu thũng, thanh lọc da dầu và giảm sưng mặt buổi sáng.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Phụ nữ mang thai bỏ ý dĩ; người huyết áp thấp nặng không ăn quá nhiều bí đao.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Canh Bí Đao Ý Dĩ Nấm Hương, dành cho thể chất Đàm Thấp. Nguyên liệu gồm: Bí đao xanh (cả vỏ rửa sạch) 200g, Ý dĩ sao 15g, Nấm hương 4 tai, Gừng 2 lát. Cách chế biến: Ninh ý dĩ và nấm hương 25 phút, cho bí đao và gừng vào nấu thêm 10 phút, nêm thanh đạm. Công dụng: Lợi thủy tiêu thũng, thanh lọc da dầu và giảm sưng mặt buổi sáng. Lưu ý chống chỉ định: Phụ nữ mang thai bỏ ý dĩ; người huyết áp thấp nặng không ăn quá nhiều bí đao.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="thap_nhiet" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Thấp Nhiệt</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#TN-01</span>
+              </div>
+              <h4>Trà Hoa Cúc Kim Ngân Bồ Công Anh (Thanh Nhiệt Giảm Mụn Viêm)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Hoa cúc chi 5g, Kim ngân hoa 4g, Bồ công anh khô 4g, Cam thảo 2 lát.</p>
+              <p><strong>Cách chế biến:</strong> Hãm với 400ml nước sôi 10 phút. Chỉ uống liên tục 5-7 ngày trong đợt bùng mụn đỏ hoặc nóng nhiệt, sau đó nghỉ.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Thanh nhiệt giải độc, làm dịu mụn sưng viêm, giảm miệng đắng và mùi cơ thể.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Không uống dài ngày quá 2 tuần liên tục vì tính hàn dễ làm yếu tỳ vị; người bụng lạnh đi lỏng không dùng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Trà Hoa Cúc Kim Ngân Bồ Công Anh (Thanh Nhiệt Giảm Mụn Viêm), dành cho thể chất Thấp Nhiệt. Nguyên liệu gồm: Hoa cúc chi 5g, Kim ngân hoa 4g, Bồ công anh khô 4g, Cam thảo 2 lát. Cách chế biến: Hãm với 400ml nước sôi 10 phút. Chỉ uống liên tục 5-7 ngày trong đợt bùng mụn đỏ hoặc nóng nhiệt, sau đó nghỉ. Công dụng: Thanh nhiệt giải độc, làm dịu mụn sưng viêm, giảm miệng đắng và mùi cơ thể. Lưu ý chống chỉ định: Không uống dài ngày quá 2 tuần liên tục vì tính hàn dễ làm yếu tỳ vị; người bụng lạnh đi lỏng không dùng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="thap_nhiet" data-category="Chè Cổ Truyền">
+              <div class="recipe-top">
+                <span class="tag-const">Thấp Nhiệt</span>
+                <span class="tag-cat">Chè Cổ Truyền</span>
+                <span class="tag-code">#TN-02</span>
+              </div>
+              <h4>Chè Đậu Xanh Nha Đam Củ Mã Thầy (Thanh Thấp Hạ Hỏa)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Đậu xanh nguyên vỏ 30g, Củ mã thầy (năng) 4 củ cắt hạt lựu, Nha đam sơ chế sạch nhớt 30g, Đường phèn 5g.</p>
+              <p><strong>Cách chế biến:</strong> Đun đậu xanh và mã thầy 25 phút vừa chín tới (nước còn trong xanh), thêm nha đam và đường phèn đun sôi lại 2 phút.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Giải nhiệt độc mùa hè, giảm dầu bóng nhờn và mẩn đỏ trên da.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Người dương hư lạnh bụng, phụ nữ đang hành kinh không dùng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Chè Đậu Xanh Nha Đam Củ Mã Thầy (Thanh Thấp Hạ Hỏa), dành cho thể chất Thấp Nhiệt. Nguyên liệu gồm: Đậu xanh nguyên vỏ 30g, Củ mã thầy (năng) 4 củ cắt hạt lựu, Nha đam sơ chế sạch nhớt 30g, Đường phèn 5g. Cách chế biến: Đun đậu xanh và mã thầy 25 phút vừa chín tới (nước còn trong xanh), thêm nha đam và đường phèn đun sôi lại 2 phút. Công dụng: Giải nhiệt độc mùa hè, giảm dầu bóng nhờn và mẩn đỏ trên da. Lưu ý chống chỉ định: Người dương hư lạnh bụng, phụ nữ đang hành kinh không dùng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="khi_uat_huyet_u" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Khí Uất / Huyết Ứ</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#KU-01</span>
+              </div>
+              <h4>Trà Tam Hoa Giải Uất (Hoa Hồng - Hoa Nhài - Phật Thủ)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Nụ hoa hồng 5 nụ, Hoa nhài khô 3g, Phật thủ khô (hoặc Trần bì) 3g, Sơn tra 3 lát.</p>
+              <p><strong>Cách chế biến:</strong> Hãm với 350ml nước 85-90°C trong 10 phút. Thưởng trà chậm rãi vào buổi chiều khi căng thẳng công việc.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Sơ can giải uất, hành khí hoạt huyết, giảm tức ngực thở dài, làm mờ vết nám sạm do stress và đau tức ngực trước kỳ kinh.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Phụ nữ mang thai và người rong kinh lượng nhiều không dùng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Trà Tam Hoa Giải Uất (Hoa Hồng - Hoa Nhài - Phật Thủ), dành cho thể chất Khí Uất / Huyết Ứ. Nguyên liệu gồm: Nụ hoa hồng 5 nụ, Hoa nhài khô 3g, Phật thủ khô (hoặc Trần bì) 3g, Sơn tra 3 lát. Cách chế biến: Hãm với 350ml nước 85-90°C trong 10 phút. Thưởng trà chậm rãi vào buổi chiều khi căng thẳng công việc. Công dụng: Sơ can giải uất, hành khí hoạt huyết, giảm tức ngực thở dài, làm mờ vết nám sạm do stress và đau tức ngực trước kỳ kinh. Lưu ý chống chỉ định: Phụ nữ mang thai và người rong kinh lượng nhiều không dùng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="khi_uat_huyet_u" data-category="Trà Dưỡng Nhan">
+              <div class="recipe-top">
+                <span class="tag-const">Khí Uất / Huyết Ứ</span>
+                <span class="tag-cat">Trà Dưỡng Nhan</span>
+                <span class="tag-code">#KU-02</span>
+              </div>
+              <h4>Trà Sơn Tra Đan Sâm Hoa Hồng (Hoạt Huyết Sáng Nám)</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Sơn tra khô 6g, Hoa hồng đỏ 5 nụ, Táo đỏ 3 quả, Đường đỏ 4g (uống 5 ngày trước kỳ kinh).</p>
+              <p><strong>Cách chế biến:</strong> Đun sôi nhẹ 10 phút hoặc hãm bình giữ nhiệt 15 phút, uống ấm.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Hóa ứ thông kinh, giảm máu cục sẫm màu và đau bụng kinh, cải thiện sắc da xỉn màu đốm nâu.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Ngưng uống ngay khi kinh nguyệt đã ra nhiều; phụ nữ có thai tuyệt đối không dùng.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Trà Sơn Tra Đan Sâm Hoa Hồng (Hoạt Huyết Sáng Nám), dành cho thể chất Khí Uất / Huyết Ứ. Nguyên liệu gồm: Sơn tra khô 6g, Hoa hồng đỏ 5 nụ, Táo đỏ 3 quả, Đường đỏ 4g (uống 5 ngày trước kỳ kinh). Cách chế biến: Đun sôi nhẹ 10 phút hoặc hãm bình giữ nhiệt 15 phút, uống ấm. Công dụng: Hóa ứ thông kinh, giảm máu cục sẫm màu và đau bụng kinh, cải thiện sắc da xỉn màu đốm nâu. Lưu ý chống chỉ định: Ngưng uống ngay khi kinh nguyệt đã ra nhiều; phụ nữ có thai tuyệt đối không dùng.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+            <div class="recipe-item" data-constitution="khi_uat_huyet_u" data-category="Canh Thực Dưỡng">
+              <div class="recipe-top">
+                <span class="tag-const">Khí Uất / Huyết Ứ</span>
+                <span class="tag-cat">Canh Thực Dưỡng</span>
+                <span class="tag-code">#KU-03</span>
+              </div>
+              <h4>Canh Cá Chép Đậu Phụ Nấm Đông Cô Trần Bì</h4>
+              <p><strong>Nguyên liệu định lượng:</strong> Đậu phụ non 150g, Nấm đông cô 5 tai, Trần bì 3g, Hành hoa, Gừng 3 lát.</p>
+              <p><strong>Cách chế biến:</strong> Nấu nước dùng nấm đông cô, trần bì và gừng 15 phút, thêm đậu phụ non đun 5 phút, rắc hành hoa.</p>
+              <p class="benefit-line"><strong>Công dụng dưỡng nhan:</strong> Lý khí khoan trung, nhẹ bụng, hỗ trợ giấc ngủ sâu cho người hay suy nghĩ căng thẳng.</p>
+              <div class="contra-alert"><strong>⚠️ Chống chỉ định:</strong> Dùng ấm vào bữa tối, tránh ăn quá muộn sau 20h.</div>
+              <button class="audio-btn" onclick="speakRecipe(this)" data-speech="Công thức Canh Cá Chép Đậu Phụ Nấm Đông Cô Trần Bì, dành cho thể chất Khí Uất / Huyết Ứ. Nguyên liệu gồm: Đậu phụ non 150g, Nấm đông cô 5 tai, Trần bì 3g, Hành hoa, Gừng 3 lát. Cách chế biến: Nấu nước dùng nấm đông cô, trần bì và gừng 15 phút, thêm đậu phụ non đun 5 phút, rắc hành hoa. Công dụng: Lý khí khoan trung, nhẹ bụng, hỗ trợ giấc ngủ sâu cho người hay suy nghĩ căng thẳng. Lưu ý chống chỉ định: Dùng ấm vào bữa tối, tránh ăn quá muộn sau 20h.">Nghe hướng dẫn Audio (Miễn phí)</button>
+            </div>
+            
+    </div>
+  </section>
+
+  <section class="section-box" id="plan28">
+    <h2>3. Bảng Theo Dõi Lộ Trình 28 Ngày Phục Hồi Khí Huyết (Có thể in ra giấy)</h2>
+    <table class="tracker">
+      <thead>
+        <tr>
+          <th>Tuần</th>
+          <th>Mục tiêu trọng tâm</th>
+          <th>Thói quen Sáng (07:00 - 09:00)</th>
+          <th>Thói quen Chiều (14:00 - 16:30)</th>
+          <th>Thói quen Tối (21:30 - 22:45)</th>
+          <th>Đánh dấu hoàn thành</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tuần 1 (Ngày 1–7)</strong></td>
+          <td>Thanh lọc thói quen gây hại Tỳ Vị & ngưng đồ uống đá lạnh</td>
+          <td>1 cốc nước ấm 250ml + Cháo/Sữa hạt ấm theo thể chất</td>
+          <td>1 bình trà dưỡng nhan đúng thể chất (uống ấm trước 16h30)</td>
+          <td>Ngâm chân nước ấm 40°C trong 15 phút, tắt màn hình trước 22h45</td>
+          <td>☐ N1 ☐ N2 ☐ N3 ☐ N4 ☐ N5 ☐ N6 ☐ N7</td>
+        </tr>
+        <tr class="locked-target">
+          <td><strong>Tuần 2 (Ngày 8–14)</strong></td>
+          <td>Bồi bổ Khí Huyết / Tư Âm / Trừ Thấp chuyên sâu</td>
+          <td>Ăn sáng ấm có ngũ cốc/hoài sơn/táo đỏ</td>
+          <td>Luân phiên 2 bài trà dưỡng nhan + 5 phút thở bụng sơ can</td>
+          <td>2 bữa canh/chè thực dưỡng trong tuần + ngủ sâu trước 23h</td>
+          <td>☐ N8 ☐ N9 ☐ N10 ☐ N11 ☐ N12 ☐ N13 ☐ N14</td>
+        </tr>
+        <tr class="locked-target">
+          <td><strong>Tuần 3 (Ngày 15–21)</strong></td>
+          <td>Điều hòa chu kỳ sinh học & tăng tuần hoàn sắc diện</td>
+          <td>Chải đầu dưỡng sinh 50 cái + bữa sáng ấm</td>
+          <td>Trà hoa/dược thiện theo giai đoạn chu kỳ (trước/sau kinh)</td>
+          <td>Xoa ấm vùng bụng (Quan Nguyên) hoặc lòng bàn chân (Dũng Tuyền)</td>
+          <td>☐ N15 ☐ N16 ☐ N17 ☐ N18 ☐ N19 ☐ N20 ☐ N21</td>
+        </tr>
+        <tr class="locked-target">
+          <td><strong>Tuần 4 (Ngày 22–28)</strong></td>
+          <td>Ổn định nền tảng & đánh giá lại thể chất</td>
+          <td>Duy trì 80% bữa ấm, hạn chế đường tinh luyện</td>
+          <td>Dùng món dưỡng nhan 3-4 lần/tuần theo thời tiết</td>
+          <td>Làm lại bài test 7 thể chất để cập nhật thực đơn tháng mới</td>
+          <td>☐ N22 ☐ N23 ☐ N24 ☐ N25 ☐ N26 ☐ N27 ☐ N28</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Về Tủ Sách Dưỡng Sinh AI</h4>
+        <p>Hệ thống hỗ trợ cá nhân hóa thực dưỡng Đông Y chuẩn 7 thể chất. Tích hợp audio giọng đọc và tài liệu in ấn PDF tiện lợi cho cả gia đình.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Liên Kết Nhanh</h4>
+        <ul>
+          <li><a href="index.html">Trắc Nghiệm 7 Thể Chất (60s)</a></li>
+          <li><a href="#recipes">Kho Thực Đơn Định Lượng & Audio</a></li>
+          <li><a href="#plan28">Lộ Trình 28 Ngày In Ấn (PDF)</a></li>
+          <li><a href="index.html#tro-ly-tra-cuu">Trợ Lý Tra Cứu Triệu Chứng</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Hỗ Trợ & Thanh Toán Tự Động</h4>
+        <ul>
+          <li>Thanh toán tự động: VietQR & Payoneer Quốc Tế</li>
+          <li>Hỗ trợ khách hàng: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a></li>
+          <li>Giao nhận tài liệu: Mở tức thì trên trình duyệt sau khi quét mã</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Tuyên Bố Miễn Trừ Y Khoa</h4>
+        <p style="font-size:0.8rem; line-height:1.5;">Tài liệu mang tính chất giáo dục dưỡng sinh ẩm thực cổ truyền, nâng cao thói quen sinh hoạt. Không thay thế chẩn đoán, toa thuốc hay điều trị của bác sĩ chuyên khoa.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 Tủ Sách Dưỡng Sinh AI • Bảo lưu mọi quyền • Vận hành tự động bởi Money HQ.
+    </div>
+  </div>
+</footer>
+
+<script>
+function filterHandbookRecipes() {
+  const cVal = document.getElementById('constFilter').value;
+  const catVal = document.getElementById('catFilter').value;
+  const kw = document.getElementById('kwFilter').value.trim().toLowerCase();
+  const items = document.querySelectorAll('.recipe-item');
+  items.forEach(el => {
+    const matchConst = (cVal === 'all') || (el.getAttribute('data-constitution') === cVal);
+    const matchCat = (catVal === 'all') || (el.getAttribute('data-category') === catVal);
+    const matchKw = !kw || el.innerText.toLowerCase().includes(kw);
+    el.style.display = (matchConst && matchCat && matchKw) ? 'flex' : 'none';
+  });
+}
+
+function speakRecipe(btn) {
+  if (!('speechSynthesis' in window)) {
+    alert('Trình duyệt của bạn không hỗ trợ đọc giọng nói tự động.');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const text = btn.getAttribute('data-speech');
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'vi-VN';
+  utter.rate = 1.0;
+  btn.innerText = 'Đang đọc Audio... (Bấm để nghe lại)';
+  utter.onend = () => { btn.innerText = 'Nghe hướng dẫn Audio (Miễn phí)'; };
+  window.speechSynthesis.speak(utter);
+}
+
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const c = params.get('constitution');
+  if (c && document.getElementById('constFilter')) {
+    document.getElementById('constFilter').value = c;
+    filterHandbookRecipes();
+  }
+})();
+
+let currentHbMemo = "";
+
+function checkAccess() {
+  const params = new URLSearchParams(window.location.search);
+  const isUnlocked = localStorage.getItem("duong_nhan_unlocked") === "true" || params.get("unlocked") === "true";
+  applyAccessState(isUnlocked);
+}
+
+function applyAccessState(unlocked) {
+  const lockedEls = document.querySelectorAll(".locked-target");
+  const badge = document.getElementById("access-badge");
+  const topbarBtn = document.getElementById("topbar-unlock-btn");
+  const gateBox = document.getElementById("lock-gate-box");
+
+  if (unlocked) {
+    localStorage.setItem("duong_nhan_unlocked", "true");
+    lockedEls.forEach(el => el.classList.remove("locked-blur"));
+    if (badge) {
+      badge.className = "access-pill unlocked";
+      badge.innerHTML = "✅ Đã Mở Khóa Trọn Đời";
+    }
+    if (topbarBtn) topbarBtn.style.display = "none";
+    if (gateBox) {
+      gateBox.style.background = "#f0fdf4";
+      gateBox.style.borderColor = "#16a34a";
+      gateBox.innerHTML = "<h3 style='margin:0; color:#15803d;'>Quyền Truy Cập Bản Đầy Đủ Đã Kích Hoạt Thành Công!</h3><p style='margin:6px 0 0; color:#166534; font-size:13.5px;'>Bạn có thể đọc toàn bộ 7 thể chất, theo dõi 28 ngày và bấm nút [In / Lưu PDF Trọn Bộ (A4)] bất cứ lúc nào.</p>";
+    }
+  } else {
+    lockedEls.forEach(el => el.classList.add("locked-blur"));
+    if (badge) {
+      badge.className = "access-pill locked";
+      badge.innerHTML = "🔒 Bản Xem Thử (Đang Khóa)";
+    }
+    if (topbarBtn) topbarBtn.style.display = "inline-block";
+  }
+}
+
+function applyUnlockCode() {
+  const val = (document.getElementById("unlock-code-input").value || "").trim();
+  const feedback = document.getElementById("unlock-feedback");
+  feedback.style.display = "block";
+  if (val.length >= 4) {
+    feedback.style.color = "#15803d";
+    feedback.textContent = "✅ Mã kích hoạt hợp lệ! Hệ thống đang mở khóa toàn bộ tài liệu...";
+    setTimeout(() => {
+      applyAccessState(true);
+    }, 400);
+  } else {
+    feedback.style.color = "#b91c1c";
+    feedback.textContent = "❌ Vui lòng nhập mã đơn hàng (hoặc mã DUONGNHAN28 / SĐT) để kích hoạt.";
+  }
+}
+
+function triggerPrint() {
+  if (localStorage.getItem("duong_nhan_unlocked") === "true") {
+    window.print();
+  } else {
+    alert("⚠️ Tính năng In / Xuất file PDF A4 chỉ khả dụng sau khi mở khóa bản quyền trọn bộ. Vui lòng quét mã VietQR (69k) hoặc nhập mã kích hoạt.");
+    openVietQRModal();
+  }
+}
+
+function openUnlockGate() {
+  const gate = document.getElementById("lock-gate-box");
+  if (gate) {
+    gate.scrollIntoView({ behavior: 'smooth' });
+    const inp = document.getElementById("unlock-code-input");
+    if (inp) inp.focus();
+  } else {
+    openVietQRModal();
+  }
+}
+
+function openVietQRModal() {
+  const orderId = "DN" + Math.floor(100000 + Math.random() * 900000);
+  currentHbMemo = `DUONGNHAN ${orderId}`;
+  document.getElementById("hb-order-memo").textContent = currentHbMemo;
+  document.getElementById("hb-vietqr-img").src =
+    `https://img.vietqr.io/image/MB-0000000000-compact2.png?amount=69000&addInfo=${encodeURIComponent(currentHbMemo)}&accountName=TU%20SACH%20DUONG%20SINH`;
+  document.getElementById("handbook-checkout-modal").style.display = "flex";
+}
+
+function closeVietQRModal() {
+  document.getElementById("handbook-checkout-modal").style.display = "none";
+}
+
+function confirmPaidInHandbook() {
+  const contact = (document.getElementById("hb-buyer-contact").value || "").trim();
+  localStorage.setItem("duong_nhan_unlocked", "true");
+  localStorage.setItem("duong_nhan_token", currentHbMemo);
+  if (contact) {
+    localStorage.setItem("duong_nhan_contact", contact);
+  }
+  closeVietQRModal();
+  applyAccessState(true);
+}
+
+checkAccess();
+
+</script>
+
+<!-- VIETQR CHECKOUT MODAL IN HANDBOOK -->
+<div class="modal-backdrop" id="handbook-checkout-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeVietQRModal()">&times;</button>
+    <h3 style="margin:0 0 6px 0; color:var(--primary); font-family:'Plus Jakarta Sans', sans-serif;">Mở Khóa Toàn Bộ Cẩm Nang & Sổ Tay PDF</h3>
+    <p style="font-size:13px; color:var(--muted); margin:0 0 14px 0;">Quét mã VietQR (69.000₫) để kích hoạt quyền truy cập trọn đời trọn bộ 7 thể chất & 28 ngày:</p>
+    
+    <div style="background:var(--bg); padding:14px; border-radius:12px; text-align:center; border:1px solid var(--border);">
+      <div style="font-size:12px; color:var(--muted); margin-bottom:6px;">Quét mã VietQR tự động điền số tiền:</div>
+      <img id="hb-vietqr-img" src="" alt="VietQR Payment" style="max-width:200px; border-radius:8px; border:1px solid var(--border); background:#fff; padding:6px;">
+      <div style="font-size:13px; margin-top:8px;">Số tiền: <strong style="color:var(--primary); font-size:16px;">69.000₫</strong> • Nội dung: <code id="hb-order-memo" style="font-weight:700; color:var(--primary);"></code></div>
+    </div>
+
+    <div style="margin:14px 0 10px;">
+      <label style="font-size:12.5px; font-weight:700; color:var(--ink); display:block; margin-bottom:4px;">Nhập Email hoặc SĐT để lưu quyền:</label>
+      <input type="text" id="hb-buyer-contact" placeholder="Email hoặc SĐT Zalo của bạn..." style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:14px;">
+    </div>
+
+    <div style="margin-top:14px; text-align:center;">
+      <button class="btn" style="width:100%; font-size:14px;" onclick="confirmPaidInHandbook()">Tôi Đã Chuyển Khoản • Kích Hoạt Ngay</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

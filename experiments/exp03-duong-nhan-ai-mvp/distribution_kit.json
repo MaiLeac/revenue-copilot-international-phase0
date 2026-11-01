@@ -1,0 +1,38 @@
+{
+  "asset_id": "EXP-03",
+  "product_name": "Cẩm Nang Dưỡng Nhan & Trắc Nghiệm 7 Thể Chất Đông Y",
+  "live_url": "https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/",
+  "pricing": {
+    "vnd": 299000,
+    "usd": 12,
+    "checkout_channels": [
+      "VietQR",
+      "Payoneer"
+    ]
+  },
+  "external_publish_mode": "observe_dry_run",
+  "compliant_acquisition_channels": [
+    {
+      "channel": "Google Search / GitHub Pages Organic SEO",
+      "status": "active_via_sitemap",
+      "target_keywords": [
+        "trắc nghiệm thể chất đông y miễn phí",
+        "thực đơn dưỡng nhan 28 ngày khí hư huyết hư",
+        "trà dưỡng nhan cho dân văn phòng mất ngủ"
+      ]
+    },
+    {
+      "channel": "Facebook Group / Threads Chia Sẻ Chăm Sóc Sức Khỏe Chủ Động (Zero-Spend Value Post)",
+      "status": "observe_dry_run_staged",
+      "hook_title": "Mình vừa tổng hợp bộ Trắc nghiệm 7 Thể chất Đông Y (Khí hư, Huyết hư, Dương hư, Đàm thấp...) chạy ngay trên trình duyệt, không cần cài app",
+      "cta_url": "https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/"
+    },
+    {
+      "channel": "Pinterest / Short-Form Infographic Pin",
+      "status": "observe_dry_run_staged",
+      "hook_title": "Bảng Phân Biệt 7 Thể Chất Đông Y & 14 Bài Trà - Canh Dưỡng Nhan Theo Chu Kỳ",
+      "cta_url": "https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/handbook.html"
+    }
+  ],
+  "generated_at": "2026-11-01T15:45:38+00:00"
+}

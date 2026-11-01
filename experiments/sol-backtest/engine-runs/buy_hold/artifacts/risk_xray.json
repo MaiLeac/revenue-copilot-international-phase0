@@ -1,0 +1,51 @@
+{
+  "inputs": {
+    "symbols": [
+      "SOL-USDT"
+    ],
+    "weights": {
+      "SOL-USDT": 1.0
+    },
+    "aligned_days": 2095,
+    "return_observations": 2094,
+    "first_date": "2021-01-01 16:00:00",
+    "last_date": "2026-09-26 16:00:00"
+  },
+  "concentration": {
+    "hhi": 1.0,
+    "effective_n": 1.0,
+    "top1_weight": 1.0,
+    "top3_weight": 1.0
+  },
+  "volatility": {
+    "daily_vol": 0.05699223901221751,
+    "annualized_vol": 1.0888351974855472,
+    "downside_deviation_annualized": 0.6622430437287247
+  },
+  "drawdown": {
+    "max_drawdown": -0.9629315111778182,
+    "max_drawdown_start": "2021-11-05 16:00:00",
+    "max_drawdown_trough": "2022-12-28 16:00:00"
+  },
+  "tail_risk": {
+    "var_95": 0.07228303026648317,
+    "expected_shortfall_95": 0.10921277408540286,
+    "var_99": 0.1244195608471111,
+    "expected_shortfall_99": 0.1820672005952646,
+    "method": "historical simulation (non-parametric)"
+  },
+  "diversification": {
+    "diversification_ratio": null,
+    "note": "needs at least 2 assets"
+  },
+  "correlation": {
+    "avg_pairwise_abs": null,
+    "max_pair": null,
+    "beta_to_equal_weight": null,
+    "note": "needs at least 2 assets"
+  },
+  "skipped": [],
+  "warnings": [
+    "weights summed to 0.999523; renormalized to 1.0"
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "version": "2026-11-01.v1",
+  "owner": "MaiLeac",
+  "pagination_verified": {
+    "github_owned_repositories_total": 9,
+    "github_starred_repositories_total": 7,
+    "local_clones_and_archives_inspected": 4
+  },
+  "approved_dependencies": {
+    "react_typescript_stack": [
+      {"package": "lucide-react", "version": "^0.546.0", "license": "ISC", "purpose": "Crisp SVG iconography (replaces all UI emojis)"},
+      {"package": "tailwindcss", "version": "^4.1.14", "license": "MIT", "purpose": "Utility styling bound to CSS custom property tokens"},
+      {"package": "motion", "version": "^12.23.24", "license": "MIT", "purpose": "Transform/opacity micro-interactions with reduced-motion fallback"},
+      {"package": "react-qr-code", "version": "^2.2.0", "license": "MIT", "purpose": "Deterministic client-side QR rendering"},
+      {"package": "html-to-image", "version": "^1.11.13", "license": "MIT", "purpose": "Client-side receipt/card image export"},
+      {"package": "jspdf", "version": "^4.2.1", "license": "MIT", "purpose": "Client-side PDF deliverable generation"}
+    ],
+    "static_html_editorial_stack": [
+      {"source": "Google Fonts (Rethink Sans, Newsreader, EB Garamond, JetBrains Mono)", "license": "OFL-1.1", "purpose": "Non-default editorial & technical typography"},
+      {"source": "assets/web_capability_library/tokens.css", "license": "MIT", "purpose": "Hallmark Floor-compliant semantic CSS tokens & anti-slop base rules"}
+    ],
+    "qa_and_visual_verification_stack": [
+      {"package": "playwright", "license": "Apache-2.0", "purpose": "Real headless Chromium rendering, DOM geometry check & screenshot capture"},
+      {"source": "tools/web_quality_gate.py", "license": "MIT", "purpose": "Independent Anti-AI-Slop & Flow-Scout UX Quality Gate"}
+    ]
+  },
+  "resources": [
+    {
+      "id": "STAR-01",
+      "name": "Nutlope/hallmark",
+      "url": "https://github.com/Nutlope/hallmark",
+      "source_type": "github_star",
+      "categories": [
+        "Premium UI components and design systems",
+        "Typography, color systems and visual design references",
+        "Accessibility and usability tools",
+        "AI-assisted design and frontend development tools"
+      ],
+      "provides": "50 material themes, 16 non-waivable Floor Gates against AI-slop (no tracked-cap eyebrows, no transition:all, no purple-blue gradients, no emoji icons, mandatory :root tokens, :focus-visible, prefers-reduced-motion, overflow-x:clip), curated font pairings (fonts.md), and sloplint.mjs / sloplint-render.mjs.",
+      "license": "MIT",
+      "commercial_use": "Allowed without restriction (755 bundled photos carry individual open licenses in photos.json).",
+      "maintenance_status": "Active (44,519 stars, updated 2026-10-29)",
+      "framework_compatibility": "Framework-agnostic (HTML/CSS, React, Next.js, Vite, Tailwind)",
+      "integration_complexity": "Low (CSS tokens + static/DOM lint rules)",
+      "reuse_mode": "direct_reuse",
+      "target_projects": ["Money HQ Storefront & Assets (EXP-02, EXP-03)", "Sisan / Wink Home", "Loser Kingdom"]
+    },
+    {
+      "id": "STAR-02",
+      "name": "alchaincyf/huashu-design",
+      "url": "https://github.com/alchaincyf/huashu-design",
+      "source_type": "github_star",
+      "categories": [
+        "Landing page and website templates",
+        "Animation and micro-interaction libraries",
+        "Charts, data visualization and interactive elements",
+        "AI-assisted design and frontend development tools"
+      ],
+      "provides": "84-style visual reference catalog (design-styles.md), 3-direction exploration gate, GSAP/timeline animation recipes (gsap-recipes.md), typography scale rules (>=2.5x display-to-body ratio, 8pt spacing grid, <=4 core colors), and Python visual linter (scripts/design_lint.py).",
+      "license": "MIT",
+      "commercial_use": "Allowed",
+      "maintenance_status": "Active (28,387 stars, updated 2026-10-30)",
+      "framework_compatibility": "HTML-native, React, Slide Decks, Infographics",
+      "integration_complexity": "Low",
+      "reuse_mode": "adapt_pattern",
+      "target_projects": ["Money HQ Storefront & Assets (EXP-02, EXP-03)", "Sisan / Wink Home", "Loser Kingdom"]
+    },
+    {
+      "id": "STAR-03",
+      "name": "eternity4719/HowToLiveBetter",
+      "url": "https://github.com/eternity4719/HowToLiveBetter",
+      "source_type": "github_star",
+      "categories": [
+        "Landing page and website templates",
+        "Forms, tables, filters and search interfaces",
+        "Product analytics and conversion optimization"
+      ],
+      "provides": "High-trust editorial health & life guide (index.html + selfcheck.html) where every recommendation displays explicit Cost, Benefit, Evidence Grade, and Primary Source, paired with an interactive self-assessment checklist.",
+      "license": "MIT (Code via LICENSE-CODE) / CC-BY-4.0 (Content)",
+      "commercial_use": "Code layout/UX patterns reusable under MIT; content requires attribution.",
+      "maintenance_status": "Active (72,232 stars, updated 2026-10-21)",
+      "framework_compatibility": "Static HTML/CSS/JS",
+      "integration_complexity": "Low",
+      "reuse_mode": "adapt_pattern",
+      "target_projects": ["EXP-03 (Dưỡng Nhan 7-Constitution Web App & Handbook)"]
+    },
+    {
+      "id": "STAR-04",
+      "name": "Vincentwei1021/video-shotcraft",
+      "url": "https://github.com/Vincentwei1021/video-shotcraft",
+      "source_type": "github_star",
+      "categories": [
+        "Animation and micro-interaction libraries",
+        "Image, icon, illustration and asset libraries",
+        "AI-assisted design and frontend development tools"
+      ],
+      "provides": "124 cinematic shot recipe cards, 150 motion previews, beat-synced Remotion promo video templates, and Motion Workbench.",
+      "license": "Apache-2.0",
+      "commercial_use": "Allowed",
+      "maintenance_status": "Active (15,738 stars, updated 2026-10-29)",
+      "framework_compatibility": "TypeScript / React / Remotion",
+      "integration_complexity": "Medium",
+      "reuse_mode": "adapt_pattern",
+      "target_projects": ["Money HQ Organic Video Promo Generation", "Sisan Room Showcase Reels"]
+    },
+    {
+      "id": "STAR-05",
+      "name": "browser-use/browser-use",
+      "url": "https://github.com/browser-use/browser-use",
+      "source_type": "github_star",
+      "categories": [
+        "Browser automation and visual regression testing"
+      ],
+      "provides": "Python AI browser automation library built on Playwright for multi-step web interaction and inspection.",
+      "license": "MIT",
+      "commercial_use": "Allowed (open-source Python package)",
+      "maintenance_status": "Active (119,743 stars, updated 2026-10-31)",
+      "framework_compatibility": "Python 3.11+ / Playwright",
+      "integration_complexity": "Medium",
+      "reuse_mode": "direct_reuse",
+      "target_projects": ["Money HQ Automated Visual QA & Crowdtesting"]
+    },
+    {
+      "id": "STAR-06",
+      "name": "HKUDS/Vibe-Trading",
+      "url": "https://github.com/HKUDS/Vibe-Trading",
+      "source_type": "github_star",
+      "categories": [
+        "Charts, data visualization and interactive elements"
+      ],
+      "provides": "Agentic trading research reference. Not a web UI library.",
+      "license": "MIT",
+      "commercial_use": "Allowed",
+      "maintenance_status": "Active (37,358 stars, updated 2026-10-30)",
+      "framework_compatibility": "Python",
+      "integration_complexity": "High",
+      "reuse_mode": "inspiration_only",
+      "target_projects": ["TRD-01 Exness Demo R&D (Frozen)"]
+    },
+    {
+      "id": "STAR-07",
+      "name": "Conway-Research/automaton",
+      "url": "https://github.com/Conway-Research/automaton",
+      "source_type": "github_star",
+      "categories": [
+        "AI-assisted design and frontend development tools"
+      ],
+      "provides": "Conceptual autonomous agent experiment. Superseded in Money HQ by our deterministic DeepSeek Superagent Control Plane.",
+      "license": "MIT",
+      "commercial_use": "Allowed",
+      "maintenance_status": "Active (7,642 stars, updated 2026-08-26)",
+      "framework_compatibility": "TypeScript",
+      "integration_complexity": "High",
+      "reuse_mode": "inspiration_only",
+      "target_projects": ["Money HQ Superagent Control Plane"]
+    },
+    {
+      "id": "OWN-01",
+      "name": "MaiLeac/flow-scout-core",
+      "url": "https://github.com/MaiLeac/flow-scout-core",
+      "local_path": "C:\\Users\\ACER\\Documents\\Codex\\flow-scout-core",
+      "source_type": "owned_repo_and_local_clone",
+      "categories": [
+        "Browser automation and visual regression testing",
+        "Accessibility and usability tools",
+        "Forms, tables, filters and search interfaces",
+        "Navigation, menus and responsive layouts"
+      ],
+      "provides": "15 battle-tested UX/QA failure patterns (PAT-01 filter-detail contradiction, PAT-02 price/discount breakdown mismatch, PAT-03 cross-step state loss, PAT-05 unrecoverable empty state, PAT-06 visual/localization overflow, PAT-07 date-picker lockout, PAT-08 dead links, PAT-09 infinite spinner, PAT-11 masked input cursor jump) + Playwright bug-hunter runner.",
+      "license": "Proprietary / Owner (MaiLeac)",
+      "commercial_use": "Full owner rights",
+      "maintenance_status": "Active (updated 2026-11-01)",
+      "framework_compatibility": "TypeScript / Playwright / Any Web UI",
+      "integration_complexity": "Low",
+      "reuse_mode": "direct_reuse",
+      "target_projects": ["All Money HQ Web Apps", "Sisan / Wink Home", "Loser Kingdom"]
+    },
+    {
+      "id": "OWN-02",
+      "name": "MaiLeac/awesome-ai-video-code",
+      "url": "https://github.com/MaiLeac/awesome-ai-video-code",
+      "source_type": "owned_repo",
+      "categories": [
+        "Animation and micro-interaction libraries",
+        "Image, icon, illustration and asset libraries"
+      ],
+      "provides": "Vietnamese handbook & integration matrix for 8 code-driven video/animation skills (video-shotcraft, Remotion, GSAP, hyperframes, edge-tts voiceover).",
+      "license": "Proprietary / Owner (MaiLeac)",
+      "commercial_use": "Full owner rights",
+      "maintenance_status": "Active (updated 2026-11-01)",
+      "framework_compatibility": "TypeScript / Python / HTML",
+      "integration_complexity": "Low",
+      "reuse_mode": "direct_reuse",
+      "target_projects": ["EXP-03 & EXP-02 Promo Assets"]
+    },
+    {
+      "id": "OWN-03",
+      "name": "MaiLeac/Sisan",
+      "url": "https://github.com/MaiLeac/Sisan",
+      "local_path": "C:\\Users\\ACER\\Sisan",
+      "source_type": "owned_repo_and_local_clone",
+      "categories": [
+        "Dashboard and application layouts",
+        "Forms, tables, filters and search interfaces",
+        "Navigation, menus and responsive layouts",
+        "Product analytics and conversion optimization"
+      ],
+      "provides": "Canonical React 19 + TypeScript + Tailwind v4 + Express property rental marketplace: touch-swipeable RoomCard carousel, OSRM route distance calculator (distance.ts), multi-criteria FilterBar with mobile bottom sheet, CTV referral link tracker (referral.ts), and Bookings/Revenue dashboards.",
+      "license": "Proprietary / Owner (MaiLeac)",
+      "commercial_use": "Full owner rights",
+      "maintenance_status": "Active (updated 2026-10-28)",
+      "framework_compatibility": "React 19, TypeScript, Tailwind CSS v4, Vite 6",
+      "integration_complexity": "Low",
+      "reuse_mode": "direct_reuse",
+      "target_projects": ["Sisan / Wink Home", "Reusable React Marketplace/Directory Components"]
+    },
+    {
+      "id": "OWN-04",
+      "name": "MaiLeac/vuong-quoc-loser & Loser-Kingdom-studio",
+      "url": "https://github.com/MaiLeac/vuong-quoc-loser",
+      "local_path": "C:\\Users\\ACER\\.codex\\worktrees\\backup-task-ids\\Loser Kingdom",
+      "source_type": "owned_repo_and_local_clone",
+      "categories": [
+        "Animation and micro-interaction libraries",
+        "Typography, color systems and visual design references",
+        "Image, icon, illustration and asset libraries"
+      ],
+      "provides": "Dark fantasy RPG gamified discipline engine featuring isolated SVG motion layers (banner-flag-svg, cloak-svg) over static high-res concept art, ambient canvas particle system (kingdom-magic, kingdom-petals) with explicit pause toggle (.motion-toggle), and ornate SVG filigree cards.",
+      "license": "Proprietary / Owner (MaiLeac)",
+      "commercial_use": "Full owner rights",
+      "maintenance_status": "Active (updated 2026-10-25)",
+      "framework_compatibility": "Vanilla HTML/CSS/JS + Python Backend + Android WebView",
+      "integration_complexity": "Low",
+      "reuse_mode": "adapt_pattern",
+      "target_projects": ["Loser Kingdom"]
+    }
+  ]
+}

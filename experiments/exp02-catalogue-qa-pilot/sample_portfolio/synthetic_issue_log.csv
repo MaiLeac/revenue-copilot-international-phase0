@@ -1,0 +1,124 @@
+row_number,handle,sku,field_name,severity,issue_code,description,original_value,remediated_value
+2,linen-resort-shirt,004101,Variant SKU,AUTO_FIXED,SKU_LEADING_ZERO_RESTORED,Restored leading zeros on numeric SKU to 6 digits.,4101,004101
+3,linen-resort-shirt,004102,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Linen Resort Shirt  ,Linen Resort Shirt
+4,linen-resort-shirt,004103,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Linen Resort Shirt  ,Linen Resort Shirt
+5,linen-resort-shirt,004104,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Linen Resort Shirt  ,Linen Resort Shirt
+6,linen-resort-shirt,004105,Handle,AUTO_FIXED,HANDLE_NORMALIZED,Normalized handle slug to lowercase hyphenated ASCII.,LINEN RESORT SHIRT,linen-resort-shirt
+6,linen-resort-shirt,004105,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Linen Resort Shirt  ,Linen Resort Shirt
+7,linen-resort-shirt,004106,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Linen Resort Shirt  ,Linen Resort Shirt
+8,bamboo-lounge-set,004107,Variant SKU,AUTO_FIXED,SKU_LEADING_ZERO_RESTORED,Restored leading zeros on numeric SKU to 6 digits.,4107,004107
+9,bamboo-lounge-set,004108,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Bamboo Lounge Set  ,Bamboo Lounge Set
+10,bamboo-lounge-set,004109,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Bamboo Lounge Set  ,Bamboo Lounge Set
+11,bamboo-lounge-set,004110,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Bamboo Lounge Set  ,Bamboo Lounge Set
+11,bamboo-lounge-set,004110,Variant Price,AUTO_FIXED,PRICE_NUMBER_FORMATTED,Removed currency symbols/commas and formatted to 2 decimal places.,$45.00,45.00
+12,bamboo-lounge-set,004111,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Bamboo Lounge Set  ,Bamboo Lounge Set
+13,bamboo-lounge-set,004111,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Bamboo Lounge Set  ,Bamboo Lounge Set
+13,bamboo-lounge-set,004111,Variant SKU,CRITICAL,DUPLICATE_SKU,Duplicate Variant SKU '004111' (first seen on row 12).,004111,004111
+14,ceramic-pour-over-mug,004113,Variant SKU,AUTO_FIXED,SKU_LEADING_ZERO_RESTORED,Restored leading zeros on numeric SKU to 6 digits.,4113,004113
+15,ceramic-pour-over-mug,004114,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ceramic Pour Over Mug  ,Ceramic Pour Over Mug
+15,ceramic-pour-over-mug,004114,Option1 Name,AUTO_FIXED,OPTION_NAME_NORMALIZED,Standardized Option1 Name casing/whitespace.,  size ,Size
+16,ceramic-pour-over-mug,004115,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ceramic Pour Over Mug  ,Ceramic Pour Over Mug
+17,ceramic-pour-over-mug,004116,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ceramic Pour Over Mug  ,Ceramic Pour Over Mug
+18,ceramic-pour-over-mug,004117,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ceramic Pour Over Mug  ,Ceramic Pour Over Mug
+19,ceramic-pour-over-mug,004118,Handle,AUTO_FIXED,HANDLE_NORMALIZED,Normalized handle slug to lowercase hyphenated ASCII.,CERAMIC POUR OVER MUG,ceramic-pour-over-mug
+19,ceramic-pour-over-mug,004118,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ceramic Pour Over Mug  ,Ceramic Pour Over Mug
+20,merino-travel-hoodie,004119,Variant SKU,AUTO_FIXED,SKU_LEADING_ZERO_RESTORED,Restored leading zeros on numeric SKU to 6 digits.,4119,004119
+21,merino-travel-hoodie,004120,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Merino Travel Hoodie  ,Merino Travel Hoodie
+21,merino-travel-hoodie,004120,Status,AUTO_FIXED,STATUS_CASED_LOWER,Normalized Status value to lowercase.,ACTIVE,active
+22,merino-travel-hoodie,004121,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Merino Travel Hoodie  ,Merino Travel Hoodie
+23,merino-travel-hoodie,004122,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Merino Travel Hoodie  ,Merino Travel Hoodie
+23,merino-travel-hoodie,004122,Variant Price,AUTO_FIXED,PRICE_NUMBER_FORMATTED,Removed currency symbols/commas and formatted to 2 decimal places.,$78.00,78.00
+24,merino-travel-hoodie,004123,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Merino Travel Hoodie  ,Merino Travel Hoodie
+25,merino-travel-hoodie,004124,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Merino Travel Hoodie  ,Merino Travel Hoodie
+26,canvas-weekender-tote,004125,Variant SKU,AUTO_FIXED,SKU_LEADING_ZERO_RESTORED,Restored leading zeros on numeric SKU to 6 digits.,4125,004125
+27,canvas-weekender-tote,004126,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Canvas Weekender Tote  ,Canvas Weekender Tote
+28,canvas-weekender-tote,,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Canvas Weekender Tote  ,Canvas Weekender Tote
+28,canvas-weekender-tote,,Variant SKU,CRITICAL,MISSING_SKU,Variant SKU is empty; never invent missing SKUs without client mapping.,,
+29,canvas-weekender-tote,004128,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Canvas Weekender Tote  ,Canvas Weekender Tote
+29,canvas-weekender-tote,004128,Option1 Name,AUTO_FIXED,OPTION_NAME_NORMALIZED,Standardized Option1 Name casing/whitespace.,  size ,Size
+30,canvas-weekender-tote,004129,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Canvas Weekender Tote  ,Canvas Weekender Tote
+31,canvas-weekender-tote,004130,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Canvas Weekender Tote  ,Canvas Weekender Tote
+32,organic-cotton-tee,004131,Variant SKU,AUTO_FIXED,SKU_LEADING_ZERO_RESTORED,Restored leading zeros on numeric SKU to 6 digits.,4131,004131
+33,organic-cotton-tee,004132,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Organic Cotton Tee  ,Organic Cotton Tee
+34,organic-cotton-tee,004133,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Organic Cotton Tee  ,Organic Cotton Tee
+34,organic-cotton-tee,004133,Option1 Value,CRITICAL,MISSING_OPTION_VALUE,Option1 Value is empty; Shopify/WooCommerce imports fail when variant option is blank.,,
+35,organic-cotton-tee,004134,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Organic Cotton Tee  ,Organic Cotton Tee
+36,organic-cotton-tee,004135,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Organic Cotton Tee  ,Organic Cotton Tee
+36,organic-cotton-tee,004135,Variant Price,AUTO_FIXED,PRICE_NUMBER_FORMATTED,Removed currency symbols/commas and formatted to 2 decimal places.,$22.00,22.00
+37,organic-cotton-tee,004136,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Organic Cotton Tee  ,Organic Cotton Tee
+38,pleated-wide-leg-pant,004137,Variant SKU,AUTO_FIXED,SKU_LEADING_ZERO_RESTORED,Restored leading zeros on numeric SKU to 6 digits.,4137,004137
+39,pleated-wide-leg-pant,004138,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Pleated Wide Leg Pant  ,Pleated Wide Leg Pant
+40,pleated-wide-leg-pant,004139,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Pleated Wide Leg Pant  ,Pleated Wide Leg Pant
+41,pleated-wide-leg-pant,004140,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Pleated Wide Leg Pant  ,Pleated Wide Leg Pant
+41,pleated-wide-leg-pant,004140,Status,AUTO_FIXED,STATUS_CASED_LOWER,Normalized Status value to lowercase.,ACTIVE,active
+42,pleated-wide-leg-pant,004141,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Pleated Wide Leg Pant  ,Pleated Wide Leg Pant
+43,pleated-wide-leg-pant,004142,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Pleated Wide Leg Pant  ,Pleated Wide Leg Pant
+44,minimalist-card-holder,004143,Variant SKU,AUTO_FIXED,SKU_LEADING_ZERO_RESTORED,Restored leading zeros on numeric SKU to 6 digits.,4143,004143
+45,minimalist-card-holder,004144,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Minimalist Card Holder  ,Minimalist Card Holder
+46,minimalist-card-holder,004145,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Minimalist Card Holder  ,Minimalist Card Holder
+47,minimalist-card-holder,004146,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Minimalist Card Holder  ,Minimalist Card Holder
+48,minimalist-card-holder,004147,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Minimalist Card Holder  ,Minimalist Card Holder
+49,minimalist-card-holder,004148,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Minimalist Card Holder  ,Minimalist Card Holder
+49,minimalist-card-holder,004148,Variant Price,CRITICAL,INVALID_OR_NON_POSITIVE_PRICE,"Variant Price is missing, non-numeric, or <= 0. Business prices are never guessed.",0.00,0.00
+51,ribbed-knit-cardigan,004150,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ribbed Knit Cardigan  ,Ribbed Knit Cardigan
+52,ribbed-knit-cardigan,004151,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ribbed Knit Cardigan  ,Ribbed Knit Cardigan
+53,ribbed-knit-cardigan,004152,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ribbed Knit Cardigan  ,Ribbed Knit Cardigan
+54,ribbed-knit-cardigan,004153,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ribbed Knit Cardigan  ,Ribbed Knit Cardigan
+55,ribbed-knit-cardigan,004154,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Ribbed Knit Cardigan  ,Ribbed Knit Cardigan
+56,stainless-thermal-flask,004155,Variant Compare At Price,WARNING,COMPARE_AT_LOWER_THAN_PRICE,Compare At Price (15.00) is lower than Variant Price (31.00).,15.00,15.00
+57,stainless-thermal-flask,004156,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stainless Thermal Flask  ,Stainless Thermal Flask
+58,stainless-thermal-flask,004157,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stainless Thermal Flask  ,Stainless Thermal Flask
+59,stainless-thermal-flask,004158,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stainless Thermal Flask  ,Stainless Thermal Flask
+60,stainless-thermal-flask,004159,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stainless Thermal Flask  ,Stainless Thermal Flask
+61,stainless-thermal-flask,004160,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stainless Thermal Flask  ,Stainless Thermal Flask
+63,woven-market-basket,004162,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Woven Market Basket  ,Woven Market Basket
+64,woven-market-basket,004163,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Woven Market Basket  ,Woven Market Basket
+65,woven-market-basket,004164,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Woven Market Basket  ,Woven Market Basket
+65,woven-market-basket,004164,Body (HTML),WARNING,PII_DETECTED_IN_DESCRIPTION,Potential email or phone number detected in product description; flagged/redacted per privacy rule.,[REDACTED_PII_IN_ORIGINAL],<p>Supplier contact: [REDACTED_EMAIL] or [REDACTED_PHONE] before reorder.</p>
+66,woven-market-basket,004165,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Woven Market Basket  ,Woven Market Basket
+67,woven-market-basket,004166,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Woven Market Basket  ,Woven Market Basket
+69,silk-sleep-eye-mask,004168,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Silk Sleep Eye Mask  ,Silk Sleep Eye Mask
+70,silk-sleep-eye-mask,004169,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Silk Sleep Eye Mask  ,Silk Sleep Eye Mask
+71,silk-sleep-eye-mask,004170,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Silk Sleep Eye Mask  ,Silk Sleep Eye Mask
+72,silk-sleep-eye-mask,004171,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Silk Sleep Eye Mask  ,Silk Sleep Eye Mask
+73,silk-sleep-eye-mask,004172,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Silk Sleep Eye Mask  ,Silk Sleep Eye Mask
+75,tailored-linen-shorts,004174,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Tailored Linen Shorts  ,Tailored Linen Shorts
+76,tailored-linen-shorts,004175,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Tailored Linen Shorts  ,Tailored Linen Shorts
+77,tailored-linen-shorts,004176,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Tailored Linen Shorts  ,Tailored Linen Shorts
+78,tailored-linen-shorts,004177,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Tailored Linen Shorts  ,Tailored Linen Shorts
+79,tailored-linen-shorts,004178,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Tailored Linen Shorts  ,Tailored Linen Shorts
+81,stoneware-salad-bowl,004180,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stoneware Salad Bowl  ,Stoneware Salad Bowl
+82,stoneware-salad-bowl,004181,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stoneware Salad Bowl  ,Stoneware Salad Bowl
+83,stoneware-salad-bowl,004182,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stoneware Salad Bowl  ,Stoneware Salad Bowl
+84,stoneware-salad-bowl,004183,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stoneware Salad Bowl  ,Stoneware Salad Bowl
+85,stoneware-salad-bowl,004184,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Stoneware Salad Bowl  ,Stoneware Salad Bowl
+87,recycled-nylon-backpack,004186,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Recycled Nylon Backpack  ,Recycled Nylon Backpack
+88,recycled-nylon-backpack,004187,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Recycled Nylon Backpack  ,Recycled Nylon Backpack
+89,recycled-nylon-backpack,004188,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Recycled Nylon Backpack  ,Recycled Nylon Backpack
+90,recycled-nylon-backpack,004189,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Recycled Nylon Backpack  ,Recycled Nylon Backpack
+91,recycled-nylon-backpack,004190,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Recycled Nylon Backpack  ,Recycled Nylon Backpack
+93,waffle-weave-bath-towel,004192,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Waffle Weave Bath Towel  ,Waffle Weave Bath Towel
+94,waffle-weave-bath-towel,004193,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Waffle Weave Bath Towel  ,Waffle Weave Bath Towel
+95,waffle-weave-bath-towel,004194,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Waffle Weave Bath Towel  ,Waffle Weave Bath Towel
+96,waffle-weave-bath-towel,004195,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Waffle Weave Bath Towel  ,Waffle Weave Bath Towel
+97,waffle-weave-bath-towel,004196,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Waffle Weave Bath Towel  ,Waffle Weave Bath Towel
+99,brushed-fleece-jogger,004198,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brushed Fleece Jogger  ,Brushed Fleece Jogger
+100,brushed-fleece-jogger,004199,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brushed Fleece Jogger  ,Brushed Fleece Jogger
+101,brushed-fleece-jogger,004200,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brushed Fleece Jogger  ,Brushed Fleece Jogger
+102,brushed-fleece-jogger,004201,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brushed Fleece Jogger  ,Brushed Fleece Jogger
+103,brushed-fleece-jogger,004202,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brushed Fleece Jogger  ,Brushed Fleece Jogger
+105,brass-desk-organizer,004204,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brass Desk Organizer  ,Brass Desk Organizer
+106,brass-desk-organizer,004205,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brass Desk Organizer  ,Brass Desk Organizer
+107,brass-desk-organizer,004206,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brass Desk Organizer  ,Brass Desk Organizer
+108,brass-desk-organizer,004207,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brass Desk Organizer  ,Brass Desk Organizer
+109,brass-desk-organizer,004208,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Brass Desk Organizer  ,Brass Desk Organizer
+111,suede-loafer-mule,004210,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Suede Loafer Mule  ,Suede Loafer Mule
+112,suede-loafer-mule,004211,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Suede Loafer Mule  ,Suede Loafer Mule
+113,suede-loafer-mule,004212,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Suede Loafer Mule  ,Suede Loafer Mule
+114,suede-loafer-mule,004213,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Suede Loafer Mule  ,Suede Loafer Mule
+115,suede-loafer-mule,004214,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Suede Loafer Mule  ,Suede Loafer Mule
+117,cashmere-rib-beanie,004216,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Cashmere Rib Beanie  ,Cashmere Rib Beanie
+118,cashmere-rib-beanie,004217,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Cashmere Rib Beanie  ,Cashmere Rib Beanie
+119,cashmere-rib-beanie,004218,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Cashmere Rib Beanie  ,Cashmere Rib Beanie
+120,cashmere-rib-beanie,004219,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Cashmere Rib Beanie  ,Cashmere Rib Beanie
+121,cashmere-rib-beanie,004220,Title,AUTO_FIXED,WHITESPACE_CLEANED,Trimmed redundant whitespace in Title.,  Cashmere Rib Beanie  ,Cashmere Rib Beanie

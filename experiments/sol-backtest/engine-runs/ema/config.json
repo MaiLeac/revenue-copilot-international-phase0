@@ -1,0 +1,21 @@
+{
+  "source": "okx",
+  "codes": [
+    "SOL-USDT"
+  ],
+  "start_date": "2020-06-15",
+  "end_date": "2026-09-27",
+  "evaluation_start_date": "2021-01-01",
+  "interval": "1D",
+  "initial_cash": 10000,
+  "commission": 0.001,
+  "taker_rate": 0.001,
+  "maker_rate": 0.001,
+  "slippage": 0.0005,
+  "leverage": 1,
+  "funding_rate": 0,
+  "engine": "daily",
+  "position_adjustment": "hold",
+  "optimizer": null,
+  "extra_fields": null
+}

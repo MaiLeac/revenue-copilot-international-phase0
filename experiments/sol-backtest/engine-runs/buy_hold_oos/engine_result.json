@@ -1,0 +1,16 @@
+{
+  "status": "ok",
+  "exit_code": 0,
+  "stdout": "{\n  \"final_value\": 6326.484529722434,\n  \"total_return\": -0.36735154702775663,\n  \"annual_return\": -0.23170628898286294,\n  \"max_drawdown\": -0.7706408393870855,\n  \"sharpe\": -0.07067671831824232,\n  \"calmar\": -0.3007,\n  \"sortino\": -0.1121,\n  \"win_rate\": 0.0,\n  \"profit_loss_ratio\": 0.0,\n  \"profit_factor\": 0.0,\n  \"max_consecutive_loss\": 1,\n  \"avg_holding_days\": 633.0,\n  \"trade_count\": 1,\n  \"benchmark_return\": -0.365484,\n  \"excess_return\": -0.001868,\n  \"information_ratio\": -0.7733,\n  \"tracking_error\": 0.058761,\n  \"benchmark_beta\": 0.9933,\n  \"avg_turnover\": 0.001522,\n  \"total_turnover\": 0.964775,\n  \"unfilled_plan_rejections\": 0,\n  \"target_change_count\": 0,\n  \"rebalance_executed_bars\": 0,\n  \"rebalance_executed_fills\": 0,\n  \"rebalance_realized_turnover\": 0.0,\n  \"rebalance_turnover_mean\": 0.0,\n  \"rebalance_turnover_max\": 0.0,\n  \"position_adjustment\": \"hold\",\n  \"rebalance_tolerance\": 0.0,\n  \"dropped_target_adjustment_count\": 0,\n  \"dropped_target_adjustments\": [],\n  \"risk_xray_hhi\": 1.0,\n  \"risk_xray_effective_n\": 1.0,\n  \"risk_xray_annualized_vol\": 0.7158712075213325,\n  \"risk_xray_max_drawdown\": -0.7706408455909532,\n  \"risk_xray_avg_invested\": 0.9984226946681868\n}\n",
+  "stderr": "",
+  "artifacts": {
+    "equity": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold_oos\\artifacts\\equity.csv",
+    "metrics": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold_oos\\artifacts\\metrics.csv",
+    "trades": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold_oos\\artifacts\\trades.csv",
+    "positions": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold_oos\\artifacts\\positions.csv",
+    "target_positions": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold_oos\\artifacts\\target_positions.csv",
+    "run_card_json": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold_oos\\run_card.json",
+    "run_card_md": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold_oos\\run_card.md"
+  },
+  "run_dir": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold_oos"
+}

@@ -1,0 +1,158 @@
+/* hallmark: domain=money-hq-capability-library | theme=multi-material-v1 | fonts=Plus Jakarta Sans+System UI */
+/* critique: Editorial material honesty over dark-mode neon AI defaults; strict 8pt spacing, tabular numerals, zero tracked-cap eyebrows. */
+/* waivers: none */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap&subset=vietnamese');
+
+:root,
+[data-theme="swiss-ledger"] {
+  --bg-canvas: #faf8f5;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f3efe8;
+  --bg-inverse: #141413;
+  --text-primary: #141413;
+  --text-secondary: #4a4843;
+  --text-muted: #706d65;
+  --text-on-accent: #ffffff;
+  --border-hairline: #e4dfd5;
+  --border-strong: #141413;
+  --accent-primary: #0f5338;
+  --accent-primary-hover: #0a3d28;
+  --accent-secondary: #9a3412;
+  --accent-focus: #1d4ed8;
+  --status-ok-bg: #ecfdf5;
+  --status-ok-text: #065f46;
+  --status-warn-bg: #fffbeb;
+  --status-warn-text: #92400e;
+  --status-danger-bg: #fef2f2;
+  --status-danger-text: #991b1b;
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-card: 0 1px 2px rgba(20, 20, 19, 0.05), 0 8px 24px rgba(20, 20, 19, 0.04);
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 64px;
+  --measure-container: 1120px;
+  --measure-reading: 68ch;
+}
+
+[data-theme="apothecary-paper"] {
+  --bg-canvas: #f7f3eb;
+  --bg-surface: #fffdf9;
+  --bg-subtle: #efe8da;
+  --bg-inverse: #231b18;
+  --text-primary: #231b18;
+  --text-secondary: #52433d;
+  --text-muted: #78665e;
+  --text-on-accent: #fffdf9;
+  --border-hairline: #dfd5c5;
+  --border-strong: #854d3b;
+  --accent-primary: #8c2d19;
+  --accent-primary-hover: #6e2010;
+  --accent-secondary: #2e5a44;
+  --accent-focus: #8c2d19;
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+[data-theme="hospitality-warm"] {
+  --bg-canvas: #fcfbf9;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f4f2ed;
+  --bg-inverse: #18181b;
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --text-on-accent: #ffffff;
+  --border-hairline: #e4e4e7;
+  --border-strong: #27272a;
+  --accent-primary: #065f46;
+  --accent-primary-hover: #064e3b;
+  --accent-secondary: #b45309;
+  --accent-focus: #065f46;
+}
+
+/* Hallmark Floor Gate #4: overflow-x clip on both html and body, never 100vw */
+html,
+body {
+  overflow-x: clip;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Hallmark Floor Gate #5: display heads carry overflow-wrap: break-word; min-width: 0 */
+h1,
+h2,
+h3,
+.display-heading {
+  font-family: var(--font-display);
+  overflow-wrap: break-word;
+  min-width: 0;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: var(--text-primary);
+}
+
+/* Hallmark Floor Gate #6: instant :focus-visible on every interactive element */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-focus);
+  outline-offset: 2px;
+  transition: none;
+}
+
+/* Hallmark Floor Gate #2: Specific property transitions only, never transition: all */
+.interactive-surface {
+  transition: background-color 160ms ease-out, border-color 160ms ease-out, color 160ms ease-out, transform 160ms ease-out;
+}
+
+/* Tabular figures for prices, SKUs, metrics, and timers */
+.tabular-nums,
+table,
+td,
+th,
+.price-figure {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hallmark Floor Gate #14: Capped & centered container */
+.cap-container {
+  width: 100%;
+  max-width: var(--measure-container);
+  margin-inline: auto;
+  padding-inline: var(--space-3);
+}
+
+/* Hallmark Floor Gate #7: Reduced motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

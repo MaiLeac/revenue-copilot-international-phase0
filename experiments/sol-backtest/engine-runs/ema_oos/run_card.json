@@ -1,0 +1,128 @@
+{
+  "artifacts": [
+    {
+      "path": "artifacts/equity.csv",
+      "sha256": "4c0a75964129c58e6b5ee74a07984ba7d6e775a7c9bdd6574f043ac465913e17",
+      "size_bytes": 68386
+    },
+    {
+      "path": "artifacts/fills.jsonl",
+      "sha256": "ea29f115fb18996ca0f94811995905fb3ce56c0876b17a059648c9236bebf40e",
+      "size_bytes": 1697
+    },
+    {
+      "path": "artifacts/metrics.csv",
+      "sha256": "af8544efc4c8001869e55e9d2fe9d81980d4f958915ac33ca5f8fb9d37c6517d",
+      "size_bytes": 966
+    },
+    {
+      "path": "artifacts/ohlcv_SOL-USDT.csv",
+      "sha256": "150c233bacca71fe48bd274edd8ef3a895d6aee6d1e2790118dddb446cec6d2f",
+      "size_bytes": 132862
+    },
+    {
+      "path": "artifacts/positions.csv",
+      "sha256": "33f3db149dfcf83e28876c8b040abdee1262d8f12a40d7276581a0148e733394",
+      "size_bytes": 18680
+    },
+    {
+      "path": "artifacts/rebalance_notes.json",
+      "sha256": "3ee28d4ab03720ee53cd88d1304b4f19f32f6df829ab3b4b224c735098035b92",
+      "size_bytes": 1721
+    },
+    {
+      "path": "artifacts/rebalance_notes.md",
+      "sha256": "470624a4268f0136863297d5f380d15268fbb88c5f004c5cd9bb90a9c5c9deb9",
+      "size_bytes": 609
+    },
+    {
+      "path": "artifacts/risk_xray.json",
+      "sha256": "aac111b64b5e9cd5b8a68ddf6b2ceb2f7565f1cc8dd8f0d1377457c079993796",
+      "size_bytes": 1317
+    },
+    {
+      "path": "artifacts/risk_xray.md",
+      "sha256": "354680937d28094fc14d8d016dc4622cdde9586bd83f2fb999a535b001afa003",
+      "size_bytes": 291
+    },
+    {
+      "path": "artifacts/target_positions.csv",
+      "sha256": "8734ae48dada202eaf99c203892bfb694757bc2eb8485548fc6239bef348f6b7",
+      "size_bytes": 15870
+    },
+    {
+      "path": "artifacts/trades.csv",
+      "sha256": "b41028893601d48e9dc9e78fc472f78f6d298f737d90dd7c3618500b75d7c144",
+      "size_bytes": 517
+    },
+    {
+      "path": "code/signal_engine.py",
+      "sha256": "4085f15b1afe745e738c1d135b7484f2eddc159922ef1ab90ccee22a1525a9ed",
+      "size_bytes": 406
+    },
+    {
+      "path": "config.json",
+      "sha256": "445d0f511b6c3eb84375511dbff975fc5b62a4fd01f1815a0b9d9d5a4d9c3b16",
+      "size_bytes": 446
+    }
+  ],
+  "backtest": {
+    "codes": [
+      "SOL-USDT"
+    ],
+    "end_date": "2026-09-27",
+    "engine": "daily",
+    "initial_cash": 10000,
+    "interval": "1D",
+    "source": "okx",
+    "start_date": "2020-06-15"
+  },
+  "data_sources": [
+    "okx"
+  ],
+  "generated_at": "2026-09-28T11:33:05.511230Z",
+  "metrics": {
+    "annual_return": -0.22538694524335567,
+    "avg_holding_days": 63.0,
+    "avg_turnover": 0.004683,
+    "benchmark_beta": 0.3979,
+    "benchmark_return": -0.365484,
+    "calmar": -0.3544,
+    "dropped_target_adjustment_count": 0,
+    "excess_return": 0.007198,
+    "final_value": 6417.144781545625,
+    "information_ratio": -0.3414,
+    "max_consecutive_loss": 2,
+    "max_drawdown": -0.6359987038661534,
+    "position_adjustment": "hold",
+    "profit_factor": 0.2418,
+    "profit_loss_ratio": 0.4836,
+    "rebalance_executed_bars": 0,
+    "rebalance_executed_fills": 0,
+    "rebalance_realized_turnover": 0.0,
+    "rebalance_tolerance": 0.0,
+    "rebalance_turnover_max": 0.5,
+    "rebalance_turnover_mean": 0.5,
+    "risk_xray_annualized_vol": 0.7158712075213325,
+    "risk_xray_avg_invested": 0.2981072498459767,
+    "risk_xray_effective_n": 1.0,
+    "risk_xray_hhi": 1.0,
+    "risk_xray_max_drawdown": -0.7706408455909532,
+    "sharpe": -0.4312950369266765,
+    "sortino": -0.388,
+    "target_change_count": 4,
+    "total_return": -0.3582855218454375,
+    "total_turnover": 2.968951,
+    "tracking_error": 0.556868,
+    "trade_count": 3,
+    "unfilled_plan_rejections": 0,
+    "win_rate": 0.3333333333333333
+  },
+  "reproducibility": {
+    "config_hash": "445d0f511b6c3eb84375511dbff975fc5b62a4fd01f1815a0b9d9d5a4d9c3b16",
+    "strategy_hash": "4085f15b1afe745e738c1d135b7484f2eddc159922ef1ab90ccee22a1525a9ed"
+  },
+  "run_dir": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema_oos",
+  "schema_version": "0.1",
+  "warnings": []
+}

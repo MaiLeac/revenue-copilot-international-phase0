@@ -1,0 +1,24 @@
+MONEY HQ - BANG DIEU KHIEN TAI CHINH DU AN AI TU KIEM TIEN (TACH BIET TAI SAN GIA DINH),,,,,
+Cap nhat,2026-11-01,Trang thai he thong,ACTIVE PRE-REVENUE (L3 Verified on EXP-01; L4 Cash = 0 VND; Spend = 0 VND),Che do van hanh,Autonomous Low-Cost (0 VND Spend)
+,,,,,
+1. CHI SO TAI CHINH COT LOI (CORE P&L & RUNWAY),Gia tri (VND / Don vi),Cap bang chung,Quy tac hach toan,Canh bao / Nguong,Ghi chu xac thuc
+Ngan sach thu nghiem toi da (Budget Cap),0,Approved Cap,"Khong vuot qua 500,000 VND","Hard Stop tai 500,000 VND",Chi dung khi co ROI >= 3x
+Doanh thu thuc nhan ve tai khoan (Realized Cash L4),0,L4 (Collected),Chi ghi nhan khi tien ve Bank/PayPal,Muc tieu: >0 VND trong 14 ngay,CASH_LEDGER.csv (0 VND hien tai)
+Doanh thu cho thanh toan (Pending Payouts L3),0 bugs approved (USD TBD),L3 (Approved),Tach biet tuyet doi voi L4,Theo doi ky thanh toan 15 & cuoi thang,uTest platform.utest.com: VND 0.00 Pending Payout (chưa có payout)
+Hoan tien / Tu choi thanh toan (Refunds / Rejected),0,Verified,Ghi nhan moi khoan bi clawback/reject,Canh bao neu > 10% bug bi reject,0 bug bi reject (3/3 approved)
+Chi phi bien doi (Variable Operating Costs),0,Verified,Chi phi san xuat/rut tien thuc te,Toi thieu hoa,COST_LEDGER.csv
+Chi phi cong cu / API tang them (Incremental AI/Tool Spend),0,Verified,Tach biet thue bao co dinh vs phi tang them,Uu tien 100% Free/Local script,Dung Python local + OAuth co san (0 VND)
+Loi nhuan rong thuc nhan (Net Realized Profit L4),0,L4 Net,Realized Cash L4 - Total Incremental Cost,Muc tieu duong ngay tu ky rut dau tien,Chua tinh L3 dang cho ve
+Ngan sach con lai (Cash Runway Remaining),0,0.0%,Budget Cap - Incremental Cost,"Bao dong do neu < 150,000 VND","Con nguyen 100% ngan sach (500,000 VND)"
+So gio chu so huu da bo ra (Owner Hours Spent),3.5 gio,Logged,Chi tinh gio Mai truc tiep thao tac,Gioi han <= 5h/tuan,3.5h test uTest Cycle 562706
+Loi nhuan thuc nhan / Gio cua Mai (Net Profit / Owner Hr),0,L4 / Hr,"San luong lao dong an: 50,000 VND/gio","Dung thu nghiem neu < 50,000 VND/gio",Se cap nhat ngay khi L3 -> L4
+,,,,,
+2. DANH MUC TAI SAN SO TU DONG (AUTONOMOUS ASSET PORTFOLIO),Cap uu tien,Bang chung,Doanh thu L4 (VND),Chi phi bien (Marginal Cost),Co che Tu dong hoa & Link Live
+ASSET-01 (EXP-03): Cam Nang & Tro Ly Duong Nhan 7 The Chat + Audio (299k),Tier 1 & 2 Primary (#1),L2 Live Asset (L1 299k Price),0,0 VND / don,100% AI tao Web Quiz + 21 Cong thuc Audio/PDF + VietQR/KOC (?ref=). Live tren GitHub Pages
+ASSET-02 (EXP-02): Catalogue QA Auto-Clean Self-Serve Web App (199k/$9),Tier 2 & 4 Tool (#2),L2 Live Asset (120 SKU Test),0,0 VND / don,"100% tu phuc vu tren trinh duyet (Client-side CSV Audit + Clean + Report), 0h lao dong tay chan"
+CASH-01 (EXP-01): uTest Cycle 562706 Approved Bug Bounty Settlement,Tier 6 Cash Bridge (#3),L3 Verified (3/3 Approved),0,0 VND,"Rank #1 Cycle 562706 (3/3 bugs approved). Chi thu tien L3 -> L4, khong bat Mai lam job tay chan"
+TRD-01 & TRD-02: Exness MT5 Demo Agent & SOL EMA50/200 Backtest,R&D Demo / Archived,G1-G3 Pass / SOL OOS -38.65%,0 (Demo Only),0 VND,Khoa cung LiveAccountBlockedError; SOL EMA50/200 DA DONG vi lo OOS (-38.65%)
+,,,,,
+3. CANH BAO SOM & VIEC CAN MAI DUYET (CAPITAL ALLOCATOR & EXCEPTION HANDLER),Muc do,Trang thai,Hanh dong cua AI,Ngoai le duy nhat can Mai,Thoi gian uoc tinh
+ACT-01: Gan tai khoan nhan tien tu dong (VietQR/SePay + PayPal uTest),ONE-TIME,CHO MAI DUYET,Da deploy live ASSET-01 & ASSET-02 len GitHub Pages + VietQR,Gan STK/SePay nhan tien VietQR & xac nhan PayPal uTest nhan tien L3,3 phut (1 lan duy nhat)
+RISK-01: Chong bien Mai thanh nhan vien van hanh tay chan (Anti-Labor Lock),GUARDED,ACTIVE LOCK,Da ha cap JOB-01 (viec lam theo gio) xuong Tier 6; uu tien 100% Tai san so,Khong can thao tac (0h/ngay),0 phut

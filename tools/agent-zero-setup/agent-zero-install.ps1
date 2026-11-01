@@ -1,0 +1,2403 @@
+<#
+.SYNOPSIS
+Installs and manages Dockerized Agent Zero instances from a terminal.
+
+.DESCRIPTION
+This is the CLI installer for environments where the A0 Launcher GUI is
+unavailable, undesirable, or overkill. Interactive mode uses menus. Quick Start
+and noninteractive mode create an instance from flags and exit after creation.
+#>
+param(
+    [switch]$A0ResumeRuntimeSetup,
+    [switch]$QuickStart,
+    [switch]$NonInteractive,
+    [switch]$Yes,
+    [string]$Name = '',
+    [string]$Tag = '',
+    [int]$Port = 0,
+    [string]$DataDir = '',
+    [string]$AuthLogin = '',
+    [string]$AuthPassword = '',
+    [switch]$SkipRuntimeSetup
+)
+
+$ErrorActionPreference = 'Stop'
+
+# Agent Zero Install Script v1 (PowerShell)
+# Windows equivalent of install.sh
+# https://github.com/agent0ai/agent-zero
+
+$script:HomeDir = [Environment]::GetFolderPath('UserProfile')
+$script:SelectedTag = 'latest'
+$script:RuntimeEndpointSelectionPolicy = 'reuse-before-setup'
+$script:DockerMode = 'windows'
+$script:DockerHostArgs = @()
+$script:DockerEndpointNoticeShown = $false
+$script:DockerEndpointScanSeen = @{}
+$script:WslDockerDistro = ''
+$script:WslKeepAliveNoticeShown = $false
+$script:DefaultWslDistro = 'Ubuntu'
+$script:ResumeRuntimeSetup = [bool]$A0ResumeRuntimeSetup
+$script:RuntimeSetupRunOnceValue = 'AgentZeroInstallResumeRuntimeSetup'
+$script:CliNonInteractive = [bool](
+    $NonInteractive -or
+    $Yes -or
+    $QuickStart -or
+    -not [string]::IsNullOrWhiteSpace($Name) -or
+    -not [string]::IsNullOrWhiteSpace($Tag) -or
+    $Port -gt 0 -or
+    -not [string]::IsNullOrWhiteSpace($DataDir) -or
+    $PSBoundParameters.ContainsKey('AuthLogin') -or
+    $PSBoundParameters.ContainsKey('AuthPassword')
+)
+$script:CliName = $Name
+$script:CliTag = $Tag
+$script:CliPort = $Port
+$script:CliDataDir = $DataDir
+$script:CliAuthLogin = $AuthLogin
+$script:CliAuthPassword = $AuthPassword
+$script:CliAuthLoginSet = $PSBoundParameters.ContainsKey('AuthLogin')
+$script:CliAuthPasswordSet = $PSBoundParameters.ContainsKey('AuthPassword')
+$script:SkipRuntimeSetup = [bool]$SkipRuntimeSetup
+
+function Show-Banner {
+    Write-Host @"
+ █████╗   ██████╗ ███████╗███╗   ██╗████████╗   ███████╗███████╗██████╗  ██████╗ 
+██╔══██╗ ██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝   ╚══███╔╝██╔════╝██╔══██╗██╔═══██╗
+███████║ ██║  ███╗█████╗  ██╔██╗ ██║   ██║        ███╔╝ █████╗  ██████╔╝██║   ██║
+██╔══██║ ██║   ██║██╔══╝  ██║╚██╗██║   ██║       ███╔╝  ██╔══╝  ██╔══██╗██║   ██║
+██║  ██║ ╚██████╔╝███████╗██║ ╚████║   ██║      ███████╗███████╗██║  ██║╚██████╔╝
+╚═╝  ╚═╝  ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝      ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ 
+"@ -ForegroundColor Blue
+}
+
+function print_ok {
+    param([string]$Message)
+    Write-Host "  [OK] $Message" -ForegroundColor Green
+}
+
+function print_info {
+    param([string]$Message)
+    Write-Host "[INFO] $Message" -ForegroundColor Green
+}
+
+function print_warn {
+    param([string]$Message)
+    Write-Host "[WARN] $Message" -ForegroundColor Yellow
+}
+
+function print_error {
+    param([string]$Message)
+    Write-Host "[ERROR] $Message" -ForegroundColor Red
+}
+
+function Wait-ForKeypress {
+    Write-Host ''
+    Write-Host 'Press any key to continue...' -NoNewline
+    $null = [Console]::ReadKey($true)
+    Write-Host ''
+}
+
+function Test-InteractiveConsole {
+    try {
+        $null = [Console]::KeyAvailable
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+function Test-WindowsServer {
+    try {
+        $os = Get-CimInstance Win32_OperatingSystem -ErrorAction Stop
+        return ($os.ProductType -ne 1 -or $os.Caption -match 'Windows Server')
+    }
+    catch {
+        return $false
+    }
+}
+
+function Get-OptionalFeatureState {
+    param([string]$Name)
+
+    try {
+        $feature = Get-WindowsOptionalFeature -Online -FeatureName $Name -ErrorAction Stop
+        return "$($feature.State)"
+    }
+    catch {
+        return 'unknown'
+    }
+}
+
+function Show-WindowsServerDockerGuidance {
+    print_error 'Docker is not available on this Windows Server host.'
+    print_warn 'Docker Desktop is not supported on Windows Server. Agent Zero requires a Linux-container Docker runtime.'
+
+    $wslFeature = Get-OptionalFeatureState 'Microsoft-Windows-Subsystem-Linux'
+    $vmPlatform = Get-OptionalFeatureState 'VirtualMachinePlatform'
+
+    if ($wslFeature -ne 'Enabled' -or $vmPlatform -ne 'Enabled') {
+        print_info 'A WSL2-backed Docker Engine can be used when WSL2 and nested virtualization are available.'
+        print_info 'Enable WSL2 with: wsl.exe --install --no-distribution'
+        print_info 'Restart Windows, then install a Linux distro and Docker Engine inside WSL.'
+    }
+    else {
+        print_info 'WSL2 features are enabled. If WSL2 still cannot start, this VM likely needs nested virtualization or Hyper-V support from the host provider.'
+        print_info 'After a WSL2 Docker Engine is running, expose it through a Docker CLI or a local Docker endpoint, then rerun this installer.'
+    }
+}
+
+function Show-WindowsClientDockerGuidance {
+    param(
+        [switch]$DaemonOnly
+    )
+
+    if ($DaemonOnly) {
+        print_error 'Docker CLI is installed, but the Docker daemon is not reachable.'
+        print_info 'Start Docker Desktop, set DOCKER_HOST to a reachable Docker-compatible endpoint, or rerun this installer interactively to set up the Agent Zero local runtime.'
+    }
+    else {
+        print_error 'Docker is not installed or is not on PATH.'
+        print_info 'Rerun this installer interactively to set up the Agent Zero local runtime, or install Docker Desktop / Docker CLI manually and rerun.'
+    }
+
+    print_info 'For a manual WSL Docker Engine endpoint, expose Docker on loopback only, for example tcp://127.0.0.1:23750.'
+}
+
+function Get-CleanCommandText {
+    param([object]$Value)
+
+    return (($Value | Out-String) -replace "`0", '').Trim()
+}
+
+function Get-AgentZeroStateDir {
+    $localAppData = [Environment]::GetFolderPath('LocalApplicationData')
+    if ([string]::IsNullOrWhiteSpace($localAppData)) {
+        $localAppData = $script:HomeDir
+    }
+    $stateDir = Join-Path $localAppData 'AgentZero'
+    New-Item -ItemType Directory -Force -Path $stateDir *> $null
+    return $stateDir
+}
+
+function Get-InstallerResumeScriptPath {
+    return (Join-Path (Get-AgentZeroStateDir) 'install-resume.ps1')
+}
+
+function Get-CurrentInstallerScriptPath {
+    if (-not [string]::IsNullOrWhiteSpace($PSCommandPath) -and (Test-Path -LiteralPath $PSCommandPath)) {
+        return $PSCommandPath
+    }
+    if ($MyInvocation.MyCommand -and -not [string]::IsNullOrWhiteSpace($MyInvocation.MyCommand.Path) -and (Test-Path -LiteralPath $MyInvocation.MyCommand.Path)) {
+        return $MyInvocation.MyCommand.Path
+    }
+    return ''
+}
+
+function Save-InstallerResumeScript {
+    $resumePath = Get-InstallerResumeScriptPath
+    $currentPath = Get-CurrentInstallerScriptPath
+
+    try {
+        if (-not [string]::IsNullOrWhiteSpace($currentPath)) {
+            Copy-Item -LiteralPath $currentPath -Destination $resumePath -Force
+            return $resumePath
+        }
+
+        Invoke-WebRequest -Uri 'https://ps.agent-zero.ai' -UseBasicParsing -OutFile $resumePath
+        return $resumePath
+    }
+    catch {
+        print_warn "Could not prepare automatic post-restart resume: $(Get-CleanCommandText $_)"
+        return ''
+    }
+}
+
+function Convert-ToWindowsCommandArg {
+    param([string]$Value)
+
+    return '"' + (($Value -replace '\\(?=")', '$0') -replace '"', '\"') + '"'
+}
+
+function Get-InstallerResumeLaunchCommand {
+    $resumePath = Save-InstallerResumeScript
+    if ([string]::IsNullOrWhiteSpace($resumePath)) {
+        return ''
+    }
+
+    $powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
+    if (-not (Test-Path -LiteralPath $powershell)) {
+        $powershell = 'powershell.exe'
+    }
+
+    return @(
+        (Convert-ToWindowsCommandArg $powershell),
+        '-NoLogo',
+        '-NoProfile',
+        '-ExecutionPolicy',
+        'Bypass',
+        '-File',
+        (Convert-ToWindowsCommandArg $resumePath),
+        '-A0ResumeRuntimeSetup'
+    ) -join ' '
+}
+
+function Register-InstallerRuntimeSetupResume {
+    $command = Get-InstallerResumeLaunchCommand
+    if ([string]::IsNullOrWhiteSpace($command)) {
+        return $false
+    }
+
+    try {
+        & reg.exe add 'HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce' `
+            /v $script:RuntimeSetupRunOnceValue `
+            /t REG_SZ `
+            /d $command `
+            /f *> $null
+        print_info 'Agent Zero installer will resume once after your next Windows sign-in.'
+        return $true
+    }
+    catch {
+        print_warn "Could not register automatic post-restart resume: $(Get-CleanCommandText $_)"
+        return $false
+    }
+}
+
+function Clear-InstallerRuntimeSetupResume {
+    try {
+        & reg.exe delete 'HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce' `
+            /v $script:RuntimeSetupRunOnceValue `
+            /f *> $null
+    }
+    catch { }
+}
+
+function Get-WslListText {
+    $wsl = Get-Command wsl.exe -ErrorAction SilentlyContinue
+    if (-not $wsl) {
+        return ''
+    }
+
+    try {
+        $raw = & wsl.exe -l -v 2>&1
+        return (Get-CleanCommandText $raw)
+    }
+    catch {
+        return (Get-CleanCommandText $_)
+    }
+}
+
+function Test-WslFeaturesUsable {
+    param([string]$ListText)
+
+    $value = "$ListText"
+    if ($value -match 'WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED') {
+        return $false
+    }
+    if ($value -match 'WSL_E_DEFAULT_DISTRO_NOT_FOUND') {
+        return $true
+    }
+    if ($value -match 'has no installed distributions|no installed distributions|non ha distribuzioni installate') {
+        return $true
+    }
+    if ($value -match '(?im)^\s*\*?\s*NAME\s+STATE\s+VERSION\b') {
+        return $true
+    }
+
+    return $false
+}
+
+function Test-WslCommandOk {
+    param(
+        [string]$Distro,
+        [string]$Script
+    )
+
+    try {
+        Invoke-WslShell -Distro $Distro -Script $Script *> $null
+        return ($LASTEXITCODE -eq 0)
+    }
+    catch {
+        return $false
+    }
+}
+
+function Convert-ToWslShellCommand {
+    param([string]$Script)
+
+    $normalizedScript = ($Script -replace "`r`n", "`n") -replace "`r", "`n"
+    $encodedScript = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($normalizedScript))
+    return "printf '%s' '$encodedScript' | base64 -d | sh"
+}
+
+function Invoke-WslShell {
+    param(
+        [string]$Distro,
+        [string]$Script,
+        [switch]$Root
+    )
+
+    $wslArgs = @()
+    if (-not [string]::IsNullOrWhiteSpace($Distro)) {
+        $wslArgs += @('-d', $Distro)
+    }
+    if ($Root) {
+        $wslArgs += @('-u', 'root')
+    }
+    $wslArgs += @('--exec', 'sh', '-lc', (Convert-ToWslShellCommand -Script $Script))
+    & wsl.exe @wslArgs
+}
+
+function Test-WslRootCommandOk {
+    param(
+        [string]$Distro,
+        [string]$Script
+    )
+
+    try {
+        Invoke-WslShell -Distro $Distro -Script $Script -Root *> $null
+        return ($LASTEXITCODE -eq 0)
+    }
+    catch {
+        return $false
+    }
+}
+
+function Invoke-WslRootShell {
+    param(
+        [string]$Distro,
+        [string]$Script
+    )
+
+    Invoke-WslShell -Distro $Distro -Script $Script -Root
+}
+
+function Get-UbuntuLauncherBinary {
+    foreach ($binary in @('ubuntu.exe', 'ubuntu2404.exe', 'ubuntu2204.exe', 'ubuntu2004.exe')) {
+        $cmd = Get-Command $binary -ErrorAction SilentlyContinue
+        if ($cmd) {
+            return $cmd.Source
+        }
+    }
+
+    return ''
+}
+
+function Register-UbuntuPackageAsRoot {
+    $launcher = Get-UbuntuLauncherBinary
+    if ([string]::IsNullOrWhiteSpace($launcher)) {
+        return $false
+    }
+
+    print_info "Preparing $script:DefaultWslDistro for Agent Zero..."
+    try {
+        & $launcher install --root *> $null
+        if ($LASTEXITCODE -eq 0) {
+            return $true
+        }
+    }
+    catch {
+        $message = Get-CleanCommandText $_
+        if ($message -match 'already installed|gi[aà]\s+installato') {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Invoke-ElevatedPowerShellScript {
+    param([string]$Script)
+
+    try {
+        $encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($Script))
+        $argsList = @(
+            '-NoLogo',
+            '-NoProfile',
+            '-ExecutionPolicy',
+            'Bypass',
+            '-EncodedCommand',
+            $encodedCommand
+        )
+        $process = Start-Process -FilePath 'powershell.exe' `
+            -ArgumentList $argsList `
+            -Verb RunAs `
+            -WindowStyle Hidden `
+            -Wait `
+            -PassThru
+        if ($null -ne $process.ExitCode -and $process.ExitCode -ne 0) {
+            print_error "Windows setup exited with code $($process.ExitCode)."
+            return $false
+        }
+        return $true
+    }
+    catch {
+        print_error "Windows setup was not completed: $(Get-CleanCommandText $_)"
+        return $false
+    }
+}
+
+function Install-WslFeatures {
+    print_info 'Agent Zero will set up the local Windows runtime.'
+    print_info 'Windows may ask for approval. A restart may be required before setup can continue.'
+    $resumeRegistered = Register-InstallerRuntimeSetupResume
+
+    $featureScript = @'
+$ErrorActionPreference = "Stop"
+wsl.exe --install --no-distribution
+if ($LASTEXITCODE -ne 0) {
+    wsl.exe --install --no-distribution --web-download
+}
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+wsl.exe --set-default-version 2
+exit $LASTEXITCODE
+'@
+
+    if (-not (Invoke-ElevatedPowerShellScript -Script $featureScript)) {
+        Clear-InstallerRuntimeSetupResume
+        return 'failed'
+    }
+
+    print_warn 'Windows runtime setup was started.'
+    if ($resumeRegistered) {
+        print_warn 'Restart Windows if prompted. The installer will resume once after your next sign-in.'
+    }
+    else {
+        print_warn 'Restart Windows if prompted, then rerun this installer to continue Agent Zero setup.'
+    }
+    return 'followup'
+}
+
+function Install-WslDistribution {
+    print_info "Installing $script:DefaultWslDistro for Agent Zero..."
+
+    $installed = $false
+    try {
+        & wsl.exe --install -d $script:DefaultWslDistro --no-launch
+        if ($LASTEXITCODE -eq 0) {
+            $installed = $true
+        }
+        else {
+            & wsl.exe --install -d $script:DefaultWslDistro --no-launch --web-download
+            $installed = ($LASTEXITCODE -eq 0)
+        }
+    }
+    catch {
+        $installed = $false
+    }
+
+    if (-not $installed) {
+        print_error "Could not install $script:DefaultWslDistro for WSL."
+        return 'failed'
+    }
+
+    if (Test-WslRootCommandOk -Distro $script:DefaultWslDistro -Script 'true') {
+        return 'ready'
+    }
+
+    if ((Register-UbuntuPackageAsRoot) -and (Test-WslRootCommandOk -Distro $script:DefaultWslDistro -Script 'true')) {
+        return 'ready'
+    }
+
+    print_warn 'Linux distribution setup was started.'
+    print_warn 'If Windows opens a first-run setup window or asks for a restart, complete that and rerun this installer.'
+    return 'followup'
+}
+
+function Install-DockerEngineInWsl {
+    param([string]$Distro)
+
+    if (-not (Test-WslRootCommandOk -Distro $Distro -Script '. /etc/os-release 2>/dev/null; [ "${ID:-}" = "ubuntu" ]')) {
+        print_error "Automatic WSL runtime setup currently expects an Ubuntu WSL2 distro."
+        print_info "Install $script:DefaultWslDistro with WSL or install Docker Engine manually inside '$Distro', then rerun this installer."
+        return $false
+    }
+
+    print_info "Installing Docker Engine inside WSL distro '$Distro'..."
+    $installScript = @'
+set -eu
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y ca-certificates curl python3
+for pkg in docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc; do apt-get remove -y "$pkg" >/dev/null 2>&1 || true; done
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
+. /etc/os-release
+codename="${UBUNTU_CODENAME:-${VERSION_CODENAME:-}}"
+if [ -z "$codename" ]; then echo "Could not determine Ubuntu codename" >&2; exit 1; fi
+arch="$(dpkg --print-architecture)"
+cat > /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: ${codename}
+Components: stable
+Architectures: ${arch}
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+'@
+
+    try {
+        Invoke-WslRootShell -Distro $Distro -Script $installScript
+        if ($LASTEXITCODE -eq 0) {
+            return $true
+        }
+    }
+    catch { }
+
+    print_error "Could not install Docker Engine inside WSL distro '$Distro'."
+    return $false
+}
+
+function Start-WslDockerEngine {
+    param([string]$Distro)
+
+    $startScript = @'
+set -eu
+if docker info >/dev/null 2>&1; then exit 0; fi
+if command -v systemctl >/dev/null 2>&1 && [ "$(ps -p 1 -o comm= 2>/dev/null)" = "systemd" ]; then
+    systemctl reset-failed docker || true
+    systemctl start docker || systemctl restart docker
+elif command -v service >/dev/null 2>&1; then
+    service docker start || service docker restart
+else
+    dockerd >/tmp/a0-dockerd.log 2>&1 &
+fi
+docker info >/dev/null 2>&1
+'@
+
+    try {
+        Invoke-WslRootShell -Distro $Distro -Script $startScript *> $null
+        return ($LASTEXITCODE -eq 0)
+    }
+    catch {
+        return $false
+    }
+}
+
+function Get-WslKeepAlivePidFile {
+    $stateDir = Get-AgentZeroStateDir
+
+    $distroKey = if ([string]::IsNullOrWhiteSpace($script:WslDockerDistro)) {
+        'default'
+    }
+    else {
+        ($script:WslDockerDistro -replace '[^A-Za-z0-9_.-]', '_')
+    }
+    return (Join-Path $stateDir "wsl-docker-keepalive-$distroKey.pid")
+}
+
+function Test-ProcessIdRunning {
+    param([int]$ProcessId)
+
+    if ($ProcessId -le 0) {
+        return $false
+    }
+
+    try {
+        $null = Get-Process -Id $ProcessId -ErrorAction Stop
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+function Test-WslDockerKeepAliveRunning {
+    if ($script:DockerMode -ne 'wsl') {
+        return $false
+    }
+
+    $pidFile = Get-WslKeepAlivePidFile
+    if (-not (Test-Path -LiteralPath $pidFile)) {
+        return $false
+    }
+
+    $pidText = (Get-Content -LiteralPath $pidFile -ErrorAction SilentlyContinue | Select-Object -First 1)
+    $processId = 0
+    if (-not [int]::TryParse("$pidText", [ref]$processId)) {
+        Remove-Item -LiteralPath $pidFile -Force -ErrorAction SilentlyContinue
+        return $false
+    }
+
+    if (Test-ProcessIdRunning -ProcessId $processId) {
+        return $true
+    }
+
+    Remove-Item -LiteralPath $pidFile -Force -ErrorAction SilentlyContinue
+    return $false
+}
+
+function Start-WslDockerKeepAlive {
+    if ($script:DockerMode -ne 'wsl') {
+        return
+    }
+
+    if (Test-WslDockerKeepAliveRunning) {
+        return
+    }
+
+    $wsl = Get-Command wsl.exe -ErrorAction SilentlyContinue
+    if (-not $wsl) {
+        return
+    }
+
+    $keepAliveScript = "trap 'exit 0' TERM INT; while :; do sleep 2147483647 & wait `$!; done"
+    $distroLiteral = "$script:WslDockerDistro" -replace "'", "''"
+    $keepAliveLiteral = $keepAliveScript -replace "'", "''"
+    $childScript = @"
+`$ErrorActionPreference = 'SilentlyContinue'
+`$wslArgs = @()
+`$distro = '$distroLiteral'
+if (-not [string]::IsNullOrWhiteSpace(`$distro)) {
+    `$wslArgs += @('-d', `$distro)
+}
+`$wslArgs += @('-u', 'root', '--exec', 'sh', '-lc', '$keepAliveLiteral')
+& wsl.exe @wslArgs
+"@
+    $encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($childScript))
+
+    try {
+        $process = Start-Process -FilePath 'powershell.exe' -ArgumentList @(
+            '-NoLogo',
+            '-NoProfile',
+            '-ExecutionPolicy',
+            'Bypass',
+            '-EncodedCommand',
+            $encodedCommand
+        ) -WindowStyle Hidden -PassThru
+        Set-Content -LiteralPath (Get-WslKeepAlivePidFile) -Value "$($process.Id)"
+        if (-not $script:WslKeepAliveNoticeShown) {
+            print_info "Keeping WSL distro '$script:WslDockerDistro' active while Agent Zero runs."
+            $script:WslKeepAliveNoticeShown = $true
+        }
+    }
+    catch {
+        print_warn "Could not start the WSL keepalive process. If WSL idles, running Agent Zero containers may stop."
+    }
+}
+
+function Stop-WslDockerKeepAlive {
+    if ($script:DockerMode -ne 'wsl') {
+        return
+    }
+
+    $pidFile = Get-WslKeepAlivePidFile
+    if (-not (Test-Path -LiteralPath $pidFile)) {
+        return
+    }
+
+    $pidText = (Get-Content -LiteralPath $pidFile -ErrorAction SilentlyContinue | Select-Object -First 1)
+    $processId = 0
+    if ([int]::TryParse("$pidText", [ref]$processId) -and (Test-ProcessIdRunning -ProcessId $processId)) {
+        Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
+    }
+    Remove-Item -LiteralPath $pidFile -Force -ErrorAction SilentlyContinue
+
+    $killArgs = @()
+    if (-not [string]::IsNullOrWhiteSpace($script:WslDockerDistro)) {
+        $killArgs += @('-d', $script:WslDockerDistro)
+    }
+    $killArgs += @('-u', 'root', '--exec', 'sh', '-lc', "pkill -f 'sleep 2147483647' 2>/dev/null || true; pkill -f '2147483647' 2>/dev/null || true")
+    try {
+        & wsl.exe @killArgs *> $null
+    }
+    catch { }
+}
+
+function Get-WslDockerDistros {
+    $wsl = Get-Command wsl.exe -ErrorAction SilentlyContinue
+    if (-not $wsl) {
+        return @()
+    }
+
+    $raw = Get-WslListText
+
+    $distros = New-Object System.Collections.Generic.List[object]
+    foreach ($lineRaw in ((Get-CleanCommandText $raw) -split "`r?`n")) {
+        $line = $lineRaw.Trim()
+        if ([string]::IsNullOrWhiteSpace($line) -or $line -match '^NAME\s+STATE\s+VERSION$') {
+            continue
+        }
+
+        $isDefault = $line.StartsWith('*')
+        $clean = $line -replace '^\*\s*', ''
+        $parts = @($clean -split '\s+' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+        if ($parts.Count -lt 3) {
+            continue
+        }
+
+        $versionText = $parts[$parts.Count - 1]
+        $state = $parts[$parts.Count - 2]
+        $name = ($parts[0..($parts.Count - 3)] -join ' ')
+        $version = 0
+        if (-not [int]::TryParse($versionText, [ref]$version)) {
+            continue
+        }
+
+        $distros.Add([pscustomobject]@{
+            Name = $name
+            State = $state
+            Version = $version
+            IsDefault = $isDefault
+        })
+    }
+
+    return $distros.ToArray()
+}
+
+function Get-WslDistroCandidates {
+    param([switch]$PreferUbuntu)
+
+    $distros = @(Get-WslDockerDistros | Where-Object { $_.Version -eq 2 })
+    $ordered = New-Object System.Collections.Generic.List[object]
+    $seen = @{}
+
+    function Add-Candidate {
+        param([object]$Distro)
+        if ($null -eq $Distro) {
+            return
+        }
+        $name = "$($Distro.Name)"
+        if ([string]::IsNullOrWhiteSpace($name) -or $seen.ContainsKey($name)) {
+            return
+        }
+        $seen[$name] = $true
+        $ordered.Add($Distro)
+    }
+
+    if ($PreferUbuntu) {
+        $distros | Where-Object { $_.Name -eq $script:DefaultWslDistro } | ForEach-Object { Add-Candidate $_ }
+        $distros | Where-Object { $_.Name -like "$script:DefaultWslDistro*" } | ForEach-Object { Add-Candidate $_ }
+        $distros | Where-Object { $_.IsDefault } | ForEach-Object { Add-Candidate $_ }
+    }
+    else {
+        $distros | Where-Object { $_.IsDefault } | ForEach-Object { Add-Candidate $_ }
+        $distros | Where-Object { $_.Name -eq $script:DefaultWslDistro } | ForEach-Object { Add-Candidate $_ }
+        $distros | Where-Object { $_.Name -like "$script:DefaultWslDistro*" } | ForEach-Object { Add-Candidate $_ }
+    }
+
+    $distros | ForEach-Object { Add-Candidate $_ }
+    return $ordered.ToArray()
+}
+
+function Select-WslDockerDistro {
+    $distros = @(Get-WslDistroCandidates)
+    if ($distros.Count -eq 0) {
+        return ''
+    }
+
+    $selected = $distros | Select-Object -First 1
+    return "$($selected.Name)"
+}
+
+function Select-WslSetupDistro {
+    $distros = @(Get-WslDistroCandidates -PreferUbuntu)
+    if ($distros.Count -eq 0) {
+        return ''
+    }
+
+    $selected = $distros | Where-Object { $_.Name -eq $script:DefaultWslDistro } | Select-Object -First 1
+    if (-not $selected) {
+        $selected = $distros | Where-Object { $_.Name -like "$script:DefaultWslDistro*" } | Select-Object -First 1
+    }
+
+    if (-not $selected) {
+        return ''
+    }
+
+    return "$($selected.Name)"
+}
+
+function Test-WslDockerAvailable {
+    foreach ($candidate in (Get-WslDistroCandidates)) {
+        $distro = "$($candidate.Name)"
+        try {
+            Invoke-WslShell -Distro $distro -Script 'docker info >/dev/null 2>&1' *> $null
+            if ($LASTEXITCODE -eq 0) {
+                $script:DockerMode = 'wsl'
+                $script:DockerHostArgs = @()
+                $script:WslDockerDistro = $distro
+                return $true
+            }
+        }
+        catch { }
+    }
+
+    return $false
+}
+
+function Use-WslDockerRuntimeIfInstalled {
+    foreach ($candidate in (Get-WslDistroCandidates)) {
+        $distro = "$($candidate.Name)"
+        $hasDocker = Test-WslCommandOk -Distro $distro -Script 'command -v docker >/dev/null 2>&1'
+        $hasDockerd = Test-WslCommandOk -Distro $distro -Script 'command -v dockerd >/dev/null 2>&1'
+        if (-not ($hasDocker -and $hasDockerd)) {
+            continue
+        }
+
+        if (Start-WslDockerEngine -Distro $distro) {
+            $script:DockerMode = 'wsl'
+            $script:DockerHostArgs = @()
+            $script:WslDockerDistro = $distro
+            print_ok "Using Docker Engine inside WSL distro '$script:WslDockerDistro'"
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Ensure-WindowsClientWslRuntime {
+    if (Test-WindowsServer) {
+        Show-WindowsServerDockerGuidance
+        return 'failed'
+    }
+
+    $wsl = Get-Command wsl.exe -ErrorAction SilentlyContinue
+    if (-not $wsl) {
+        return (Install-WslFeatures)
+    }
+
+    $wslList = Get-WslListText
+    if (-not (Test-WslFeaturesUsable -ListText $wslList)) {
+        return (Install-WslFeatures)
+    }
+
+    if (Use-WslDockerRuntimeIfInstalled) {
+        return 'ready'
+    }
+
+    $distro = Select-WslSetupDistro
+    if ([string]::IsNullOrWhiteSpace($distro)) {
+        $distroStatus = Install-WslDistribution
+        if ($distroStatus -ne 'ready') {
+            return $distroStatus
+        }
+        $distro = $script:DefaultWslDistro
+    }
+
+    if (-not (Test-WslRootCommandOk -Distro $distro -Script 'true')) {
+        print_warn "WSL distro '$distro' is not ready for command-line setup yet."
+        print_warn 'If Windows opened a first-run setup window or asks for a restart, complete that and rerun this installer.'
+        return 'followup'
+    }
+
+    $hasDocker = Test-WslCommandOk -Distro $distro -Script 'command -v docker >/dev/null 2>&1'
+    $hasDockerd = Test-WslCommandOk -Distro $distro -Script 'command -v dockerd >/dev/null 2>&1'
+    if (-not ($hasDocker -and $hasDockerd)) {
+        if (-not (Install-DockerEngineInWsl -Distro $distro)) {
+            return 'failed'
+        }
+    }
+
+    if (-not (Start-WslDockerEngine -Distro $distro)) {
+        print_error "Could not start Docker Engine inside WSL distro '$distro'."
+        return 'failed'
+    }
+
+    $script:DockerMode = 'wsl'
+    $script:DockerHostArgs = @()
+    $script:WslDockerDistro = $distro
+    print_ok "Using Docker Engine inside WSL distro '$script:WslDockerDistro'"
+    return 'ready'
+}
+
+function Complete-WindowsClientRuntimeSetup {
+    $status = Ensure-WindowsClientWslRuntime
+    if ($status -eq 'ready') {
+        return $true
+    }
+    if ($status -eq 'followup') {
+        exit 0
+    }
+
+    return $false
+}
+
+function Invoke-Docker {
+    param([string[]]$Arguments)
+
+    if ($script:DockerMode -eq 'wsl') {
+        $wslArgs = @()
+        if (-not [string]::IsNullOrWhiteSpace($script:WslDockerDistro)) {
+            $wslArgs += @('-d', $script:WslDockerDistro)
+        }
+        $wslArgs += @('--exec', 'docker')
+        $wslArgs += $Arguments
+        & wsl.exe @wslArgs
+        return
+    }
+
+    $dockerArgs = @()
+    $dockerArgs += $script:DockerHostArgs
+    $dockerArgs += $Arguments
+    & docker @dockerArgs
+}
+
+function Normalize-DockerHostCandidate {
+    param([string]$HostValue)
+
+    if ([string]::IsNullOrWhiteSpace($HostValue)) {
+        return ''
+    }
+
+    $trimmed = $HostValue.Trim()
+    if ($trimmed -match '^(unix|npipe|tcp|http|https|ssh)://') {
+        return $trimmed
+    }
+
+    return ''
+}
+
+function Test-LocalDockerHostCandidate {
+    param([string]$HostValue)
+
+    if ([string]::IsNullOrWhiteSpace($HostValue)) {
+        return $false
+    }
+
+    return (
+        $HostValue -match '^npipe://' -or
+        $HostValue -match '^unix://' -or
+        $HostValue -match '^(tcp|http|https)://localhost[:/]' -or
+        $HostValue -match '^(tcp|http|https)://127\.' -or
+        $HostValue -match '^(tcp|http|https)://\[::1\][:/]'
+    )
+}
+
+function Use-DockerEndpointIfReachable {
+    param(
+        [string]$Label,
+        [string]$HostValue
+    )
+
+    $hostCandidate = Normalize-DockerHostCandidate -HostValue $HostValue
+    if ([string]::IsNullOrWhiteSpace($hostCandidate)) {
+        return $false
+    }
+    if (-not (Test-LocalDockerHostCandidate -HostValue $hostCandidate)) {
+        return $false
+    }
+    if ($script:DockerEndpointScanSeen.ContainsKey($hostCandidate)) {
+        return $false
+    }
+    $script:DockerEndpointScanSeen[$hostCandidate] = $true
+
+    try {
+        & docker --host $hostCandidate info *> $null 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            $script:DockerMode = 'windows'
+            $script:DockerHostArgs = @('--host', $hostCandidate)
+            $script:WslDockerDistro = ''
+            if (-not $script:DockerEndpointNoticeShown) {
+                print_ok "Using Docker runtime: $Label"
+                $script:DockerEndpointNoticeShown = $true
+            }
+            return $true
+        }
+    }
+    catch { }
+
+    return $false
+}
+
+function Use-DockerHostEnvEndpoint {
+    if ([string]::IsNullOrWhiteSpace($env:DOCKER_HOST)) {
+        return $false
+    }
+
+    return (Use-DockerEndpointIfReachable -Label 'DOCKER_HOST' -HostValue $env:DOCKER_HOST)
+}
+
+function Use-DockerContextEndpoint {
+    param([string]$ContextName)
+
+    if ([string]::IsNullOrWhiteSpace($ContextName)) {
+        return $false
+    }
+
+    try {
+        $hostValue = (& docker context inspect $ContextName --format '{{ (index .Endpoints "docker").Host }}' 2>$null | Select-Object -First 1)
+        if ([string]::IsNullOrWhiteSpace($hostValue) -or "$hostValue" -eq '<no value>') {
+            return $false
+        }
+        return (Use-DockerEndpointIfReachable -Label "Docker context '$ContextName'" -HostValue "$hostValue")
+    }
+    catch {
+        return $false
+    }
+}
+
+function Use-DockerContextEndpoints {
+    $currentContext = ''
+    try {
+        $currentContext = "$(& docker context show 2>$null)".Trim()
+    }
+    catch { }
+
+    if ((-not [string]::IsNullOrWhiteSpace($currentContext)) -and (Use-DockerContextEndpoint -ContextName $currentContext)) {
+        return $true
+    }
+
+    $contexts = @()
+    try {
+        $contexts = @(& docker context ls --format '{{.Name}}' 2>$null | ForEach-Object { "$($_)".Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    }
+    catch { }
+
+    foreach ($context in $contexts) {
+        if ($context -eq $currentContext) {
+            continue
+        }
+        if (Use-DockerContextEndpoint -ContextName $context) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Use-KnownDockerEndpointCandidates {
+    $candidates = @(
+        @{ Label = 'Docker Engine'; Host = 'npipe:////./pipe/docker_engine' },
+        @{ Label = 'Docker Desktop'; Host = 'npipe:////./pipe/dockerDesktopLinuxEngine' },
+        @{ Label = 'Podman'; Host = 'npipe:////./pipe/podman-machine-default' }
+    )
+
+    foreach ($candidate in $candidates) {
+        if (Use-DockerEndpointIfReachable -Label $candidate.Label -HostValue $candidate.Host) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Use-ExistingDockerEndpoint {
+    if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+        return $false
+    }
+
+    $script:DockerEndpointScanSeen = @{}
+
+    if (Use-DockerHostEnvEndpoint) {
+        return $true
+    }
+    if (Use-DockerContextEndpoints) {
+        return $true
+    }
+    if (Use-KnownDockerEndpointCandidates) {
+        return $true
+    }
+
+    return $false
+}
+
+# Check whether a TCP port is in use on localhost.
+# Checks Docker container port mappings and system listeners.
+# Returns $true if in use, $false if free.
+function Is-PortInUse {
+    param([int]$Port)
+
+    # Check Docker-published ports
+    try {
+        $dockerPorts = Invoke-Docker -Arguments @('ps', '-a', '--format', '{{.Ports}}') 2>$null
+        if ($LASTEXITCODE -eq 0 -and $dockerPorts) {
+            $portsText = ($dockerPorts | Out-String)
+            if ($portsText -match ":${Port}->") {
+                return $true
+            }
+        }
+    }
+    catch { }
+
+    # System-level check via Test-NetConnection or .NET TcpClient
+    try {
+        $listener = New-Object System.Net.Sockets.TcpClient
+        $listener.Connect('127.0.0.1', $Port)
+        $listener.Close()
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+# Find the first free port starting from a given base.
+function Find-FreePort {
+    param([int]$BasePort = 5080)
+
+    $candidate = $BasePort
+    $maxAttempts = 100
+    $attempt = 0
+
+    while ($attempt -lt $maxAttempts) {
+        if (-not (Is-PortInUse -Port $candidate)) {
+            return $candidate
+        }
+        $candidate++
+        $attempt++
+    }
+
+    # If exhausted, return base port and let Docker report the conflict
+    return $BasePort
+}
+
+function Test-PortValue {
+    param([int]$PortValue)
+
+    return ($PortValue -ge 1 -and $PortValue -le 65535)
+}
+
+# Escape-aware text input. Reads character by character with support for:
+#   - Normal character input and Backspace for editing
+#   - Escape key to abort (returns $null)
+#   - Enter to submit (returns the entered text)
+function Read-InputWithEscape {
+    param(
+        [string]$Default = ''
+    )
+
+    $buffer = $Default
+    if ($buffer.Length -gt 0) {
+        Write-Host $buffer -NoNewline
+    }
+
+    while ($true) {
+        $keyInfo = [Console]::ReadKey($true)
+
+        # Handle Enter key
+        if ($keyInfo.Key -eq 'Enter') {
+            Write-Host ''
+            return $buffer
+        }
+
+        # Handle Escape key
+        if ($keyInfo.Key -eq 'Escape') {
+            Write-Host ''
+            return $null
+        }
+
+        # Handle Backspace
+        if ($keyInfo.Key -eq 'Backspace') {
+            if ($buffer.Length -gt 0) {
+                $buffer = $buffer.Substring(0, $buffer.Length - 1)
+                # Move cursor back, overwrite with space, move back again
+                Write-Host "`b `b" -NoNewline
+            }
+            continue
+        }
+
+        # Regular printable character
+        $ch = $keyInfo.KeyChar
+        if ($ch -and [char]::IsControl($ch) -eq $false) {
+            $buffer += $ch
+            Write-Host $ch -NoNewline
+        }
+    }
+}
+
+# Legacy wrapper kept for compatibility - no longer used by main flow
+function Read-HostWithDefault {
+    param(
+        [string]$Prompt,
+        [string]$Default = ''
+    )
+
+    if ([string]::IsNullOrEmpty($Default)) {
+        return (Read-Host $Prompt)
+    }
+
+    $value = Read-Host "$Prompt [$Default]"
+    if ([string]::IsNullOrWhiteSpace($value)) {
+        return $Default
+    }
+
+    return $value
+}
+
+# Returns selected index (0-based) on Enter, or -1 on Escape/Backspace (go back).
+# Throws "GO_BACK" is NOT used; callers check for -1 return value.
+function select_from_menu {
+    param(
+        [string]$Header = '',
+        [string[]]$Options
+    )
+
+    if (-not $Options -or $Options.Count -eq 0) {
+        print_error "select_from_menu requires at least one menu option"
+        exit 1
+    }
+
+    if (-not (Test-InteractiveConsole)) {
+        print_error 'This installer menu requires an interactive PowerShell session.'
+        exit 1
+    }
+
+    $selectedIndex = 0
+
+    # Flush any buffered keypresses so stale input doesn't auto-select an option
+    try {
+        while ([Console]::KeyAvailable) {
+            [void][Console]::ReadKey($true)
+        }
+    }
+    catch {
+        print_error 'This installer menu requires an interactive PowerShell session.'
+        exit 1
+    }
+
+    while ($true) {
+        Clear-Host
+        Show-Banner
+
+        if (-not [string]::IsNullOrWhiteSpace($Header)) {
+            Write-Host $Header
+            Write-Host ''
+        }
+
+        for ($i = 0; $i -lt $Options.Count; $i++) {
+            if ($i -eq $selectedIndex) {
+                Write-Host "  > $($Options[$i])" -ForegroundColor Green
+            }
+            else {
+                Write-Host "    $($Options[$i])"
+            }
+        }
+
+        Write-Host ''
+        Write-Host 'Use arrow keys to navigate, Enter to select, Esc to go back'
+
+        $keyInfo = [Console]::ReadKey($true)
+        switch ($keyInfo.Key) {
+            'Enter' {
+                return $selectedIndex
+            }
+            'Escape' {
+                return -1
+            }
+            'Backspace' {
+                return -1
+            }
+            'UpArrow' {
+                $selectedIndex--
+                if ($selectedIndex -lt 0) {
+                    $selectedIndex = $Options.Count - 1
+                }
+            }
+            'DownArrow' {
+                $selectedIndex++
+                if ($selectedIndex -ge $Options.Count) {
+                    $selectedIndex = 0
+                }
+            }
+        }
+    }
+}
+
+function check_docker_daemon_running {
+    try {
+        Invoke-Docker -Arguments @('info') *> $null 2>&1
+        return ($LASTEXITCODE -eq 0)
+    }
+    catch {
+        # NativeCommandError thrown under $ErrorActionPreference = 'Stop'
+        # means docker exited with non-zero / daemon not running.
+        return $false
+    }
+}
+
+function start_docker_daemon {
+    print_info "Starting Docker Desktop..."
+
+    $desktopPath = Get-DockerDesktopPath
+    if (-not [string]::IsNullOrWhiteSpace($desktopPath)) {
+        Start-Process -FilePath $desktopPath
+        return $true
+    }
+
+    print_info "Docker Desktop was not found."
+    return $false
+}
+
+function Get-DockerDesktopPath {
+    $candidatePaths = @(
+        (Join-Path $env:ProgramFiles 'Docker\Docker\Docker Desktop.exe')
+    )
+
+    if (${env:ProgramFiles(x86)}) {
+        $candidatePaths += (Join-Path ${env:ProgramFiles(x86)} 'Docker\Docker\Docker Desktop.exe')
+    }
+
+    foreach ($path in $candidatePaths) {
+        if (Test-Path -LiteralPath $path) {
+            return $path
+        }
+    }
+
+    return ''
+}
+
+function Open-DockerDesktopDownload {
+    try {
+        Start-Process 'https://www.docker.com/products/docker-desktop/'
+        print_ok 'Opened Docker Desktop download page in browser.'
+    }
+    catch {
+        print_warn 'Could not open browser. Please visit https://www.docker.com/products/docker-desktop/ manually.'
+    }
+}
+
+function wait_for_docker_daemon {
+    $maxWait = 30
+    $waited = 0
+
+    print_info "Waiting for Docker daemon to be ready..."
+    while ($waited -lt $maxWait) {
+        if (check_docker_daemon_running) {
+            Write-Host ''
+            print_ok "Docker daemon is ready"
+            return $true
+        }
+
+        Start-Sleep -Seconds 1
+        $waited++
+        Write-Host '.' -NoNewline
+    }
+
+    Write-Host ''
+    print_error "Docker daemon did not become ready within $maxWait seconds."
+    return $false
+}
+
+function check_docker {
+    if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+        if (Test-WslDockerAvailable) {
+            print_ok "Using Docker Engine inside WSL distro '$script:WslDockerDistro'"
+            return
+        }
+        if ($script:SkipRuntimeSetup) {
+            Show-WindowsClientDockerGuidance
+            exit 1
+        }
+        if (Use-WslDockerRuntimeIfInstalled) {
+            return
+        }
+        if (Test-WindowsServer) {
+            Show-WindowsServerDockerGuidance
+            exit 1
+        }
+        if ($script:CliNonInteractive) {
+            if (Complete-WindowsClientRuntimeSetup) {
+                return
+            }
+            exit 1
+        }
+        if (-not (Test-InteractiveConsole)) {
+            Show-WindowsClientDockerGuidance
+            exit 1
+        }
+
+        # Docker not found - offer the Agent Zero local runtime before manual Docker paths.
+        while ($true) {
+            $idx = select_from_menu -Header 'Agent Zero needs a local runtime. What would you like to do?' `
+                -Options @('Set up Agent Zero local runtime', 'Open Docker Desktop download page', 'Check again')
+
+            if ($idx -eq -1) {
+                # Esc pressed — exit
+                exit 0
+            }
+
+            if ($idx -eq 0) {
+                if (Complete-WindowsClientRuntimeSetup) {
+                    return
+                }
+            }
+            elseif ($idx -eq 1) {
+                Open-DockerDesktopDownload
+            }
+
+            # Check again (both after opening page or explicit "Check again")
+            if (Get-Command docker -ErrorAction SilentlyContinue) {
+                print_ok 'Docker found'
+                break
+            }
+            if (Test-WslDockerAvailable) {
+                print_ok "Using Docker Engine inside WSL distro '$script:WslDockerDistro'"
+                return
+            }
+            if (Use-WslDockerRuntimeIfInstalled) {
+                return
+            }
+        }
+    }
+    else {
+        print_ok "Docker already installed"
+    }
+
+    if (-not (check_docker_daemon_running)) {
+        if (Use-ExistingDockerEndpoint) {
+            return
+        }
+        if (Test-WslDockerAvailable) {
+            print_ok "Using Docker Engine inside WSL distro '$script:WslDockerDistro'"
+            return
+        }
+        if ($script:SkipRuntimeSetup) {
+            Show-WindowsClientDockerGuidance -DaemonOnly
+            exit 1
+        }
+        if (Use-WslDockerRuntimeIfInstalled) {
+            return
+        }
+        print_warn "Docker daemon is not running"
+        if (Test-WindowsServer) {
+            print_error 'Docker is installed, but its daemon is not reachable.'
+            print_info 'Start your Windows Server Docker endpoint or WSL2-backed Docker Engine, then rerun this installer.'
+            exit 1
+        }
+        if ($script:CliNonInteractive) {
+            if (Complete-WindowsClientRuntimeSetup) {
+                return
+            }
+            exit 1
+        }
+        if (-not (Test-InteractiveConsole)) {
+            Show-WindowsClientDockerGuidance -DaemonOnly
+            exit 1
+        }
+
+        # Try to auto-start Docker Desktop first
+        $autoStarted = start_docker_daemon
+        if ($autoStarted) {
+            if (wait_for_docker_daemon) {
+                return
+            }
+        }
+
+        # Auto-start failed or timed out - offer local runtime setup as the friendly path.
+        while ($true) {
+            $idx = select_from_menu -Header 'Docker is not running. What would you like to do?' `
+                -Options @('Set up Agent Zero local runtime', 'Try Docker again', 'Exit')
+
+            if ($idx -eq -1 -or $idx -eq 2) {
+                exit 0
+            }
+
+            if ($idx -eq 0) {
+                if (Complete-WindowsClientRuntimeSetup) {
+                    return
+                }
+            }
+
+            if (Use-ExistingDockerEndpoint) {
+                return
+            }
+            if (Test-WslDockerAvailable) {
+                print_ok "Using Docker Engine inside WSL distro '$script:WslDockerDistro'"
+                return
+            }
+            if (Use-WslDockerRuntimeIfInstalled) {
+                return
+            }
+            if (check_docker_daemon_running) {
+                print_ok 'Docker daemon is running'
+                break
+            }
+        }
+    }
+    else {
+        print_ok "Docker daemon is running"
+    }
+}
+
+function Get-NonEmptyLines {
+    param([object]$InputObject)
+
+    if ($null -eq $InputObject) {
+        return @()
+    }
+
+    $lines = @($InputObject)
+    return @($lines | ForEach-Object { "$($_)".Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
+
+function Wait-ForReady {
+    param([string]$Url)
+
+    $maxWait = 300
+    $waited = 0
+
+    Write-Host "[INFO] Launching Agent Zero..." -ForegroundColor Green -NoNewline
+    while ($waited -lt $maxWait) {
+        try {
+            $response = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 2 -ErrorAction Stop
+            if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) {
+                Write-Host ''
+                print_ok "Agent Zero is ready at $Url"
+                return $true
+            }
+        }
+        catch { }
+
+        Start-Sleep -Seconds 1
+        $waited++
+        Write-Host '.' -NoNewline
+    }
+
+    Write-Host ''
+    print_warn "Agent Zero did not respond within $maxWait seconds. It may still be starting up."
+    return $false
+}
+
+# Discover Agent Zero containers using a hybrid approach:
+#   1. Containers with the "ai.agent0.managed=true" label (new installs)
+#   2. Containers whose Config.Image matches agent0ai/agent-zero (legacy / pre-label)
+# Returns an array of "Name|Image|Status" strings where Image is the friendly
+# reference resolved via Config.Image (survives image re-tagging).
+function List-AgentZeroContainers {
+    $result = New-Object System.Collections.Generic.List[string]
+    $seen = @{}
+
+    try {
+        # --- Pass 1: labeled containers (fast, single docker command) ---
+        $labeled = Invoke-Docker -Arguments @('ps', '-a', '--filter', 'label=ai.agent0.managed=true', '--format', '{{.Names}}') 2>$null
+        if ($LASTEXITCODE -eq 0 -and $labeled) {
+            foreach ($name in (Get-NonEmptyLines $labeled)) {
+                $cfgImage = (Invoke-Docker -Arguments @('inspect', '--format', '{{.Config.Image}}', $name) 2>$null) | Select-Object -First 1
+                $status = (Invoke-Docker -Arguments @('ps', '-a', '--filter', "name=^/$name$", '--format', '{{.Status}}') 2>$null) | Select-Object -First 1
+                $result.Add("$name|$cfgImage|$status")
+                $seen[$name] = $true
+            }
+        }
+
+        # --- Pass 2: unlabeled containers whose Config.Image matches (legacy) ---
+        $allNames = Invoke-Docker -Arguments @('ps', '-a', '--format', '{{.Names}}') 2>$null
+        if ($LASTEXITCODE -eq 0 -and $allNames) {
+            foreach ($name in (Get-NonEmptyLines $allNames)) {
+                if ($seen.ContainsKey($name)) { continue }
+                $cfgImage = (Invoke-Docker -Arguments @('inspect', '--format', '{{.Config.Image}}', $name) 2>$null) | Select-Object -First 1
+                if (-not ($cfgImage -match '^agent0ai/agent-zero(:|$)')) { continue }
+                $status = (Invoke-Docker -Arguments @('ps', '-a', '--filter', "name=^/$name$", '--format', '{{.Status}}') 2>$null) | Select-Object -First 1
+                $result.Add("$name|$cfgImage|$status")
+            }
+        }
+    }
+    catch { }
+
+    return $result.ToArray()
+}
+
+function count_existing_agent_zero_containers {
+    return @(List-AgentZeroContainers).Count
+}
+
+function instance_name_taken {
+    param([string]$NameToCheck)
+
+    $names = Invoke-Docker -Arguments @('ps', '-a', '--format', '{{.Names}}') 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        return $false
+    }
+
+    foreach ($name in (Get-NonEmptyLines $names)) {
+        if ($name -eq $NameToCheck) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function suggest_next_instance_name {
+    param([string]$BaseName = 'agent-zero')
+
+    $candidateName = $BaseName
+    $index = 2
+
+    while (instance_name_taken -NameToCheck $candidateName) {
+        $candidateName = "$BaseName-$index"
+        $index++
+    }
+
+    return $candidateName
+}
+
+function open_browser {
+    param([string]$Url)
+
+    try {
+        Start-Process $Url
+        print_ok "Opened browser: $Url"
+    }
+    catch {
+        print_warn "Could not open browser automatically. Open this URL manually: $Url"
+    }
+}
+
+function fetch_available_tags {
+    $tagsUrl = 'https://registry.hub.docker.com/v2/repositories/agent0ai/agent-zero/tags/?page_size=20&ordering=last_updated'
+
+    try {
+        $payload = Invoke-RestMethod -Uri $tagsUrl -Method Get
+    }
+    catch {
+        return @()
+    }
+
+    $seen = @{}
+    $parsedTags = New-Object System.Collections.Generic.List[string]
+
+    foreach ($item in @($payload.results)) {
+        $name = $item.name
+        if ([string]::IsNullOrWhiteSpace($name)) {
+            continue
+        }
+
+        if (-not $seen.ContainsKey($name)) {
+            $seen[$name] = $true
+            $parsedTags.Add($name)
+        }
+    }
+
+    return $parsedTags.ToArray()
+}
+
+function fetch_latest_release_tag {
+    $releasesUrl = 'https://api.github.com/repos/agent0ai/agent-zero/releases?per_page=100'
+
+    try {
+        $payload = Invoke-RestMethod -Uri $releasesUrl -Method Get
+    }
+    catch {
+        return ''
+    }
+
+    $candidates = New-Object System.Collections.Generic.List[object]
+    foreach ($item in @($payload)) {
+        $tag = "$($item.tag_name)"
+        if ($item.draft -or $item.prerelease) {
+            continue
+        }
+
+        $version = Convert-AgentZeroReleaseTagToVersion -Tag $tag
+        if ($null -ne $version) {
+            $publishedAt = [datetime]::MinValue
+            if (-not [string]::IsNullOrWhiteSpace("$($item.published_at)")) {
+                try {
+                    $publishedAt = [datetime]::Parse("$($item.published_at)")
+                }
+                catch {
+                    $publishedAt = [datetime]::MinValue
+                }
+            }
+            $candidates.Add([pscustomobject]@{
+                Tag = $tag
+                Version = $version
+                PublishedAt = $publishedAt
+            })
+        }
+    }
+
+    if ($candidates.Count -gt 0) {
+        $selected = $candidates |
+            Sort-Object -Property @{ Expression = { $_.Version }; Descending = $true }, @{ Expression = { $_.PublishedAt }; Descending = $true } |
+            Select-Object -First 1
+        return $selected.Tag
+    }
+
+    return ''
+}
+
+function Convert-AgentZeroReleaseTagToVersion {
+    param([string]$Tag)
+
+    $tagValue = ''
+    if ($null -ne $Tag) {
+        $tagValue = $Tag.Trim()
+    }
+    if ($tagValue -notmatch '^v(?<major>[0-9]+)\.(?<minor>[0-9]+)(\.(?<patch>[0-9]+))?$') {
+        return $null
+    }
+
+    $patch = '0'
+    if ($Matches.ContainsKey('patch') -and -not [string]::IsNullOrWhiteSpace($Matches['patch'])) {
+        $patch = $Matches['patch']
+    }
+
+    try {
+        return [version]"$($Matches['major']).$($Matches['minor']).$patch"
+    }
+    catch {
+        return $null
+    }
+}
+
+function default_image_tag {
+    $tag = fetch_latest_release_tag
+    if (-not [string]::IsNullOrWhiteSpace($tag)) {
+        return $tag
+    }
+    return 'latest'
+}
+
+function select_image_tag {
+    $script:SelectedTag = default_image_tag
+
+    $allTags = @(fetch_available_tags)
+
+    if ($allTags.Count -eq 0) {
+        Write-Host 'Select version:'
+        print_warn "No additional tags found. Using $script:SelectedTag."
+        print_info "Selected version: $script:SelectedTag"
+        Write-Host ''
+        return $true
+    }
+
+    # Build ordered tag list:
+    #   1. Pinned tags (latest, testing, development) - only if they exist
+    #   2. Up to 5 additional tags from newest, excluding pinned ones
+    $pinnedNames = @('latest', 'testing', 'development')
+    $pinnedTags = New-Object System.Collections.Generic.List[string]
+    foreach ($pin in $pinnedNames) {
+        if ($allTags -contains $pin) {
+            $pinnedTags.Add($pin)
+        }
+    }
+
+    $otherTags = New-Object System.Collections.Generic.List[string]
+    foreach ($tag in $allTags) {
+        if ($pinnedNames -contains $tag) {
+            continue
+        }
+        if ($otherTags.Count -ge 5) {
+            break
+        }
+        $otherTags.Add($tag)
+    }
+
+    # Combine pinned + other into final menu list
+    $menuTags = New-Object System.Collections.Generic.List[string]
+    foreach ($t in $pinnedTags) { $menuTags.Add($t) }
+    foreach ($t in $otherTags) { $menuTags.Add($t) }
+
+    if ($menuTags.Count -eq 0) {
+        Write-Host 'Select version:'
+        print_warn "No tags found. Using $script:SelectedTag."
+        print_info "Selected version: $script:SelectedTag"
+        Write-Host ''
+        return $true
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($script:SelectedTag) -and -not $menuTags.Contains($script:SelectedTag)) {
+        $menuTags.Insert(0, $script:SelectedTag)
+    }
+
+    $selectedIndex = select_from_menu -Header 'Select version:' -Options $menuTags.ToArray()
+
+    # Handle go-back
+    if ($selectedIndex -eq -1) {
+        return $false
+    }
+
+    $script:SelectedTag = $menuTags[$selectedIndex]
+    if ([string]::IsNullOrWhiteSpace($script:SelectedTag)) {
+        $script:SelectedTag = 'latest'
+    }
+
+    print_info "Selected version: $script:SelectedTag"
+    Write-Host ''
+    return $true
+}
+
+function Expand-UserPath {
+    param([string]$PathValue)
+
+    if ($PathValue -eq '~') {
+        return $script:HomeDir
+    }
+
+    if ($PathValue.StartsWith('~/') -or $PathValue.StartsWith('~\')) {
+        return (Join-Path $script:HomeDir $PathValue.Substring(2))
+    }
+
+    return $PathValue
+}
+
+function Convert-ToDockerPath {
+    param([string]$PathValue)
+
+    if ($script:DockerMode -eq 'wsl') {
+        try {
+            $converted = & wsl.exe -d $script:WslDockerDistro --exec wslpath -a $PathValue 2>$null
+            if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace("$converted")) {
+                return (Get-CleanCommandText $converted)
+            }
+        }
+        catch { }
+    }
+
+    return $PathValue -replace '\\', '/'
+}
+
+# Returns $true on success, $false if user pressed Escape to go back.
+function create_instance {
+    # -----------------------------------------------------------
+    # Gather configuration from user (step-based wizard)
+    #   Esc on any step goes back to the previous step.
+    #   Esc on the first step aborts create_instance (returns $false).
+    # -----------------------------------------------------------
+    $installRoot = Join-Path $script:HomeDir 'agent-zero'
+
+    # Variables populated across wizard steps
+    $containerName = ''
+    $dataDir = ''
+    $port = ''
+    $authLogin = ''
+    $authPassword = ''
+
+    # Compute defaults once up front
+    $defaultPort = Find-FreePort -BasePort 5080
+    $defaultName = suggest_next_instance_name -BaseName 'agent-zero'
+
+    $quickStart = $false
+    if ($script:CliNonInteractive) {
+        $quickStart = $true
+        $script:SelectedTag = if (-not [string]::IsNullOrWhiteSpace($script:CliTag)) { $script:CliTag } else { default_image_tag }
+        $containerName = if (-not [string]::IsNullOrWhiteSpace($script:CliName)) { $script:CliName } else { $defaultName }
+        $instanceDir = Join-Path $installRoot $containerName
+        $dataDir = if (-not [string]::IsNullOrWhiteSpace($script:CliDataDir)) { $script:CliDataDir } else { Join-Path $instanceDir 'usr' }
+        $dataDir = Expand-UserPath -PathValue $dataDir
+        $port = if ($script:CliPort -gt 0) { "$($script:CliPort)" } else { "$defaultPort" }
+        $authLogin = ''
+        $authPassword = ''
+
+        if (-not (Test-PortValue -PortValue ([int]$port))) {
+            print_error "Invalid port: $port"
+            return $false
+        }
+
+        if (-not [string]::IsNullOrWhiteSpace($script:CliName) -and (instance_name_taken -NameToCheck $containerName)) {
+            print_error "Instance name '$containerName' is already taken."
+            return $false
+        }
+
+        if ($script:CliAuthLoginSet) {
+            $authLogin = $script:CliAuthLogin
+        }
+        if ($script:CliAuthPasswordSet) {
+            if ([string]::IsNullOrWhiteSpace($authLogin)) {
+                print_error '-AuthPassword requires -AuthLogin.'
+                return $false
+            }
+            $authPassword = $script:CliAuthPassword
+        }
+        elseif (-not [string]::IsNullOrWhiteSpace($authLogin)) {
+            $authPassword = '12345678'
+        }
+
+        New-Item -ItemType Directory -Force -Path $dataDir *> $null
+        print_info 'Quick Start selected. Using:'
+        print_ok "Version:   $script:SelectedTag"
+        print_ok "Instance:  $containerName"
+        print_ok "Port:      $port"
+        print_ok "Data dir:  $dataDir"
+    }
+    else {
+    $wizardStep = 0
+    while ($wizardStep -ge 0 -and $wizardStep -le 6) {
+        switch ($wizardStep) {
+            0 {
+                # Quick Start vs Manual mode selection
+                $modeIndex = select_from_menu `
+                    -Header 'How would you like to install Agent Zero?' `
+                    -Options @(
+                        "Quick Start",
+                        "Manual (Advanced Configuration)"
+                    )
+                if ($modeIndex -eq -1) {
+                    return $false  # Esc on first step — abort
+                }
+                if ($modeIndex -eq 0) {
+                    # Quick Start: use all defaults, skip to auth
+                    $quickStart = $true
+                    $script:SelectedTag = default_image_tag
+                    $containerName = $defaultName
+                    $instanceDir = Join-Path $installRoot $containerName
+                    $dataDir = Join-Path $instanceDir 'usr'
+                    $port = "$defaultPort"
+                    New-Item -ItemType Directory -Force -Path $dataDir *> $null
+                    $wizardStep = 5
+                }
+                else {
+                    $wizardStep = 1
+                }
+            }
+
+            1 {
+                # Tag / version selection (uses its own full-screen menu)
+                if (select_image_tag) {
+                    $wizardStep = 2
+                }
+                else {
+                    $wizardStep = 0; continue  # Esc — back to mode selection
+                }
+            }
+
+            2 {
+                # Container / instance name
+                Clear-Host
+                Show-Banner
+                Write-Host ''
+                Write-Host 'What should this instance be called?' -ForegroundColor White -NoNewline
+                Write-Host ' (Esc to go back)'
+                Write-Host '> ' -NoNewline
+                $containerName = Read-InputWithEscape -Default $defaultName
+                if ($null -eq $containerName) { $wizardStep = 1; continue }
+                if ([string]::IsNullOrWhiteSpace($containerName)) {
+                    $containerName = $defaultName
+                }
+
+                if (instance_name_taken -NameToCheck $containerName) {
+                    $suggestedName = suggest_next_instance_name -BaseName $containerName
+                    print_warn "Instance name '$containerName' is already taken. Using '$suggestedName'."
+                    $containerName = $suggestedName
+                }
+                print_info "Instance name: $containerName"
+                $wizardStep = 3
+            }
+
+            3 {
+                # Data directory
+                $instanceDir = Join-Path $installRoot $containerName
+                $defaultDataDir = Join-Path $instanceDir 'usr'
+
+                Clear-Host
+                Show-Banner
+                Write-Host ''
+                Write-Host 'Where should Agent Zero store user data?' -ForegroundColor White -NoNewline
+                Write-Host ' (Esc to go back)'
+                Write-Host '> ' -NoNewline
+                $dataDir = Read-InputWithEscape -Default $defaultDataDir
+                if ($null -eq $dataDir) { $wizardStep = 2; continue }
+                if ([string]::IsNullOrWhiteSpace($dataDir)) {
+                    $dataDir = $defaultDataDir
+                }
+                $dataDir = Expand-UserPath -PathValue $dataDir
+                New-Item -ItemType Directory -Force -Path $dataDir *> $null
+                print_info "Data directory: $dataDir"
+                $wizardStep = 4
+            }
+
+            4 {
+                # Port
+                Clear-Host
+                Show-Banner
+                Write-Host ''
+                Write-Host 'What port should Agent Zero Web UI run on?' -ForegroundColor White -NoNewline
+                Write-Host ' (Esc to go back)'
+                Write-Host '> ' -NoNewline
+                $port = Read-InputWithEscape -Default "$defaultPort"
+                if ($null -eq $port) { $wizardStep = 3; continue }
+                if ([string]::IsNullOrWhiteSpace($port)) {
+                    $port = "$defaultPort"
+                }
+                if ($port -notmatch '^[0-9]+$') {
+                    print_error "Invalid port. Falling back to $defaultPort."
+                    $port = "$defaultPort"
+                }
+                print_info "Web UI port: $port"
+                $wizardStep = 5
+            }
+
+            5 {
+                # Auth username
+                Clear-Host
+                Show-Banner
+                Write-Host ''
+                if ($quickStart) {
+                    print_info 'Quick Start selected. Using defaults:'
+                    print_ok "Version:   $script:SelectedTag"
+                    print_ok "Instance:  $containerName"
+                    print_ok "Port:      $port"
+                    print_ok "Data dir:  $dataDir"
+                    Write-Host ''
+                }
+                Write-Host 'What login username should be used for the Web UI?' -ForegroundColor White -NoNewline
+                Write-Host ' (Esc to go back)'
+                Write-Host 'Leave empty for no authentication: ' -NoNewline
+                $authLogin = Read-InputWithEscape
+                if ($null -eq $authLogin) { if ($quickStart) { $wizardStep = 0 } else { $wizardStep = 4 }; continue }
+                $authPassword = ''
+                if (-not [string]::IsNullOrWhiteSpace($authLogin)) {
+                    $wizardStep = 6
+                }
+                else {
+                    print_warn 'No authentication will be configured.'
+                    $wizardStep = 7  # Done gathering input
+                }
+            }
+
+            6 {
+                # Auth password (only reached if username was provided)
+                Clear-Host
+                Show-Banner
+                Write-Host ''
+                Write-Host 'What password should be used?' -ForegroundColor White -NoNewline
+                Write-Host ' (Esc to go back)'
+                Write-Host '> ' -NoNewline
+                $authPassword = Read-InputWithEscape -Default '12345678'
+                if ($null -eq $authPassword) { $wizardStep = 5; continue }
+                if ([string]::IsNullOrWhiteSpace($authPassword)) {
+                    $authPassword = '12345678'
+                }
+                print_info "Auth configured for user: $authLogin"
+                $wizardStep = 7  # Done gathering input
+            }
+        }
+    }
+    }
+
+    Write-Host ''
+    print_info 'Configuration complete. Setting up Agent Zero...'
+    Write-Host ''
+
+    $instanceDir = Join-Path $installRoot $containerName
+    New-Item -ItemType Directory -Force -Path $instanceDir *> $null
+
+    $image = "agent0ai/agent-zero:$($script:SelectedTag)"
+
+    print_info 'Pulling Agent Zero image (this may take a moment)...'
+    Invoke-Docker -Arguments @('pull', '--quiet', $image)
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Failed to pull Docker image.'
+    }
+
+    print_info 'Starting Agent Zero...'
+    $dataDirDocker = Convert-ToDockerPath -PathValue $dataDir
+    $runArgs = @(
+        'run'
+        '--name', $containerName
+        '--label', 'ai.agent0.managed=true'
+        '--restart', 'unless-stopped'
+        '-p', "${port}:80"
+        '-v', "${dataDirDocker}:/a0/usr"
+        '-d'
+    )
+    if (-not [string]::IsNullOrWhiteSpace($authLogin)) {
+        $runArgs += @('-e', "AUTH_LOGIN=$authLogin", '-e', "AUTH_PASSWORD=$authPassword")
+    }
+    $runArgs += $image
+    Invoke-Docker -Arguments $runArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Failed to start Agent Zero.'
+    }
+    Start-WslDockerKeepAlive
+
+    # Wait for the service to become ready
+    Wait-ForReady -Url "http://localhost:$port"
+
+    # Store the created container name for the caller
+    $script:CreatedContainerName = $containerName
+
+    return $true
+}
+
+function Get-AgentZeroContainerRows {
+    return @(List-AgentZeroContainers)
+}
+
+function Test-AnyRunningAgentZeroContainer {
+    foreach ($row in (Get-AgentZeroContainerRows)) {
+        $parts = @("$row".Split('|', 3))
+        if ($parts.Count -lt 3) {
+            continue
+        }
+        if ($parts[2] -like 'Up*') {
+            return $true
+        }
+    }
+    return $false
+}
+
+function Stop-WslDockerKeepAliveIfNoRunningAgentZero {
+    if ($script:DockerMode -ne 'wsl') {
+        return
+    }
+    if (-not (Test-AnyRunningAgentZeroContainer)) {
+        Stop-WslDockerKeepAlive
+    }
+}
+
+function manage_instances {
+    while ($true) {
+        $containerRows = @(Get-AgentZeroContainerRows)
+
+        if ($containerRows.Count -eq 0) {
+            print_warn 'No Agent Zero containers found to manage.'
+            return
+        }
+
+        # Build instance selection menu
+        $instanceOptions = New-Object System.Collections.Generic.List[string]
+        foreach ($row in $containerRows) {
+            $parts = $row -split '\|', 3
+            $name = if ($parts.Count -ge 1) { $parts[0] } else { '' }
+            $image = if ($parts.Count -ge 2) { $parts[1] } else { '' }
+            $status = if ($parts.Count -ge 3) { $parts[2] } else { '' }
+
+            $tag = 'latest'
+            if ($image -match ':(?<tag>[^:]+)$') {
+                $tag = $Matches['tag']
+            }
+
+            $instanceOptions.Add("$name [tag: $tag] [status: $status]")
+        }
+
+        $selectedIndex = select_from_menu -Header 'Select existing instance:' -Options $instanceOptions.ToArray()
+
+        # Handle go-back (Escape/Backspace)
+        if ($selectedIndex -eq -1) {
+            return
+        }
+
+        $selectedRow = $containerRows[$selectedIndex]
+        $selectedParts = $selectedRow -split '\|', 3
+        $selectedName = if ($selectedParts.Count -ge 1) { $selectedParts[0] } else { '' }
+
+        manage_single_instance -ContainerName $selectedName
+    }
+}
+
+# Show the action menu for a single container (open, start, stop, restart, delete).
+# Can be called from manage_instances or directly after create_instance.
+function manage_single_instance {
+    param([string]$ContainerName)
+
+    # Look up the image for display (Config.Image preserves the original tag even when the image is untagged)
+    $selectedImage = ((Get-NonEmptyLines (Invoke-Docker -Arguments @('inspect', '--format', '{{.Config.Image}}', $ContainerName) 2>$null)) | Select-Object -First 1)
+
+    while ($true) {
+        $statusOutput = Invoke-Docker -Arguments @('ps', '-a', '--filter', "name=^/$ContainerName$", '--format', '{{.Status}}') 2>$null
+        $selectedStatus = ((Get-NonEmptyLines $statusOutput) | Select-Object -First 1)
+
+        # If container no longer exists (e.g. after delete), return
+        if ([string]::IsNullOrWhiteSpace($selectedStatus)) {
+            break
+        }
+
+        $isRunning = $selectedStatus -like 'Up*'
+        if ($isRunning) {
+            Start-WslDockerKeepAlive
+        }
+        $instanceHeader = "Selected: $ContainerName ($selectedImage, $selectedStatus)"
+
+        if ($isRunning) {
+            $actionOptions = @('Open in browser', 'Restart', 'Stop', 'Delete', 'Back')
+            $actionIndex = select_from_menu -Header $instanceHeader -Options $actionOptions
+            switch ($actionIndex) {
+                -1 { $actionKey = 'back' }   # Escape/Backspace
+                0  { $actionKey = 'open' }
+                1  { $actionKey = 'restart' }
+                2  { $actionKey = 'stop' }
+                3  { $actionKey = 'delete' }
+                4  { $actionKey = 'back' }
+                default { $actionKey = 'invalid' }
+            }
+        }
+        else {
+            $actionOptions = @('Start', 'Delete', 'Back')
+            $actionIndex = select_from_menu -Header $instanceHeader -Options $actionOptions
+            switch ($actionIndex) {
+                -1 { $actionKey = 'back' }   # Escape/Backspace
+                0  { $actionKey = 'start' }
+                1  { $actionKey = 'delete' }
+                2  { $actionKey = 'back' }
+                default { $actionKey = 'invalid' }
+            }
+        }
+
+        switch ($actionKey) {
+            'open' {
+                $portOutput = Invoke-Docker -Arguments @('port', $ContainerName, '80/tcp') 2>$null
+                $hostPort = ''
+
+                foreach ($line in (Get-NonEmptyLines $portOutput)) {
+                    if ($line -match ':(\d+)\s*$') {
+                        $hostPort = $Matches[1]
+                        break
+                    }
+                }
+
+                if ([string]::IsNullOrWhiteSpace($hostPort)) {
+                    print_warn "Could not resolve a host port for '$ContainerName' on 80/tcp. Ensure it is running with a published port."
+                }
+                else {
+                    $targetUrl = "http://localhost:$hostPort"
+                    print_info "Opening $targetUrl"
+                    open_browser -Url $targetUrl
+                }
+                Wait-ForKeypress
+            }
+            'start' {
+                print_info "Starting '$ContainerName'..."
+                $startOutput = Invoke-Docker -Arguments @('start', $ContainerName) 2>&1
+                # Verify actual container state
+                $runCheck = Invoke-Docker -Arguments @('ps', '--filter', "name=^/$ContainerName$", '--filter', 'status=running', '--format', '{{.Names}}') 2>$null
+                if ((Get-NonEmptyLines $runCheck) -contains $ContainerName) {
+                    print_ok "Started '$ContainerName'."
+                    Start-WslDockerKeepAlive
+                }
+                else {
+                    print_error "Failed to start '$ContainerName'."
+                    if ($startOutput) {
+                        Write-Host "  $startOutput"
+                    }
+                }
+                Wait-ForKeypress
+            }
+            'stop' {
+                print_info "Stopping '$ContainerName'..."
+                Invoke-Docker -Arguments @('stop', $ContainerName) *> $null
+                if ($LASTEXITCODE -eq 0) {
+                    print_ok "Stopped '$ContainerName'."
+                    Stop-WslDockerKeepAliveIfNoRunningAgentZero
+                }
+                else {
+                    print_error "Failed to stop '$ContainerName'."
+                }
+                Wait-ForKeypress
+            }
+            'restart' {
+                print_info "Restarting '$ContainerName'..."
+                $restartOutput = Invoke-Docker -Arguments @('restart', $ContainerName) 2>&1
+                # Verify actual container state
+                $runCheck = Invoke-Docker -Arguments @('ps', '--filter', "name=^/$ContainerName$", '--filter', 'status=running', '--format', '{{.Names}}') 2>$null
+                if ((Get-NonEmptyLines $runCheck) -contains $ContainerName) {
+                    print_ok "Restarted '$ContainerName'."
+                    Start-WslDockerKeepAlive
+                }
+                else {
+                    print_error "Failed to restart '$ContainerName'."
+                    if ($restartOutput) {
+                        Write-Host "  $restartOutput"
+                    }
+                }
+                Wait-ForKeypress
+            }
+            'delete' {
+                Write-Host "Are you sure you want to delete '$ContainerName'? [y/N]: " -NoNewline
+                $confirmKey = [Console]::ReadKey($true)
+                Write-Host ''
+                if ($confirmKey.KeyChar -eq 'y' -or $confirmKey.KeyChar -eq 'Y') {
+                    # Stop first if running
+                    Invoke-Docker -Arguments @('stop', $ContainerName) *> $null
+                    Invoke-Docker -Arguments @('rm', $ContainerName) *> $null
+                    if ($LASTEXITCODE -eq 0) {
+                        print_ok "Deleted '$ContainerName'."
+                        Stop-WslDockerKeepAliveIfNoRunningAgentZero
+                    }
+                    else {
+                        print_error "Failed to delete '$ContainerName'."
+                    }
+                    Wait-ForKeypress
+                    return  # Container no longer exists
+                }
+                else {
+                    print_info 'Delete cancelled.'
+                    Wait-ForKeypress
+                }
+            }
+            'back' {
+                return
+            }
+            default {
+                print_warn 'Invalid action. Please try again.'
+                Wait-ForKeypress
+            }
+        }
+    }
+}
+
+function main_menu_for_existing {
+    while ($true) {
+        # Re-count containers each iteration (may change after delete/create)
+        $menuCount = count_existing_agent_zero_containers
+        if ($menuCount -lt 0) { $menuCount = 0 }
+
+        if ($menuCount -gt 0) {
+            $header = "Detected $menuCount Agent Zero container(s). What would you like to do?"
+            $selectedIndex = select_from_menu -Header $header -Options @('Install new instance', 'Manage existing instances', 'Exit')
+
+            switch ($selectedIndex) {
+                -1 { exit 0 }    # Escape/Backspace - exit
+                0 {
+                    $script:CreatedContainerName = ''
+                    $result = create_instance
+                    if ($result) {
+                        manage_single_instance -ContainerName $script:CreatedContainerName
+                    }
+                    # Escape pressed during create or back from detail - loop back to menu
+                }
+                1 { manage_instances }  # loops back to this menu after returning
+                2 { exit 0 }     # Exit option
+                default { exit 0 }
+            }
+        }
+        else {
+            # All containers were deleted - go straight to install
+            $script:CreatedContainerName = ''
+            $result = create_instance
+            if (-not $result) {
+                exit 0
+            }
+            manage_single_instance -ContainerName $script:CreatedContainerName
+        }
+    }
+}
+
+function main {
+    check_docker
+    Clear-InstallerRuntimeSetupResume
+    Write-Host ''
+
+    if ($script:CliNonInteractive) {
+        $script:CreatedContainerName = ''
+        $result = create_instance
+        if (-not $result) {
+            exit 1
+        }
+        return
+    }
+
+    $existingCount = count_existing_agent_zero_containers
+    if ($existingCount -lt 0) {
+        $existingCount = 0
+    }
+    if ($script:DockerMode -eq 'wsl' -and (Test-AnyRunningAgentZeroContainer)) {
+        Start-WslDockerKeepAlive
+    }
+
+    if ($existingCount -gt 0) {
+        main_menu_for_existing
+    }
+    else {
+        # No existing containers - go straight to install.
+        # If Escape pressed during create, exit gracefully.
+        $script:CreatedContainerName = ''
+        $result = create_instance
+        if (-not $result) {
+            exit 0
+        }
+        manage_single_instance -ContainerName $script:CreatedContainerName
+    }
+}
+
+Show-Banner
+main

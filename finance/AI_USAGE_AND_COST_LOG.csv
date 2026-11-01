@@ -1,0 +1,4 @@
+date,system,cost_category,task_reference,model_or_tool,billing_type,incremental_cost_vnd,notes
+2026-10-30,OpenAI Codex,fixed_subscription,CYCLE-01-BOOTSTRAP,gpt-5.4 (OAuth),prepaid_subscription,0,Covered by existing user subscription; 0 VND incremental project spend
+2026-11-01,Antigravity / Codex,fixed_subscription,CYCLE-02-MONEY-HQ-ACTIVATION,Deterministic Python + Agent Zero v2.13 setup,prepaid_subscription,0,Built AI_ROUTING_POLICY + COST_OPTIMIZATION_POLICY + HTML report generator + Money HQ Sheet tab at 0 VND incremental cost
+2026-11-01,Agent Zero (local),free_local_runtime,AGENT-ZERO-SKILLS-AND-SCHEDULER,all-MiniLM-L6-v2 + SearxNG + Codex OAuth,free_or_included,0,Local Docker runtime on WSL2 using local embeddings and existing OAuth

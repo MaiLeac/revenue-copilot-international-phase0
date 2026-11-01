@@ -1,0 +1,40 @@
+platform: mt5
+account_mode: demo_only
+execution_mode: read_only
+
+symbols:
+  allowed:
+    - XAGUSD
+    - EURUSD
+    - XAUUSD
+  enabled: []  # Strictly empty in M0-M1; only enable after testing gates pass
+
+timeframes:
+  - M15
+  - H1
+
+data_quality:
+  max_candle_age_seconds:
+    M15: 1800   # 30 minutes max staleness for closed M15 candle
+    H1: 7200    # 2 hours max staleness for closed H1 candle
+  max_tick_age_seconds: 60
+  min_candle_count: 50
+  max_spread_points:
+    XAUUSD: 500
+    XAGUSD: 400
+    EURUSD: 30
+    default: 100
+
+risk:
+  risk_per_trade_pct: 0.25
+  max_total_open_risk_pct: 0.50
+  max_daily_loss_pct: 1.0
+  max_drawdown_pct: 5.0
+  max_positions_per_symbol: 1
+
+safety:
+  require_stop_loss: true
+  reject_stale_data: true
+  reject_excessive_spread: true
+  block_live_accounts: true
+  kill_switch: true

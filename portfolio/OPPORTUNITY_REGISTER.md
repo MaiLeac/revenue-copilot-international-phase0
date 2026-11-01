@@ -1,0 +1,36 @@
+# Opportunity Register — Autonomous Asset Portfolio (Strategic Correction: 2026-11-01)
+
+**Binding Rule (`OPERATING_SYSTEM.md` Sections 1–4):**
+- The objective is **not** to build a conventional small business or manual service that requires the owner to operate it daily.
+- The objective is to build a **portfolio of digital assets and automated revenue systems** that generate recurring or repeatable cash flow with minimal human labor (`0` daily owner operating hours).
+- Prioritize strictly in this order:
+  1. **Tier 1:** Assets that can be created once and sold repeatedly.
+  2. **Tier 2:** Products with automated acquisition, payment, and fulfillment.
+  3. **Tier 3:** Content, search, audience, and distribution assets that compound over time.
+  4. **Tier 4:** Software, templates, data products, and workflows with low marginal costs.
+  5. **Tier 5:** Automated services that require minimal human intervention.
+  6. **Tier 6:** Labor-based services only when they provide near-term cash flow or fund the creation of more scalable assets.
+
+---
+
+## 1. Active Autonomous Asset Portfolio
+
+- **Primary Revenue Asset (`#1` — Tier 1 & 2):** **`ASSET-01` (`PROD-01` / `EXP-03`) — Cẩm Nang & Trợ Lý Dưỡng Nhan 7 Thể Chất Đông Y (Interactive Diagnostic Web App + Full Digital Handbook + Audio + Printable PDF + VietQR/KOC Affiliate Funnel)**
+  - **Live Public URL (GitHub Pages):** `https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/`
+  - **Live Digital Handbook + Audio Deliverable:** `https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/handbook.html`
+- **Secondary Self-Serve Software Asset (`#2` — Tier 2 & 4):** **`ASSET-02` (`TOOL-01` / `EXP-02`) — Catalogue QA Auto-Clean Self-Serve Web App & Executive Audit Report**
+  - **Live Public URL (GitHub Pages):** `https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp02-catalogue-qa-pilot/`
+- **Passive Cash Bridge (`#3` — Tier 6 Settlement Only):** **`CASH-01` (`uTest Cycle 562706`) — Collect Already-Approved `L3` Bug Bounty Payout (`3/3` approved bugs, Rank `#1`, `0` new labor hours required)**
+
+---
+
+## 2. Mandatory 8-Question Autonomous Asset Evaluation Matrix
+
+| Rank | ID & Asset Name | Tier | 1. Can AI Create Initial Asset? | 2. Can AI Distribute Compliantly? | 3. Automated Payment & Fulfillment? | 4. Minimal Customer Support? | 5. Zero Continuous Owner Labor? | 6. Marginal Cost per Sale | 7. What Compounds Over Time? | 8. Unavoidable Human Intervention | Evidence & Status |
+|---:|---|---:|---|---|---|---|---|---|---|---|---|
+| **1** | **`ASSET-01` (`PROD-01`): Dưỡng Nhan 7-Constitution Web App + Handbook + Audio (`299,000 VND`)** | **Tier 1 & 2** | **YES (100% Built):** AI built `constitution_engine.py`, `handbook_generator.py`, quiz funnel `index.html`, and 21-recipe audio/PDF `handbook.html`. | **YES:** Public GitHub Pages SEO + KOC affiliate share links (`?ref=`) + automated `edge-tts` short-form video scripts. | **YES:** Dynamic VietQR (`299,000 VND` + memo `DUONGNHAN DN...`) + SePay webhook / instant link unlock to `handbook.html`. | **YES:** Self-serve browser reader + 1-click A4 PDF print + Web Speech audio (eliminates competitor's lock-in DRM complaints). | **YES:** Static web asset runs 24/7 with `0h/week` owner operating time. | **`0 VND`** (GitHub Pages static hosting + client-side JS/TTS). | Symptom search pages, KOC referral links, and recipe/constitution library. | **1-time (3 mins):** Owner sets receiving bank account / SePay webhook for VietQR. | **`L2` Deployed Asset (`L1` competitor proved 299k VND price).** **ACTIVE PRIMARY.** |
+| **2** | **`ASSET-02` (`TOOL-01`): Catalogue QA Auto-Clean Self-Serve Web Tool (`199,000 VND` / `$9`)** | **Tier 2 & 4** | **YES (100% Built):** AI built Python engine (`catalogue_qa.py`), executive report (`report_generator.py`), and client-side web app (`exp02/index.html`). | **YES:** Free instant browser CSV health score (`0–100`) acts as self-serve lead magnet on GitHub Pages. | **YES:** Instant client-side CSV cleaning & download (`0` manual file handling by owner). | **YES:** 100% client-side execution means zero data-upload tickets or privacy disputes. | **YES:** Self-serve tool requires `0` manual outreach or manual batch processing by owner. | **`0 VND`** (100% browser-executed JS + static hosting). | Validation rule library (`SKU`, price, HTML, PII redaction) and SEO landing pages. | **None (`0 mins`):** Uses same payout rail once connected. | **`L2` Deployed Asset (`L1` Matrixify $20/mo benchmark).** **ACTIVE SECONDARY.** |
+| **3** | **`ASSET-03` (`MEDIA-01`): Automated Short-Form Video & SEO Distribution Engine** | **Tier 3** | **YES:** AI generates symptom scripts, `edge-tts` voiceovers, and HTML/Canvas cards. | **YES:** Organic symptom/SKU search pages + faceless educational short-form clips with affiliate links. | **YES:** Routes directly into `ASSET-01` and `ASSET-02` VietQR checkout. | **YES:** No direct customer support on content channels. | **YES:** Scheduled via Agent Zero `duong-nhan-funnel` skill. | **`0 VND`** (`edge-tts` + local FFmpeg). | Search impressions, backlinks, and KOC affiliate network. | **Exception-only:** Approving new public social accounts if needed. | **`L1` Ready.** Supports `ASSET-01` & `ASSET-02` acquisition. |
+| **4** | **`CASH-01` (`uTest Cycle 562706`): Crowdtesting Approved Payout Settlement** | **Tier 6 (Cash Bridge)** | **No** (Human-tested cycle already completed by owner). | **N/A** (Direct platform invitation). | **Auto-settled** bi-weekly by uTest once payout rail is active. | **Yes** (`3/3` bugs already approved, `0` rejected). | **No if repeated** (requires active human testing per cycle); **Yes for collecting existing `L3` balance.** | **`0 VND` cash**, but requires human hours if new cycles are taken. | Platform rating (Rank `#1` on Cycle 562706), not a standalone asset. | **1-time (2 mins):** Confirm PayPal/Payoneer payout method on uTest. | **`L3` Verified (`3/3` approved bugs).** **PASSIVE PAYOUT COLLECTION ONLY.** |
+| **5** | **`JOB-01` (`Lionbridge` / `RWS` / `Welo`): Hourly Remote QA / Transcription Jobs** | **Tier 6 (Demoted)** | **No** (Requires human applicant + human hourly labor). | **N/A** | **No** (Requires manual timesheets/tasks). | **N/A** | **NO:** Violates Autonomous Asset mandate if treated as core business (trades owner hours for linear pay). | **High Owner Time Cost** (`50k VND/hr` shadow wage + unpaid tests). | **Nothing compounds** (employer owns all data/IP under NDA). | **High:** Continuous human labor required for every dollar earned. | **`L1` Verified (`L3/L4 = 0`).** **DEMOTED / OPTIONAL STANDBY ONLY.** Owner does NOT need to apply unless desired. |
+| **6** | **`TRD-01` & `TRD-02`: Algorithmic Trading R&D (`Exness MT5 Demo` & `SOL Backtest`)** | **R&D Only** | **Yes** (22/22 unit tests passing). | **N/A** | **N/A** (Demo-only lock active). | **N/A** | **Yes**, but requires capital risk & live edge proof before ever touching real money. | **Capital Risk** (`TRD-02` SOL EMA50/200 lost `-38.65%` in 2025 OOS). | Deterministic backtest & risk-gate codebase. | **Strict Lock:** Never deploy live capital without positive OOS proof & explicit approval. | **`TRD-01` Demo R&D / `TRD-02` Closed.** **ZERO LIVE CAPITAL.** |

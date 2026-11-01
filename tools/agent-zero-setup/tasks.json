@@ -1,0 +1,52 @@
+{
+  "tasks": [
+    {
+      "uuid": "mhqops01",
+      "context_id": "mhqops01",
+      "state": "idle",
+      "name": "Money HQ - Daily Operational and Opportunity Review",
+      "system_prompt": "You are money-coo. Follow OPERATING_SYSTEM.md, agents/AI_ROUTING_POLICY.md, and agents/COST_OPTIMIZATION_POLICY.md. Use deterministic scripts first (0 VND marginal cost). Do not spawn recursive tasks.",
+      "prompt": "In /a0/usr/projects/money-hq, run `python -m pytest -q` and check active experiments EXP-01 (uTest + JOB-01) and EXP-02 (SVC-01 Catalogue QA) against their stop conditions in portfolio/OPPORTUNITY_REGISTER.md. Update operations/DAILY_BRIEF.md only if actionable status changed.",
+      "attachments": [],
+      "project_name": "money-hq",
+      "project_color": "#10b981",
+      "created_at": "2026-11-01T17:20:00+07:00",
+      "updated_at": "2026-11-01T17:20:00+07:00",
+      "last_run": null,
+      "last_result": null,
+      "type": "scheduled",
+      "schedule": {
+        "minute": "30",
+        "hour": "8",
+        "day": "*",
+        "month": "*",
+        "weekday": "*",
+        "timezone": "Asia/Saigon"
+      }
+    },
+    {
+      "uuid": "mhqfin02",
+      "context_id": "mhqfin02",
+      "state": "idle",
+      "name": "Money HQ - Daily Financial and Blocker Report",
+      "system_prompt": "You are money-coo. Follow OPERATING_SYSTEM.md and agents/COST_OPTIMIZATION_POLICY.md. Never fabricate revenue or mix L3 pending payouts with L4 realized cash.",
+      "prompt": "In /a0/usr/projects/money-hq, run `python tools/money_hq_dashboard.py` to verify L4 realized cash, L3 pending payouts, and the 500,000 VND budget cap. If any blocker, rejection spike, or budget alert exists, update operations/DAILY_BRIEF.md and operations/OWNER_ACTIONS.md.",
+      "attachments": [],
+      "project_name": "money-hq",
+      "project_color": "#10b981",
+      "created_at": "2026-11-01T17:20:00+07:00",
+      "updated_at": "2026-11-01T17:20:00+07:00",
+      "last_run": null,
+      "last_result": null,
+      "type": "scheduled",
+      "schedule": {
+        "minute": "30",
+        "hour": "20",
+        "day": "*",
+        "month": "*",
+        "weekday": "*",
+        "timezone": "Asia/Saigon"
+      }
+    }
+  ]
+}

@@ -14,3 +14,8 @@ Ngày quan sát: 26/10/2026. Bản này thay thế khuyến nghị thị trườ
 
 Nguồn hồ sơ: yêu cầu Revenue Copilot v2.1 trong hội thoại và attachment International-first. Đây là tự khai, không phải chứng chỉ hay xác minh nghề nghiệp. Không có L3/L4 của người dùng.
 
+## Live Financial Tracking (Tài sản gia đình)
+- **Live Spreadsheet:** [Dashboard • Tài sản gia đình (Mai • Mẹ • Việt)](https://docs.google.com/spreadsheets/d/1UPReETEtQJVYTEXHyzLbOOm5aNVJpjzEYr6aJKWIals/edit?gid=665547603#gid=665547603)
+- **Mục đích:** Theo dõi trực tiếp, liên tục (real-time live dashboard) cơ cấu danh mục, vốn gốc và lãi/lỗ thực tế của Mai, Mẹ và Việt (gồm Bạc KNP 2024, PSOL Phantom, Exness XAG/USD).
+- **Nguyên tắc vận hành:** Bảng tính này được cập nhật liên tục theo biến động tài sản; hệ thống và các agent tiếp theo cần tham chiếu trực tiếp theo link sống này thay vì dùng snapshot tĩnh.
+

@@ -1,0 +1,56 @@
+{
+  "competitor": {
+    "name": "Bí quyết dưỡng nhan cho phụ nữ thời hiện đại",
+    "author": "Ying Mộc",
+    "domain": "biquyetduongnhan.vn",
+    "landing_url": "https://biquyetduongnhan.vn/ebook/duong-nhan",
+    "reader_url": "https://biquyetduongnhan.vn/ebook/duong-nhan/doc"
+  },
+  "offer": {
+    "price_vnd": 299000,
+    "payment_type": "one-time",
+    "payment_methods": [
+      "VietQR",
+      "SePay automatic transfer"
+    ],
+    "delivery_format": "Online Web Reader (Next.js Canvas)",
+    "total_recipes": 187,
+    "total_pages_core": 182,
+    "total_pages_reader": 664,
+    "body_types": [
+      "Huyết hư",
+      "Khí hư",
+      "Âm hư",
+      "Dương hư",
+      "Huyết ứ",
+      "Đàm thấp / Thấp nhiệt",
+      "Khí uất"
+    ],
+    "pain_points": [
+      "Da xỉn, sắc mặt vàng sạm",
+      "Nám, tàn nhang, sắc tố",
+      "Da khô, nếp nhăn, lão hóa sớm",
+      "Mụn, da dầu",
+      "Tóc rụng, tóc bạc sớm, tóc khô",
+      "Thon dáng, tiêu mỡ bụng, giảm phù",
+      "Kinh nguyệt và nhan sắc",
+      "Ngủ ngon, bớt căng thẳng",
+      "Tuổi 40+ và tiền mãn kinh"
+    ],
+    "lead_magnet": {
+      "title": "Bạn thuộc thể chất nào? – Bài tự đánh giá 60 câu",
+      "url": "https://claude.ai/code/artifact/bd0065a9-868c-46d5-9d46-a31063a91960"
+    }
+  },
+  "tech_stack": {
+    "framework": "Next.js (App Router)",
+    "styling": "Tailwind CSS",
+    "payment_gateway": "VietQR / SePay",
+    "drm": "Custom HTML5 Canvas rendering + guard-worker.js anti-devtools + server strike tracking",
+    "affiliate_endpoints": [
+      "/api/landing/reader/account/join",
+      "/api/landing/reader/account/xin-chi-tra",
+      "/api/landing/reader/account/payout"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Money HQ — Autonomous Revenue Operations",
+  "description": "Autonomous revenue operations, deterministic SKU/catalogue QA engine (EXP-02), crowdtesting & remote QA cashflow toolkit (EXP-01), and financial ledger system.",
+  "instructions": "Follow OPERATING_SYSTEM.md, agents/AI_ROUTING_POLICY.md, and agents/COST_OPTIMIZATION_POLICY.md. Prioritize deterministic Python tools (0 VND marginal cost) and verified L4 net cash.",
+  "include_agents_md": true,
+  "color": "#10b981",
+  "git_url": "https://github.com/MaiLeac/revenue-copilot-international-phase0.git",
+  "file_structure": {
+    "enabled": true,
+    "max_depth": 4,
+    "max_files": 25,
+    "max_folders": 20,
+    "max_lines": 250,
+    "gitignore": "__pycache__/\n.git/\n*.pyc\n.pytest_cache/\n"
+  }
+}

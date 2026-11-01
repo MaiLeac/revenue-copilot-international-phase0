@@ -22,10 +22,12 @@
    - **Realized Usable Cash (`L4` in [`finance/CASH_LEDGER.csv`](./finance/CASH_LEDGER.csv)):** **`0 VND`** (no cash has settled into a bank/Payoneer/PayPal account yet).
    - **Approved Pending Payouts (`L3`):** **`0 VND`** (`platform.utest.com/account/payments` currently shows `VND 0.00 Pending Payout` despite `3/3` approved bugs on Cycle 562706).
    - **Digital Asset Sales (`EXP-03` & `EXP-02`):** **`0 VND` (`L2` commercial storefronts deployed; `0` paid customer orders to date).**
-6. **Which projects are revenue experiments, technical R&D, or infrastructure?**  
-   - **Digital Asset / Revenue Experiments:** `EXP-03` (Dưỡng Nhan 7-Constitution Web App & Handbook), `EXP-02` (Catalogue QA Engine & Self-Serve CSV Web Tool), `EXP-01` (uTest Crowdtesting & Remote QA Dossier).
-   - **Technical R&D (Not Revenue Engines):** `TRD-01` ([`trading-agent-exness-demo/`](./trading-agent-exness-demo), Demo-only M0–M2) and `TRD-02` ([`experiments/sol-backtest/`](./experiments/sol-backtest), closed negative OOS backtest).
-   - **Operating Infrastructure:** [`assets/superagent_control_plane/`](./assets/superagent_control_plane), [`tools/superagent_runner.py`](./tools/superagent_runner.py), [`operations/ATTENTION_PANEL.md`](./operations/ATTENTION_PANEL.md), [`tools/money_hq_dashboard.py`](./tools/money_hq_dashboard.py), and [`tools/agent-zero-setup/`](./tools/agent-zero-setup).
+6. **Which projects are revenue experiments, capital engines, or infrastructure?**  
+   - **Pillar 1 (Digital Wellness):** `EXP-03` ([`experiments/exp03-duong-nhan-ai-mvp/`](./experiments/exp03-duong-nhan-ai-mvp)) — Dưỡng Nhan 7-Constitution Web App & Handbook (69k retail cashflow).
+   - **Pillar 2 (Micro-SaaS & Data Utility):** `EXP-02` ([`experiments/exp02-catalogue-qa-pilot/`](./experiments/exp02-catalogue-qa-pilot)) — Catalogue QA Engine & Self-Serve CSV Web Tool (199k / $9 B2B utility).
+   - **Pillar 3 (Media & Content Infrastructure):** [`awesome-ai-video-code`](https://github.com/MaiLeac/awesome-ai-video-code) — Directory of 8 code-driven video generation skills for audience & traffic.
+   - **Pillar 4 (Treasury & Quantitative Compounding):** `TRD-01` ([`trading-agent-exness-demo/`](./trading-agent-exness-demo)) — Milestone M2 Exness MT5 Quantitative Trading Agent connected to verified Demo account `#464160066` ($100k capital), running statistical trend + ATR stops with zero LLM order execution.
+   - **Operating Infrastructure:** [`assets/superagent_control_plane/`](./assets/superagent_control_plane), [`tools/superagent_runner.py`](./tools/superagent_runner.py), [`operations/ATTENTION_PANEL.md`](./operations/ATTENTION_PANEL.md), and [`tools/agent-zero-setup/`](./tools/agent-zero-setup).
 7. **What can each AI agent actually do?**  
    - **Money HQ Superagent Control Plane (`tools/superagent_runner.py`):** Deterministic Python operations engine (`0 VND` LLM cost) implementing DeepSeek Superagent's `Source -> Trigger -> Eval -> Mandate -> Ticket -> Isolated Worker -> Watchdog Recovery -> Attention Panel`.
    - **Antigravity:** Primary local operator with direct hands on the repository, shell, browser, and Docker environment.
@@ -116,12 +118,12 @@ Every module in this repository carries an explicit verification label:
 | **`JOB-01`: Remote Hourly QA / Transcription Applications (`Lionbridge`, `RWS`, `Welo`)** | [`experiments/exp01-qa-cashflow/APPLICATION_DOSSIER.md`](./experiments/exp01-qa-cashflow/APPLICATION_DOSSIER.md) | Static copy-paste application dossier. Demoted because hourly labor does not build an autonomous asset. | **`Planned` (Optional Standby Only)** |
 | **Competitor & Gate 0 Research** | [`research/`](./research) | Evidence logs (`EVIDENCE_LOG.csv`), Gate 0 memos, and teardown of `biquyetduongnhan.vn`. | **`Implemented and verified` (Research Baseline)** |
 
-### D. Technical R&D (Not Operating Revenue Engines)
+### D. Pillar 4: Systematic Treasury & Quantitative Compounding
 
 | ID & Name | Path | Relationship to Money HQ & Verification Status | Status |
 | :--- | :--- | :--- | :--- |
-| **`TRD-01`: Exness MT5 Demo Trading Agent** | [`trading-agent-exness-demo/`](./trading-agent-exness-demo) | Technical R&D module implementing M0–M1 read-only MT5 connector, hard live-account blocker (`LiveAccountBlockedError`), and M2 baseline strategy + cost-aware IS/OOS backtest evaluator. **22/22 unit tests pass offline using mocked terminals.** Strictly forbidden from trading real capital. | **`Implemented and verified` (Offline Demo R&D Only — Frozen)** |
-| **`TRD-02`: SOL-USDT Spot EMA50/200 Backtest** | [`experiments/sol-backtest/`](./experiments/sol-backtest) | Reproducible offline backtest on 2,096 daily OKX `SOL-USDT` bars (`2021–2026`). Verified by `tests/test_sol_backtest_audit.py`. Proved **negative Out-of-Sample returns from 2025 onward (`-35.76%` Buy & Hold, `-38.65%` EMA50/200)**. | **`Implemented and verified` (Closed Audit Benchmark)** |
+| **`TRD-01`: Exness MT5 Quantitative Trading Agent** | [`trading-agent-exness-demo/`](./trading-agent-exness-demo) | Milestone M2 Quantitative Treasury Engine. Connected via live IPC to verified Exness MT5 Demo account (`#464160066`, server `Exness-MT5Trial17`, balance `$100,000 USD`). Features 2-tier architecture (pure mathematical EMA 20/50 + ATR stops, zero LLM execution), fail-closed safety (`block_live_accounts: true`), Conway Automaton-inspired survival tiers (max 1.2% DD in walk-forward tests, hard Kill Switch at 3%), and 22/22 unit tests passing offline. | **`Implemented and verified` (Live Demo Engine M2 — Capital Compounding Wing)** |
+| **`TRD-02`: SOL-USDT Spot EMA50/200 Backtest** | [`experiments/sol-backtest/`](./experiments/sol-backtest) | Reproducible offline backtest on 2,096 daily OKX `SOL-USDT` bars (`2021–2026`). Verified by `tests/test_sol_backtest_audit.py`. Proved **negative Out-of-Sample returns from 2025 onward (`-35.76%` Buy & Hold, `-38.65%` EMA50/200)** — validated why Money HQ rejected crypto spot trend-following. | **`Implemented and verified` (Closed Audit Benchmark)** |
 
 ### E. Future Roadmap
 

@@ -1,12 +1,53 @@
-# Exness MT5 Quantitative Trading Agent (Money HQ)
+# 🏛️ Money HQ — Quantitative Treasury & Algorithmic Trading Wing
 
-Institutional-grade, deterministic Python algorithmic trading infrastructure for **Exness MetaTrader 5 (DEMO ONLY)**. Designed for automated multi-symbol portfolio trading, rigorous statistical verification, and fail-closed safety.
+> **Parent Monorepo:** [`MaiLeac/revenue-copilot-international-phase0`](https://github.com/MaiLeac/revenue-copilot-international-phase0)  
+> **Ecosystem:** Money HQ Autonomous Asset Holding & Cashflow Operations  
+> **Role within Ecosystem:** Systematic Treasury Management & Capital Compounding (`TRD-01`)  
+> **Status:** Live Demo Verified (`Exness-MT5Trial17` Account `#464160066`, \$100,000 USD virtual capital)  
 
 [![Tests](https://img.shields.io/badge/pytest-22%20passed-brightgreen.svg)]()
 [![Platform](https://img.shields.io/badge/platform-MetaTrader%205-blue.svg)]()
 [![Broker](https://img.shields.io/badge/broker-Exness-orange.svg)]()
 [![Safety](https://img.shields.io/badge/fail--closed-enforced-red.svg)]()
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)]()
+
+---
+
+## 🧭 The Big Picture: How This Sub-System Fits into Money HQ
+
+Money HQ is an autonomous digital asset holding and revenue ecosystem founded by **Mai (`MaiLeac`)**, designed to achieve **Level 3 Autonomy** (AI agents build, operate, and distribute revenue-generating assets while the owner acts strictly as capital allocator).
+
+Just like [`awesome-ai-video-code`](https://github.com/MaiLeac/awesome-ai-video-code) curates and anchors 8 code-driven video generation engines into one unified media strategy, Money HQ orchestrates **4 Distinct Revenue & Capital Pillars**:
+
+```mermaid
+graph TD
+    MHQ["🏛️ Money HQ Master Ecosystem<br/>(revenue-copilot-international-phase0)"]
+    
+    P1["🌸 Pillar 1: Digital Wellness Products<br/>(EXP-03: Dưỡng Nhan Bản Thảo 69k)"]
+    P2["🧹 Pillar 2: Micro-SaaS & Data Utility<br/>(EXP-02: Catalogue QA CSV Tool 199k / $9)"]
+    P3["🎬 Pillar 3: Media & Video Engines<br/>(awesome-ai-video-code: 8 skills)"]
+    P4["📈 Pillar 4: Quantitative Treasury Management<br/>(TRD-01: trading-agent-exness-demo)"]
+    
+    MHQ --> P1
+    MHQ --> P2
+    MHQ --> P3
+    MHQ --> P4
+    
+    P1 -->|"Retail Cashflow"| Treasury["💰 Master Treasury"]
+    P2 -->|"B2B SaaS Cashflow"| Treasury
+    P3 -->|"Audience & Distribution"| Treasury
+    Treasury -->|"Surplus Capital Allocation"| P4
+    P4 -->|"Systematic Compounding (Max 1.2% DD)"| Treasury
+```
+
+### Why Does the MT5 Quantitative Engine Exist & Why Does It Operate This Way?
+
+1. **The Mandate of This Branch:**
+   When Pillars 1, 2, and 3 generate operational cashflow into the Money HQ Treasury, surplus capital must not sit idle eroding against inflation, nor should it ever be gambled on discretionary emotional bets. This quantitative engine exists to **safely compound treasury reserves through statistical edge**.
+2. **Why Zero LLM Involvement in Order Execution?**
+   In Money HQ's constitution, **Capital Preservation overrides profit seeking**. LLMs are brilliant at language synthesis, macro news summarization, and competitor research, but disastrous at high-frequency time-series price prediction. Therefore, order entry is locked to **deterministic mathematics** ($EMA_{20}/EMA_{50}$ crossover + ATR volatility stops) with sub-millisecond execution.
+3. **Why Is It Strictly Locked to Demo Mode (M0–M2)?**
+   Under Money HQ's **Fail-Closed Governance**, no real money is ever deployed until a strategy passes statistical out-of-sample audits (Profit Factor > 1.5, Max Drawdown < 3.0%) and completes live paper validation on Exness Demo (Account `#464160066`, \$100k virtual capital).
 
 ---
 

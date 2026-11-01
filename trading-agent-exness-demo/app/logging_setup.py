@@ -26,7 +26,7 @@ class StructuredJsonFormatter(logging.Formatter):
             payload["data"] = self._scrub(extra_data)
         if record.exc_info:
             payload["exception"] = self.formatException(record.exc_info)
-        return json.dumps(payload, ensure_ascii=False)
+        return json.dumps(payload, ensure_ascii=False, default=str)
 
     def _scrub(self, data: dict[str, Any]) -> dict[str, Any]:
         scrubbed: dict[str, Any] = {}

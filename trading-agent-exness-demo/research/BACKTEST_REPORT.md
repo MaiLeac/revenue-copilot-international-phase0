@@ -1,5 +1,5 @@
 # Money HQ Quantitative Strategy Backtest Audit Report
-**Date:** 2026-11-01 17:15:10 UTC
+**Date:** 2026-11-01 19:08:18 UTC
 **Methodology:** 70% In-Sample (IS) / 30% Out-of-Sample (OOS) Bar-by-Bar Walk-Forward
 **Friction Inclusions:** Spread (12-25 pts), Commission ($7.00/lot), Slippage (2 pts/side), Overnight Swap
 **Risk Governance:** Strictly Zero Martingale, Predefined ATR Stop-Loss, Max Open Risk 0.50%

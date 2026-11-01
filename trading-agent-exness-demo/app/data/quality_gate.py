@@ -36,6 +36,25 @@ class DataQualityReport:
     passed: bool
 
 
+def is_market_closed_weekend(symbol: str, dt_utc: datetime) -> bool:
+    """Check if traditional Forex/Metals market is currently in its weekend closure."""
+    clean_sym = symbol.upper()
+    # Crypto (BTC, ETH, etc.) is open 24/7/365
+    if any(c in clean_sym for c in ("BTC", "ETH", "SOL", "XRP")):
+        return False
+    wd = dt_utc.weekday()
+    # Friday after 22:00 UTC
+    if wd == 4 and dt_utc.hour >= 22:
+        return True
+    # Saturday all day
+    if wd == 5:
+        return True
+    # Sunday before 22:00 UTC
+    if wd == 6 and dt_utc.hour < 22:
+        return True
+    return False
+
+
 class DataQualityGate:
     """Enforces strict fail-closed validation on ticks and candle series."""
 
@@ -57,7 +76,8 @@ class DataQualityGate:
 
         age_sec = (now - tick.timestamp_utc).total_seconds()
         max_tick_age = self._config.data_quality.max_tick_age_seconds
-        if self._config.safety.reject_stale_data and age_sec > max_tick_age:
+        market_closed = is_market_closed_weekend(base_symbol, now)
+        if self._config.safety.reject_stale_data and age_sec > max_tick_age and not market_closed:
             raise DataQualityError(
                 f"Stale tick for {tick.symbol}: age={age_sec:.1f}s exceeds max_tick_age_seconds={max_tick_age}s"
             )
@@ -106,8 +126,14 @@ class DataQualityGate:
                     raise DataQualityError(
                         f"Non-monotonic candle timestamps for {bar.symbol} at {bar.open_time_utc.isoformat()}"
                     )
-                # Reject intra-session missing candles (ignore weekend closures >= 48h)
-                if delta > expected_step and delta < 48 * 3600:
+                # Reject intra-session missing candles (ignore weekend closures >= 48h and scheduled daily exchange rollover breaks)
+                is_weekend_break = delta >= 48 * 3600
+                is_daily_rollover_break = (
+                    prev_time.hour in (20, 21, 22)
+                    and bar.open_time_utc.hour in (21, 22, 23)
+                    and delta <= 7200
+                )
+                if delta > expected_step and not is_weekend_break and not is_daily_rollover_break:
                     missing_bars = int(delta // expected_step) - 1
                     raise DataQualityError(
                         f"Missing candles detected for {bar.symbol} ({tf_clean}): gap of {delta:.0f}s "
@@ -118,7 +144,8 @@ class DataQualityGate:
         latest_bar = candles[-1]
         candle_age = (now - latest_bar.open_time_utc).total_seconds()
         max_candle_age = self._config.data_quality.get_max_candle_age(tf_clean)
-        if self._config.safety.reject_stale_data and candle_age > max_candle_age:
+        market_closed = is_market_closed_weekend(base_symbol, now)
+        if self._config.safety.reject_stale_data and candle_age > max_candle_age and not market_closed:
             raise DataQualityError(
                 f"Stale candle data for {latest_bar.symbol} ({tf_clean}): "
                 f"latest bar {latest_bar.open_time_utc.isoformat()} is {candle_age:.0f}s old "

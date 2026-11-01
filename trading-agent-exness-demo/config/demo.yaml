@@ -1,13 +1,16 @@
 platform: mt5
 account_mode: demo_only
-execution_mode: read_only
+execution_mode: demo_auto
 
 symbols:
   allowed:
     - XAGUSD
     - EURUSD
     - XAUUSD
-  enabled: []  # Strictly empty in M0-M1; only enable after testing gates pass
+  enabled:
+    - XAUUSD
+    - EURUSD
+    - XAGUSD
 
 timeframes:
   - M15

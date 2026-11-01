@@ -200,7 +200,7 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                     gate.evaluate(base_sym, "M15", tick, candles, now_utc=now_utc)
 
                     # Guarantee candle bar idempotency (AUDIT-03)
-                    last_bar_time = candles[-1].time_utc.isoformat()
+                    last_bar_time = candles[-1].open_time_utc.isoformat()
                     if last_processed_candles.get(base_sym) == last_bar_time:
                         continue
 

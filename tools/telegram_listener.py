@@ -63,7 +63,38 @@ def handle_command(cmd: str) -> str:
     cmd_strip = cmd.strip()
     cmd_lower = cmd_strip.lower()
 
-    # 0. Exness / Trading commands
+    # 0. Greetings / Direct queries / "trả lời"
+    if cmd_lower in ["trả lời", "alo", "ê", "bot", "hello", "hi", "hey"]:
+        return (
+            "👋 <b>MONEY HQ OPERATOR ĐANG ONLINE!</b>\n\n"
+            "Em đang trực đây ạ! Anh/chị cần em báo cáo hay thực hiện lệnh gì:\n"
+            "• Gõ <code>kiếm tiền</code> hoặc <code>hôm nay</code>: Xem hôm nay hệ thống làm gì để kiếm tiền.\n"
+            "• Gõ <code>trade</code>: Xem tình trạng bot MT5 & lệnh Forex.\n"
+            "• Gõ <code>báo cáo</code>: Xem số dư, doanh thu Money HQ.\n"
+            "• Gõ <code>link</code>: Lấy link các sản phẩm web đang bán.\n"
+            "• Hoặc gửi trực tiếp chỉ thị để kích hoạt Task Router!"
+        )
+
+    # 0.1 Business / Revenue / "Hôm nay làm gì để kiếm tiền"
+    if any(k in cmd_lower for k in ["kiếm tiền", "hôm nay", "làm gì", "mỗi trade", "dự án"]):
+        return (
+            "💼 <b>BÁO CÁO CÁC NGUỒN KIẾM TIỀN MONEY HQ HÔM NAY:</b>\n\n"
+            "Hệ thống không chỉ có mỗi trade, mà đang vận hành <b>3 trụ cột doanh thu</b> song song:\n\n"
+            "1. 📈 <b>Trụ cột 1: Trading Algo MT5 (EURUSD Pilot):</b>\n"
+            "   • Đang chạy quét liên tục trong phiên London/NY (07:00 - 16:00 UTC).\n"
+            "   • Vốn an toàn: <b>$100,000.00 USD</b> (Demo Exness).\n"
+            "   • Hôm nay nến H1 EURUSD đang sideway, chỉ số ADX chưa đủ xung lực nên bot giữ kỷ luật <b>Flat (bảo toàn vốn, không vào lệnh ẩu)</b>.\n\n"
+            "2. 🌸 <b>Trụ cột 2: Dưỡng Nhan AI MVP (69,000đ/lượt):</b>\n"
+            "   • Web trắc nghiệm thể chất đông y + bán Cẩm nang độc quyền.\n"
+            "   • Link: <a href='https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/'>Xem web trực tiếp</a>\n\n"
+            "3. 🧹 <b>Trụ cột 3: SaaS B2B Clean CSV ($9 USD / 199,000đ):</b>\n"
+            "   • Web tự động chuẩn hóa dữ liệu danh mục sản phẩm TMĐT.\n"
+            "   • Link: <a href='https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp02-catalogue-qa-pilot/'>Xem web trực tiếp</a>\n\n"
+            "4. 📚 <b>Kho dữ liệu vĩ mô & Phân tích định lượng:</b>\n"
+            "   • Vừa hoàn tất trích xuất & làm sạch 1.857 bài viết chuyên sâu của Vương Tố Linh & Đồng Chí Long lên GitHub làm tài liệu huấn luyện AI."
+        )
+
+    # 0.2 Exness / Trading commands
     if any(k in cmd_lower for k in ["bắt đầu trade", "bật trade", "bật bot", "start trade", "start bot"]):
         try:
             res = subprocess.run(

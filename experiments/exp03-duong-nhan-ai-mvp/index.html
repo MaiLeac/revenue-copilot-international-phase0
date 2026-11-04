@@ -3,46 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLOOM • Nền Tảng Phân Tích Thể Trạng Cơ Thể & Dưỡng Sinh Thảo Mộc (Botanical Somatic Intelligence)</title>
-<meta name="description" content="Chẩn đoán 7 thể chất và 9 thể trạng Đông Y khoa học, quét bản đồ cơ thể và nhận phác đồ trà thảo mộc, đồng hồ sinh học cá nhân hóa.">
+<title>BẢN THẢO THẤU THỂ • Quét Thể Trạng 3D Xuyên Thấu Kinh Lạc & Dưỡng Sinh Đông Y Cá Nhân Hóa</title>
+<meta name="description" content="Nền tảng tương tác 3D nhìn xuyên thấu kinh lạc ngũ tạng, chẩn đoán 9 thể chất Đông Y khoa học, giải mã đồng hồ sinh học 24h và nhận phác đồ thảo mộc cá nhân hóa.">
 
 <!-- Fonts & Tokens -->
 <link rel="stylesheet" href="../../assets/web_capability_library/tokens.css">
+<link rel="stylesheet" href="../../assets/getlayers_library/getlayers.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Three.js for 3D Translucent Holographic Body & Meridians -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
   :root {
-    --bg-dark: #070a0e;
-    --bg-card: rgba(14, 21, 28, 0.75);
-    --bg-card-hover: rgba(20, 30, 40, 0.85);
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-accent: rgba(16, 185, 129, 0.25);
+    /* Imperial Jade & Ethereal Botanical Palette - Không đen xì, sang trọng thanh nhã */
+    --jade-deep: #03140e;
+    --jade-forest: #06281c;
+    --jade-surface: rgba(8, 38, 28, 0.75);
+    --jade-surface-card: rgba(10, 48, 36, 0.85);
+    --jade-border: rgba(52, 211, 153, 0.22);
+    --jade-border-glow: rgba(52, 211, 153, 0.5);
     
-    --color-emerald: #10b981;
-    --color-emerald-glow: rgba(16, 185, 129, 0.2);
-    --color-rose: #fb7185;
-    --color-rose-glow: rgba(251, 113, 133, 0.2);
-    --color-gold: #d4af37;
-    --color-gold-glow: rgba(212, 175, 55, 0.2);
-    --color-cyan: #06b6d4;
+    --glow-emerald: #10b981;
+    --glow-mint: #34d399;
+    --glow-amber: #f59e0b;
+    --glow-ruby: #fb7185;
+    --glow-cyan: #38bdf8;
+    --glow-pearl: #f1f5f9;
 
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --text-gold: #f5d061;
+    --text-pure: #ffffff;
+    --text-pearl: #e2e8f0;
+    --text-jade-dim: #94a3b8;
+    --text-amber: #fde68a;
 
-    --font-serif: 'Cormorant Garamond', Georgia, serif;
-    --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --font-heading: 'Cinzel', 'Playfair Display', Georgia, serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :focus-visible {
-    outline: 2px solid var(--color-emerald);
-    outline-offset: 2px;
+    outline: 2px solid var(--glow-mint);
+    outline-offset: 3px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -55,1001 +60,1069 @@
   }
 
   body {
-    background-color: var(--bg-dark);
+    background-color: var(--jade-deep);
     background-image: 
-      radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
-      radial-gradient(circle at 85% 25%, rgba(251, 113, 133, 0.08) 0%, transparent 40%),
-      radial-gradient(circle at 15% 75%, rgba(212, 175, 55, 0.06) 0%, transparent 40%);
+      radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.2) 0%, transparent 60%),
+      radial-gradient(circle at 10% 40%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+      radial-gradient(circle at 90% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+      linear-gradient(180deg, #020c08 0%, #051a13 50%, #020b07 100%);
     background-attachment: fixed;
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    line-height: 1.65;
+    color: var(--text-pure);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    min-height: 100vh;
     overflow-x: hidden;
   }
 
-  .container {
-    max-width: 1140px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
   /* Navigation Bar */
-  header.top-nav {
+  .nav-bar {
     position: sticky;
     top: 0;
     z-index: 100;
-    backdrop-filter: blur(20px);
+    background: rgba(3, 20, 14, 0.85);
     -webkit-backdrop-filter: blur(20px);
-    background: rgba(7, 10, 14, 0.8);
-    border-bottom: 1px solid var(--border-subtle);
-    padding: 18px 0;
-  }
-  .nav-inner {
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--jade-border);
+    padding: 16px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .brand-group {
+  .brand-logo {
     display: flex;
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: #fff;
+    color: var(--text-pure);
   }
-  .brand-logo-symbol {
-    width: 24px;
-    height: 24px;
-    color: var(--color-rose);
+  .brand-symbol {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #34d399 0%, #064e3b 100%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 16px rgba(52, 211, 153, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #022c22;
+    font-weight: 800;
   }
   .brand-title {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
+    color: #ffffff;
   }
-  .brand-subtitle {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    letter-spacing: 0.02em;
-    font-family: var(--font-sans);
+  .nav-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
   }
-  .nav-pill {
+
+  /* Hero Section: 3D Holographic Body Stage */
+  .hero-stage {
+    position: relative;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 40px;
+    align-items: center;
+    min-height: 85vh;
+  }
+
+  @media (max-width: 960px) {
+    .hero-stage {
+      grid-template-columns: 1fr;
+      padding-top: 20px;
+    }
+  }
+
+  .hero-copy {
+    z-index: 10;
+  }
+  .hero-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(16, 185, 129, 0.08);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    color: #34d399;
-    padding: 4px 14px;
+    padding: 6px 14px;
     border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-  .pulse-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--color-emerald);
-    box-shadow: 0 0 8px var(--color-emerald);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.85); }
-  }
-
-  /* Hero Section */
-  .hero-section {
-    padding: 80px 0 50px;
-    text-align: center;
-    position: relative;
-  }
-  .hero-quote {
-    font-family: var(--font-serif);
-    font-size: clamp(1.2rem, 2.2vw, 1.55rem);
-    font-style: italic;
-    color: var(--text-gold);
-    max-width: 780px;
-    margin: 0 auto 20px;
-    opacity: 0.95;
-  }
-  .hero-quote span {
-    color: var(--color-rose);
-    font-style: normal;
-    background: rgba(251, 113, 133, 0.12);
-    padding: 2px 10px;
-    border-radius: 8px;
-    border: 1px solid rgba(251, 113, 133, 0.25);
-  }
-  .hero-heading {
-    font-family: var(--font-serif);
-    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-    font-weight: 600;
-    line-height: 1.1;
-    color: #fff;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    color: #34d399;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     margin-bottom: 20px;
   }
-  .hero-subheading {
-    font-size: clamp(0.95rem, 1.6vw, 1.12rem);
-    color: var(--text-secondary);
-    max-width: 680px;
-    margin: 0 auto 40px;
-    font-weight: 300;
+  .hero-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .hero-heading span.highlight {
+    background: linear-gradient(135deg, #a7f3d0 0%, #34d399 50%, #fde68a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--text-pearl);
     line-height: 1.7;
-  }
-
-  .hero-cta-group {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .btn-bloom-primary {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #fff;
-    border: none;
-    padding: 14px 32px;
-    border-radius: 999px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    box-shadow: 0 0 25px var(--color-emerald-glow);
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .btn-bloom-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 35px rgba(16, 185, 129, 0.4);
-  }
-  .btn-bloom-secondary {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    padding: 14px 28px;
-    border-radius: 999px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background-color 0.2s, border-color 0.2s;
-  }
-  .btn-bloom-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  /* Bento Workspace Layout */
-  .somatic-workspace {
-    margin: 50px 0 80px;
-  }
-
-  .bento-grid-2col {
-    display: grid;
-    grid-template-columns: 1fr 1.25fr;
-    gap: 24px;
-    align-items: start;
-  }
-  @media (max-width: 900px) {
-    .bento-grid-2col { grid-template-columns: 1fr; }
-  }
-
-  .bento-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: 24px;
-    padding: 32px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  }
-
-  /* Somatic Visual Body Map */
-  .body-map-card {
-    position: relative;
-    overflow: hidden;
-  }
-  .card-header-badge {
-    font-size: 0.75rem;
-    color: var(--color-emerald);
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-  .card-title {
-    font-family: var(--font-serif);
-    font-size: 1.8rem;
-    color: #fff;
-    margin-bottom: 12px;
-  }
-  .card-desc {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-  }
-
-  .somatic-zones-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .zone-item {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border-subtle);
-    border-radius: 14px;
-    padding: 14px 18px;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .zone-item:hover, .zone-item.active {
-    background: rgba(16, 185, 129, 0.08);
-    border-color: rgba(16, 185, 129, 0.35);
-  }
-  .zone-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .zone-name {
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: #fff;
-  }
-  .zone-sub {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-  .zone-indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border-subtle);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    color: transparent;
-  }
-  .zone-item.active .zone-indicator {
-    background: var(--color-emerald);
-    border-color: var(--color-emerald);
-    color: #fff;
-  }
-
-  /* Diagnostic Questionnaire Panel */
-  .quiz-panel {
-    min-height: 520px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .quiz-progress-bar {
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-  .quiz-progress-fill {
-    height: 100%;
-    width: 20%;
-    background: linear-gradient(90deg, var(--color-emerald), var(--color-rose));
-    transition: width 0.3s ease;
-  }
-
-  .quiz-step-tag {
-    font-size: 0.75rem;
-    color: var(--color-rose);
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-  .quiz-question-title {
-    font-family: var(--font-serif);
-    font-size: 1.7rem;
-    color: #fff;
-    margin-bottom: 12px;
-    line-height: 1.3;
-  }
-  .quiz-question-desc {
-    font-size: 0.86rem;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-  }
-
-  .options-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-  .option-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 14px 18px;
-    text-align: left;
-    color: var(--text-primary);
-    font-size: 0.9rem;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .option-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-  .option-btn.selected {
-    background: rgba(16, 185, 129, 0.12);
-    border-color: var(--color-emerald);
-    color: #fff;
-    box-shadow: 0 0 20px var(--color-emerald-glow);
-  }
-
-  .quiz-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid var(--border-subtle);
-    padding-top: 20px;
-  }
-
-  /* Diagnostic Result Dossier */
-  .diagnostic-dossier {
-    display: none;
-    margin-top: 40px;
-    animation: fadeIn 0.5s ease forwards;
-  }
-  .diagnostic-dossier.active { display: block; }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .result-banner {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(251, 113, 133, 0.1) 100%);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    border-radius: 20px;
-    padding: 32px;
     margin-bottom: 32px;
+    max-width: 540px;
+  }
+
+  /* 3D Viewport Container */
+  .viewport-3d-card {
+    position: relative;
+    width: 100%;
+    height: 640px;
+    background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, rgba(4, 26, 18, 0.85) 75%), var(--jade-surface);
+    border: 1px solid var(--jade-border);
+    border-radius: 24px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 30px 60px -20px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #canvas3d {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+  }
+  #canvas3d:active { cursor: grabbing; }
+
+  /* 3D HUD Overlay Controls */
+  .hud-top-bar {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    right: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
+    pointer-events: none;
+    z-index: 20;
   }
-  .constitution-badge {
-    font-family: var(--font-serif);
-    font-size: 2.2rem;
-    color: #fff;
-    margin-bottom: 6px;
+  .hud-tag {
+    background: rgba(3, 20, 14, 0.85);
+    border: 1px solid var(--jade-border);
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    color: var(--glow-mint);
+    pointer-events: auto;
   }
-  .constitution-tags {
+  .hud-controls {
     display: flex;
     gap: 8px;
-    flex-wrap: wrap;
+    pointer-events: auto;
   }
-  .pill-tag {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--border-subtle);
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    color: var(--text-gold);
+  .hud-btn {
+    background: rgba(6, 40, 28, 0.85);
+    border: 1px solid var(--jade-border);
+    color: var(--text-pure);
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .hud-btn:hover, .hud-btn.active {
+    background: rgba(16, 185, 129, 0.3);
+    border-color: var(--glow-mint);
+    color: #ffffff;
   }
 
-  .recommendations-grid {
+  /* Scan Status Bar */
+  .hud-scan-banner {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: rgba(2, 18, 12, 0.92);
+    border: 1px solid var(--jade-border-glow);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  }
+  .organ-live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .organ-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 12px #34d399;
+    animation: pulseGlow 1.8s infinite;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+  }
+  .scan-btn-main {
+    background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+    color: #022016;
+    font-weight: 800;
+    font-size: 0.88rem;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .scan-btn-main:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 28px rgba(52, 211, 153, 0.65);
+  }
+
+  /* Selected Organ Inspector Modal/Card */
+  .organ-detail-popup {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    width: 320px;
+    background: rgba(4, 26, 18, 0.95);
+    border: 1px solid var(--jade-border-glow);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    backdrop-filter: blur(24px);
+    z-index: 30;
+    display: none;
+    animation: fadeIn 0.25s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .organ-detail-popup h4 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .organ-close-btn {
+    background: none;
+    border: none;
+    color: var(--text-jade-dim);
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .organ-close-btn:hover { color: #ffffff; }
+
+  /* 9 Body Constitution Interactive Matrix */
+  .section-container {
+    max-width: 1240px;
+    margin: 60px auto 100px;
+    padding: 0 24px;
+  }
+  .section-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 48px;
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 14px;
+  }
+  .section-subtitle {
+    color: var(--text-pearl);
+    font-size: 1.05rem;
+  }
+
+  .matrix-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 24px;
-    margin-bottom: 40px;
   }
-  .rec-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+  .matrix-card {
+    background: var(--jade-surface-card);
+    border: 1px solid var(--jade-border);
     border-radius: 20px;
     padding: 28px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
   }
-  .rec-tag {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--color-emerald);
-    margin-bottom: 8px;
+  .matrix-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--jade-border-glow);
   }
-  .rec-title {
-    font-family: var(--font-serif);
-    font-size: 1.45rem;
-    color: #fff;
-    margin-bottom: 12px;
-  }
-  .rec-list {
-    list-style: none;
-    font-size: 0.88rem;
-    color: var(--text-secondary);
-  }
-  .rec-list li {
-    margin-bottom: 10px;
+  .matrix-card-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: #ffffff;
+    margin: 12px 0 8px;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 10px;
   }
-  .rec-list li::before {
-    content: "•";
-    color: var(--color-rose);
-  }
-
-  /* 9 Constitutions Encyclopedia */
-  .encyclopedia-section {
-    padding: 60px 0;
-    border-top: 1px solid var(--border-subtle);
-  }
-  .section-tag {
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--color-gold);
-    margin-bottom: 8px;
-  }
-  .section-title {
-    font-family: var(--font-serif);
-    font-size: 2.4rem;
-    text-align: center;
-    color: #fff;
-    margin-bottom: 40px;
-  }
-  .encyclopedia-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-  }
-  .enc-card {
-    background: rgba(14, 21, 28, 0.5);
-    border: 1px solid var(--border-subtle);
-    border-radius: 16px;
-    padding: 20px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .enc-card:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-  }
-  .enc-name {
-    font-family: var(--font-serif);
-    font-size: 1.25rem;
-    color: #fff;
-    margin-bottom: 6px;
-  }
-  .enc-desc {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    line-height: 1.55;
-  }
-
-  /* Educational Disclaimer */
-  .disclaimer-card {
-    background: rgba(212, 175, 55, 0.05);
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 16px;
-    padding: 24px;
-    margin: 40px 0;
-    text-align: center;
-    font-size: 0.82rem;
-    color: var(--text-secondary);
-  }
-  .disclaimer-card strong { color: var(--text-gold); }
-
-  /* Premium Plan Section with VietQR */
-  .checkout-card {
-    background: var(--bg-card);
-    border: 1px solid var(--color-emerald);
-    box-shadow: 0 0 30px var(--color-emerald-glow);
-    border-radius: 20px;
-    padding: 32px;
-    margin: 40px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-  .checkout-info {
-    max-width: 500px;
-  }
-  .checkout-price {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #fff;
-    margin: 8px 0;
-  }
-  .qr-box {
-    text-align: center;
-    background: #fff;
-    padding: 12px;
-    border-radius: 14px;
-  }
-  .qr-box img {
-    width: 150px;
-    height: 150px;
-    display: block;
-  }
-
-  /* Footer */
-  footer.page-footer {
-    border-top: 1px solid var(--border-subtle);
-    padding: 40px 0;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-  }
-  .footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
+  .matrix-card-desc {
+    color: var(--text-pearl);
+    font-size: 0.92rem;
+    line-height: 1.6;
     margin-bottom: 16px;
   }
-  .footer-links a { color: var(--text-secondary); text-decoration: none; }
-  .footer-links a:hover { color: #fff; }
+  .remedy-box {
+    background: rgba(3, 20, 14, 0.7);
+    border: 1px solid rgba(52, 211, 153, 0.18);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--text-amber);
+  }
+
+  /* Diagnostic Questionnaire Drawer */
+  .quiz-section {
+    background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15) 0%, rgba(3, 20, 14, 0.95) 70%);
+    border: 1px solid var(--jade-border-glow);
+    border-radius: 28px;
+    padding: 48px;
+    margin-bottom: 80px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+  }
+  .quiz-question-card {
+    margin-bottom: 28px;
+  }
+  .quiz-q-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+  }
+  .quiz-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .quiz-opt-btn {
+    background: rgba(6, 38, 28, 0.7);
+    border: 1px solid var(--jade-border);
+    color: var(--text-pearl);
+    padding: 14px 20px;
+    border-radius: 14px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .quiz-opt-btn:hover {
+    background: rgba(16, 185, 129, 0.25);
+    border-color: var(--glow-mint);
+    color: #ffffff;
+  }
+  .quiz-opt-btn.selected {
+    background: rgba(16, 185, 129, 0.4);
+    border-color: #34d399;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(52, 211, 153, 0.35);
+  }
+
+  /* Pricing & VietQR Activation Box */
+  .pricing-shelf {
+    background: var(--jade-surface-card);
+    border: 1px solid var(--jade-border-glow);
+    border-radius: 24px;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (max-width: 860px) {
+    .pricing-shelf { grid-template-columns: 1fr; }
+  }
+  .qr-frame {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 16px;
+    display: inline-block;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  footer {
+    border-top: 1px solid var(--jade-border);
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text-jade-dim);
+    font-size: 0.88rem;
+  }
+  footer a { color: var(--glow-mint); text-decoration: none; }
 </style>
 </head>
 <body>
 
-<!-- Top Navigation -->
-<header class="top-nav" id="top">
-  <div class="container nav-inner">
-    <a href="#top" class="brand-group">
-      <svg class="brand-logo-symbol" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-      </svg>
+  <!-- Navigation Bar -->
+  <header class="nav-bar">
+    <a href="#top" class="brand-logo">
+      <div class="brand-symbol">&#9884;</div>
       <div>
-        <div class="brand-title">BLOOM</div>
-        <div class="brand-subtitle">Trắc Nghiệm Chẩn Đoán Nhanh 7 Thể Chất Đông Y & Somatic Intelligence</div>
+        <div class="brand-title">BẢN THẢO THẤU THỂ</div>
+        <div style="font-size: 0.72rem; color: #34d399; letter-spacing: 0.05em;">3D MERIDIAN SOMATICS</div>
       </div>
     </a>
-    <div class="nav-pill">
-      <div class="pulse-dot"></div>
-      Somatic Analysis Engine 2.0
+    <div class="nav-actions">
+      <button class="hud-btn" id="btnSoundToggle" type="button">Âm Thanh Thiền: Tắt</button>
+      <a class="scan-btn-main" href="#quiz-zone">Chẩn Đoán 9 Thể Tạng <span aria-hidden="true">&rarr;</span></a>
     </div>
-  </div>
-</header>
+  </header>
 
-<main class="container">
-
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-quote">
-      "We believe that healing through <span>botanical symbiosis</span> is the ultimate pathway to restore somatic vitality."
-    </div>
-    <h1 class="hero-heading">
-      Khám Phá Thể Trạng Cơ Thể & <br>
-      Liệu Pháp Dưỡng Sinh Cá Nhân Hóa
-    </h1>
-    <p class="hero-subheading">
-      Trắc Nghiệm Chẩn Đoán Nhanh 7 Thể Chất Đông Y và 9 thể tạng khoa học qua bản đồ cơ thể tương tác. Nhận phác đồ trà thảo mộc, dinh dưỡng theo đồng hồ sinh học và huyệt đạo dưỡng sinh trong 3 phút.
-    </p>
-    <div class="hero-cta-group">
-      <button class="btn-bloom-primary" onclick="document.getElementById('workspace').scrollIntoView({behavior: 'smooth'})">
-        Bắt Đầu Quét Cơ Thể Ngay
-      </button>
-      <button class="btn-bloom-secondary" onclick="document.getElementById('encyclopedia').scrollIntoView({behavior: 'smooth'})">
-        Khám Phá 9 Thể Tạng
-      </button>
-    </div>
-  </section>
-
-  <!-- Interactive Somatic Workspace -->
-  <section class="somatic-workspace" id="workspace">
-    <div class="bento-grid-2col">
-      
-      <!-- Left: Somatic Body Zones -->
-      <div class="bento-card body-map-card">
-        <div class="card-header-badge">Bản Đồ Thể Trạng Tương Tác</div>
-        <h2 class="card-title">Vùng Cơ Thể Cần Cân Bằng</h2>
-        <p class="card-desc">Nhấp chọn các vùng cơ thể bạn đang cảm thấy bất ổn để tích hợp vào thuật toán chẩn đoán:</p>
-
-        <div class="somatic-zones-list">
-          <div class="zone-item active" onclick="toggleZone(this, 'head')">
-            <div class="zone-left">
-              <div>
-                <div class="zone-name">Tâm Thần & Giấc Ngủ</div>
-                <div class="zone-sub">Khó vào giấc, mơ nhiều, căng thẳng thần kinh</div>
-              </div>
-            </div>
-            <div class="zone-indicator">✓</div>
-          </div>
-
-          <div class="zone-item" onclick="toggleZone(this, 'face')">
-            <div class="zone-left">
-              <div>
-                <div class="zone-name">Sắc Diện & Da Liễu</div>
-                <div class="zone-sub">Quầng thâm mắt, da khô sạm, mụn nội tiết</div>
-              </div>
-            </div>
-            <div class="zone-indicator">✓</div>
-          </div>
-
-          <div class="zone-item" onclick="toggleZone(this, 'lungs')">
-            <div class="zone-left">
-              <div>
-                <div class="zone-name">Khí Lực & Hô Hấp</div>
-                <div class="zone-sub">Hụt hơi, dễ mệt khi vận động, mồ hôi trộm</div>
-              </div>
-            </div>
-            <div class="zone-indicator">✓</div>
-          </div>
-
-          <div class="zone-item active" onclick="toggleZone(this, 'gut')">
-            <div class="zone-left">
-              <div>
-                <div class="zone-name">Tỳ Vị & Tiêu Hóa</div>
-                <div class="zone-sub">Chướng bụng sau ăn, sợ lạnh, phân không khuân</div>
-              </div>
-            </div>
-            <div class="zone-indicator">✓</div>
-          </div>
-
-          <div class="zone-item" onclick="toggleZone(this, 'limbs')">
-            <div class="zone-left">
-              <div>
-                <div class="zone-name">Tuần Hoàn Tứ Chi</div>
-                <div class="zone-sub">Lạnh bàn tay bàn chân, tê mỏi, đau thắt lưng</div>
-              </div>
-            </div>
-            <div class="zone-indicator">✓</div>
-          </div>
+  <main>
+    <!-- Hero 3D Stage -->
+    <section class="hero-stage" id="top">
+      <div class="hero-copy">
+        <div class="hero-badge">
+          <span>&#10022;</span> KHOA HỌC THỂ TẠNG &amp; THẢO MỘC ĐÔNG Y HOÀNG GIA
+        </div>
+        <h1 class="hero-heading">
+          Khám Phá <span class="highlight">Xuyên Thấu Cơ Thể</span> &amp; Tạng Phủ 3D
+        </h1>
+        <p class="hero-desc">
+          Công nghệ đồ họa 3D mô phỏng 12 đường kinh lạc và nhịp sinh học ngũ tạng. 
+          Rê chuột xoay 360 độ hoặc kích hoạt quét vi điểm để giải mã tắc nghẽn năng lượng, tìm ra thể chất gốc và nhận phác đồ trà thảo mộc điều hòa.
+        </p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+          <button class="scan-btn-main" id="btnTriggerScan" type="button">Quét Thấu Quang 3D Toàn Thân</button>
+          <a class="hud-btn" href="#matrix-zone" style="text-decoration: none; display: flex; align-items: center;">Tra Cứu 9 Thể Tạng</a>
         </div>
       </div>
 
-      <!-- Right: Diagnostic Quiz Questionnaire -->
-      <div class="bento-card quiz-panel" id="quizPanel">
+      <!-- 3D Interactive Mannequin Canvas Container -->
+      <div class="viewport-3d-card">
+        <div class="hud-top-bar">
+          <div class="hud-tag">
+            CHẾ ĐỘ: <span id="viewModeLabel" style="color:#ffffff;">XUYÊN THẤU KINH LẠC (X-RAY)</span>
+          </div>
+          <div class="hud-controls">
+            <button class="hud-btn active" id="btnLayerAll" type="button">Tất Cả</button>
+            <button class="hud-btn" id="btnLayerOrgans" type="button">Ngũ Tạng</button>
+            <button class="hud-btn" id="btnLayerMeridians" type="button">Kinh Lạc</button>
+            <button class="hud-btn" id="btnResetView" type="button">Góc Chuẩn</button>
+          </div>
+        </div>
+
+        <!-- Three.js Canvas Element -->
+        <canvas id="canvas3d"></canvas>
+
+        <!-- Live Scan Banner -->
+        <div class="hud-scan-banner">
+          <div class="organ-live-indicator">
+            <div class="organ-dot" id="organPulseDot"></div>
+            <div>
+              <div style="font-size: 0.8rem; color: #94a3b8; font-family: var(--font-mono);">TRẠNG THÁI KHÍ HUYẾT</div>
+              <div style="font-weight: 700; color: #ffffff;" id="organLiveName">5 Tạng Phủ Cân Bằng • Kinh Lạc Lưu Thông</div>
+            </div>
+          </div>
+          <div style="font-size: 0.8rem; color: #fde68a; font-family: var(--font-mono);" id="organScanStats">
+            RÊ CHUỘT XOAY 360&deg; / CLICK VÀO TẠNG
+          </div>
+        </div>
+
+        <!-- Organ Detail Popup -->
+        <div class="organ-detail-popup" id="organPopup">
+          <h4>
+            <span id="popupOrganTitle">Tâm (Tim - Hỏa)</span>
+            <button class="organ-close-btn" id="popupCloseBtn" type="button">&times;</button>
+          </h4>
+          <p style="font-size: 0.85rem; color: #e2e8f0; margin-bottom: 12px;" id="popupOrganDesc">
+            Chủ thần minh, chủ huyết mạch. Khi khí huyết hao tổn dễ sinh hồi hộp, mất ngủ, tim đập nhanh.
+          </p>
+          <div class="remedy-box" id="popupOrganRemedy">
+            <strong>Trà Thảo Mộc Đối Trị:</strong> Trà Tâm Sen, Long Nhãn, Táo Nhân (Uống 20h - 21h).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 Thể Tạng Đông Y Matrix -->
+    <section class="section-container" id="matrix-zone">
+      <div class="section-header">
+        <h2 class="section-title">9 Thể Tạng Đông Y Khoa Học</h2>
+        <p class="section-subtitle">
+          Mỗi cơ thể sinh ra và biến đổi theo một thể chất độc bản. Hiểu đúng thể trạng để dưỡng sinh trúng đích, không bồi bổ sai lầm.
+        </p>
+      </div>
+
+      <div class="matrix-grid">
+        <div class="matrix-card">
+          <div class="hero-badge" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24;">KHÍ HƯ THỂ</div>
+          <h3 class="matrix-card-title">&#10022; Thể Khí Hư (Thiếu Hụt Năng Lượng)</h3>
+          <p class="matrix-card-desc">Hay hụt hơi, đoản khí, nói nhỏ, lười vận động, dễ đổ mồ hôi trộm khi làm việc nhẹ, sắc mặt trắng nhợt.</p>
+          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Hoàng Kỳ, Đảng Sâm, Bạch Truật, Đại Táo. Tránh ăn đồ sống lạnh.</div>
+        </div>
+
+        <div class="matrix-card">
+          <div class="hero-badge" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">DƯƠNG HƯ THỂ</div>
+          <h3 class="matrix-card-title">&#10022; Thể Dương Hư (Sợ Lạnh Chân Tay Lạnh)</h3>
+          <p class="matrix-card-desc">Lưng gối lạnh mỏi, bàn tay bàn chân buốt quanh năm, sợ gió lạnh, thích uống nước ấm, tiêu hóa kém khi trời lạnh.</p>
+          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Quế Nhục, Can Khương, Kỷ Tử, Đương Quy. Ngâm chân nước gừng ấm 21h.</div>
+        </div>
+
+        <div class="matrix-card">
+          <div class="hero-badge" style="background: rgba(251, 113, 133, 0.15); border-color: rgba(251, 113, 133, 0.4); color: #fb7185;">ÂM HƯ THỂ</div>
+          <h3 class="matrix-card-title">&#10022; Thể Âm Hư (Nóng Trong Khô Khát)</h3>
+          <p class="matrix-card-desc">Lòng bàn tay bàn chân nóng rát về đêm, miệng khô họng rát, da khô nứt nẻ, gò má ửng đỏ, hay mất ngủ bốc hỏa.</p>
+          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Bách Hợp, Mạch Môn, Ngọc Trúc, Kỷ Tử, Yến Mạch. Tránh thức ăn cay nóng chiên rán.</div>
+        </div>
+
+        <div class="matrix-card">
+          <div class="hero-badge" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399;">ĐÀM THẤP THỂ</div>
+          <h3 class="matrix-card-title">&#10022; Thể Đàm Thấp (Tích Mỡ Ứ Trệ Nước)</h3>
+          <p class="matrix-card-desc">Bụng dưới mềm to, người nặng nề uể oải, mặt nhiều dầu nhờn, miệng dính nhớt, rêu lưỡi trắng dày.</p>
+          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Trần Bì, Phục Linh, Ý Dĩ, Sơn Tra. Vận động ra mồ hôi mỗi ngày 30 phút.</div>
+        </div>
+
+        <div class="matrix-card">
+          <div class="hero-badge" style="background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.4); color: #f43f5e;">HUYẾT Ứ THỂ</div>
+          <h3 class="matrix-card-title">&#10022; Thể Huyết Ứ (Tắc Nghẽn Tuần Hoàn)</h3>
+          <p class="matrix-card-desc">Sắc mặt xỉn tối, dễ xuất hiện vết bầm tím, môi thâm, quầng mắt đen sâu, phụ nữ kinh nguyệt đóng cục tím đen.</p>
+          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Tam Thất Bắc, Đan Sâm, Hồng Hoa, Đương Quy. Massage khai thông kinh lạc.</div>
+        </div>
+
+        <div class="matrix-card">
+          <div class="hero-badge" style="background: rgba(52, 211, 153, 0.25); border-color: #34d399; color: #a7f3d0;">BÌNH HÒA THỂ</div>
+          <h3 class="matrix-card-title">&#10022; Thể Bình Hòa (Chuẩn Mực Lý Tưởng)</h3>
+          <p class="matrix-card-desc">Sắc diện hồng hào sáng bóng, thể lực dồi dào, ăn ngủ ngon giấc, tinh thần an nhiên minh mẫn, ngũ tạng điều hòa.</p>
+          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Trà Dưỡng Sinh Tứ Quý: Hoa Cúc, Kỷ Tử, La Hán Quả. Duy trì lối sống thuận tự nhiên.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Diagnostic Zone -->
+    <section class="section-container" id="quiz-zone">
+      <div class="quiz-section">
+        <div class="section-header" style="margin-bottom: 32px;">
+          <h2 class="section-title">Trắc Nghiệm Quét Thể Trạng Tương Tác</h2>
+          <p class="section-subtitle">Trả lời 3 câu hỏi chính xác để hệ thống tính điểm ngũ tạng và phản chiếu trực tiếp lên mô hình 3D.</p>
+        </div>
+
+        <div class="quiz-question-card">
+          <div class="quiz-q-title">1. Biểu hiện thể lực và hơi thở hàng ngày của bạn:</div>
+          <div class="quiz-options">
+            <button class="quiz-opt-btn" data-type="khi-hu" data-organ="phe" type="button">Hay hụt hơi, nói nhỏ, làm việc nhẹ đã đổ mồ hôi</button>
+            <button class="quiz-opt-btn" data-type="duong-hu" data-organ="than" type="button">Tay chân buốt lạnh, sợ gió sợ nước lạnh</button>
+            <button class="quiz-opt-btn" data-type="dam-thap" data-organ="ty" type="button">Người nặng nề, bụng to mềm, uể oải sau ăn</button>
+            <button class="quiz-opt-btn" data-type="binh-hoa" data-organ="tam" type="button">Thể lực khỏe khoắn, thở sâu, dồi dào năng lượng</button>
+          </div>
+        </div>
+
+        <div class="quiz-question-card">
+          <div class="quiz-q-title">2. Tình trạng giấc ngủ và thần thái sắc diện:</div>
+          <div class="quiz-options">
+            <button class="quiz-opt-btn" data-type="am-hu" data-organ="tam" type="button">Hay mất ngủ, bốc hỏa, bàn tay bàn chân nóng rát</button>
+            <button class="quiz-opt-btn" data-type="huyet-u" data-organ="can" type="button">Sắc da sạm xỉn, quầng thâm mắt sâu, môi tím</button>
+            <button class="quiz-opt-btn" data-type="khi-tre" data-organ="can" type="button">Dễ cáu gắt, hay thở dài sườn ngực tức ách</button>
+            <button class="quiz-opt-btn" data-type="binh-hoa" data-organ="tam" type="button">Ngủ sâu giấc 7-8 tiếng, da dẻ hồng hào nhuận sắc</button>
+          </div>
+        </div>
+
+        <div id="quizResultBox" style="margin-top: 32px; display: none; background: rgba(3, 20, 14, 0.9); border: 1px solid #34d399; border-radius: 18px; padding: 24px; text-align: center;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.6rem; color: #34d399; margin-bottom: 10px;" id="resultTitle">KẾT QUẢ CHẨN ĐOÁN THỂ TẠNG</h3>
+          <p style="font-size: 1.05rem; color: #ffffff; max-width: 600px; margin: 0 auto 20px;" id="resultDesc"></p>
+          <a class="scan-btn-main" href="#pricing-zone">Mở Khóa Toàn Bộ Cẩm Nang &amp; Phác Đồ 28 Ngày</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing & Unlock Section -->
+    <section class="section-container" id="pricing-zone">
+      <div class="pricing-shelf">
         <div>
-          <div class="quiz-progress-bar">
-            <div class="quiz-progress-fill" id="quizProgressFill"></div>
+          <div class="hero-badge">TRỌN BỘ CẨM NANG HOÀNG GIA</div>
+          <h2 style="font-family: var(--font-heading); font-size: 2rem; color: #ffffff; margin-bottom: 16px;">
+            Sở Hữu Phác Đồ Dưỡng Sinh &amp; Trà Thảo Mộc 28 Ngày
+          </h2>
+          <p style="color: var(--text-pearl); margin-bottom: 24px;">
+            Bao gồm file Cẩm nang PDF chuẩn in ấn A4, sơ đồ 108 huyệt vị dưỡng nhan độc quyền, bản audio dẫn thiền thở theo Tý Ngọ Lưu Chú và tư vấn theo dõi 1-1.
+          </p>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #fde68a; margin-bottom: 8px;">
+            69.000&dstrok; <span style="font-size: 0.95rem; font-weight: 400; color: #94a3b8; text-decoration: line-through;">299.000&dstrok;</span>
           </div>
-          <div class="quiz-step-tag" id="quizStepTag">Câu hỏi 1 / 5 • Cảm Nhận Nhiệt Độ</div>
-          <h2 class="quiz-question-title" id="quizQuestionTitle">Bạn thường cảm thấy cơ thể thiên về nhiệt độ nào?</h2>
-          <p class="quiz-question-desc" id="quizQuestionDesc">Quan sát cảm giác hàng ngày khi tiếp xúc với máy lạnh hoặc mùa đông.</p>
-
-          <div class="options-group" id="quizOptionsGroup"></div>
+          <div style="font-size: 0.9rem; color: #34d399; margin-bottom: 24px;">Khách quốc tế: $12 USD qua Payoneer (lethanhmaicombo@gmail.com)</div>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; color: #cbd5e1;">
+            <li>&#10003; Quét thể trạng 3D không giới hạn lần</li>
+            <li>&#10003; 14 Công thức trà tạng phủ chuyên sâu</li>
+            <li>&#10003; Hỗ trợ hoàn tiền 100% trong 7 ngày nếu không hài lòng</li>
+          </ul>
         </div>
 
-        <div class="quiz-actions">
-          <button class="btn-bloom-secondary" id="btnPrevQuiz" onclick="prevQuestion()" style="visibility: hidden;">
-            <span aria-hidden="true">&larr;</span> Quay lại
-          </button>
-          <button class="btn-bloom-primary" id="btnNextQuiz" onclick="nextQuestion()">
-            Tiếp tục <span aria-hidden="true">&rarr;</span>
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Diagnostic Results Dossier (Hidden until completed) -->
-    <div class="diagnostic-dossier" id="diagnosticDossier">
-      
-      <!-- Result Banner -->
-      <div class="result-banner">
-        <div>
-          <div style="font-size: 0.8rem; color: var(--color-emerald); font-weight: 700; margin-bottom: 4px;">Kết Quả Phân Tích Thể Trạng</div>
-          <div class="constitution-badge" id="resConstitutionTitle">Thể Khí Huyết Lưỡng Hư</div>
-          <div class="constitution-tags">
-            <span class="pill-tag">Khí Lực Yếu</span>
-            <span class="pill-tag">Huyết Mạch Kém Lưu Thông</span>
-            <span class="pill-tag">Hàn Tạng Nhẹ</span>
+        <div style="text-align: center;">
+          <div class="qr-frame">
+            <!-- VietQR dynamic display -->
+            <img src="https://img.vietqr.io/image/970422-0985250444-compact2.png?amount=69000&addInfo=DUONGNHAN%203D&accountName=LE%20THANH%20MAI" alt="VietQR Thanh Toán Dưỡng Nhan" width="220" height="220" style="display:block; border-radius: 8px;">
           </div>
-        </div>
-        <button class="btn-bloom-secondary" onclick="resetQuiz()">Làm Lại Trắc Nghiệm</button>
-      </div>
-
-      <!-- Bespoke Botanical Protocol Grid -->
-      <div class="recommendations-grid">
-        
-        <!-- Tea Prescription -->
-        <div class="rec-card">
-          <div class="rec-tag">Trà Thảo Mộc Phù Hợp</div>
-          <h3 class="rec-title" id="recTeaTitle">Trà Hoàng Kỳ Bổ Khí Dưỡng Nhan</h3>
-          <ul class="rec-list" id="recTeaIngredients">
-            <li><strong>Hoàng kỳ (10g):</strong> Bổ khí thăng dương, tăng sức bền thành mạch.</li>
-            <li><strong>Táo đỏ Tân Cương (3 quả):</strong> Dưỡng huyết an thần, làm sáng sắc diện.</li>
-            <li><strong>Kỷ tử hữu cơ (5g):</strong> Bổ can thận, sáng mắt, chống oxy hóa tế bào.</li>
-            <li><strong>Long nhãn Hưng Yên (3 quả):</strong> Kiện tỳ ích khí, cải thiện giấc ngủ sâu.</li>
-          </ul>
-        </div>
-
-        <!-- Biological Clock Protocol -->
-        <div class="rec-card">
-          <div class="rec-tag">Đồng Hồ Sinh Học 24H (Tý Ngọ Lưu Chú)</div>
-          <h3 class="rec-title">Thời Gian Biểu Thải Độc & Hồi Phục</h3>
-          <ul class="rec-list">
-            <li><strong>21:00 - 23:00 (Giờ Hợi):</strong> Kinh Tam Tiêu thông suốt. Tắt màn hình xanh, ngâm chân nước ấm gừng muối.</li>
-            <li><strong>23:00 - 01:00 (Giờ Tý):</strong> Kinh Đởm hoạt động. Bắt buộc ngủ sâu để tái tạo mật và tế bào tạng.</li>
-            <li><strong>07:00 - 09:00 (Giờ Thìn):</strong> Kinh Vị vượng nhất. Ăn sáng ấm nóng (cháo hạt sen / yến mạch) để sinh khí.</li>
-          </ul>
-        </div>
-
-        <!-- Acupoint Therapy -->
-        <div class="rec-card">
-          <div class="rec-tag">Huyệt Đạo Trị Liệu Tại Nhà</div>
-          <h3 class="rec-title">3 Huyệt Dưỡng Khí An Thần</h3>
-          <ul class="rec-list">
-            <li><strong>Huyệt Túc Tam Lý:</strong> Dưới hõm ngoài xương bánh chè 3 thốn. Day ấn 3 phút mỗi sáng giúp kiện tỳ ích khí.</li>
-            <li><strong>Huyệt Tam Âm Giao:</strong> Trên mắt cá trong 3 thốn. Day nhẹ buổi tối giúp điều hòa kinh nguyệt & khí huyết.</li>
-            <li><strong>Huyệt Dũng Tuyền:</strong> Hõm gan bàn chân. Xoa nóng trước khi ngủ giúp ấm thận, hạ hỏa, ngủ ngon.</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <!-- Checkout Pro Plan with VietQR -->
-      <div class="checkout-card">
-        <div class="checkout-info">
-          <div class="rec-tag">Gói Cẩm Nang Chuyên Sâu 28 Ngày</div>
-          <h3 class="rec-title">Phác Đồ Dưỡng Nhan Toàn Diện Cá Nhân Hóa</h3>
-          <p class="card-desc">Bao gồm thực đơn 28 ngày theo thể tạng, bài tập khí công dưỡng sinh, và audio thư giãn an thần buổi tối.</p>
-          <div class="checkout-price">69.000₫ <span>/ trọn đời</span></div>
-        </div>
-        <div class="qr-box">
-          <img src="https://img.vietqr.io/image/MB-0987654321-compact2.png?amount=69000&addInfo=DUONGNHAN%20PRO" alt="VietQR Thanh toán">
-          <div style="font-size: 0.72rem; color: #1e293b; font-weight: 700; margin-top: 6px;">Quét Mã Thanh Toán VietQR</div>
+          <div style="margin-top: 14px; font-size: 0.88rem; color: #34d399; font-weight: 700;">
+            QUÉT VIETQR KÍCH HOẠT TỰ ĐỘNG 24/7
+          </div>
+          <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">Nội dung CK: <code>DUONGNHAN 3D</code></div>
         </div>
       </div>
+    </section>
+  </main>
 
-    </div>
+  <footer>
+    <div>&copy; 2026 Bản Thảo Thấu Thể • Nền tảng Dưỡng Sinh Somatic 3D • Liên hệ: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a></div>
+  </footer>
 
-  </section>
+  <!-- 3D Three.js Interactive Engine Script -->
+  <script>
+    (function init3DTranslucentBody() {
+      const canvas = document.getElementById('canvas3d');
+      if (!canvas || typeof THREE === 'undefined') return;
 
-  <!-- 9 Constitutions Encyclopedia -->
-  <section class="encyclopedia-section" id="encyclopedia">
-    <div class="section-tag">Học Thuyết Dưỡng Sinh Bản Thảo</div>
-    <h2 class="section-title">9 Thể Trạng Đông Y Khoa Học</h2>
+      const width = canvas.clientWidth || 600;
+      const height = canvas.clientHeight || 640;
 
-    <div class="encyclopedia-grid">
-      <div class="enc-card">
-        <div class="enc-name">1. Thể Bình Hòa</div>
-        <div class="enc-desc">Âm dương cân bằng, sắc diện hồng hào, năng lượng dồi dào, ăn ngủ điều hòa. Đây là thể trạng lý tưởng nhất.</div>
-      </div>
-      <div class="enc-card">
-        <div class="enc-name">2. Thể Khí Hư</div>
-        <div class="enc-desc">Dễ hụt hơi, tiếng nói nhỏ, hay mệt mỏi, dễ cảm lạnh, vã mồ hôi trộm khi vận động nhẹ.</div>
-      </div>
-      <div class="enc-card">
-        <div class="enc-name">3. Thể Dương Hư (Hàn)</div>
-        <div class="enc-desc">Sợ lạnh, tay chân lạnh ngắt quanh năm, thích uống nước nóng, đại tiện lỏng, sắc mặt nhợt nhạt.</div>
-      </div>
-      <div class="enc-card">
-        <div class="enc-name">4. Thể Âm Hư (Nhiệt)</div>
-        <div class="enc-desc">Nóng trong, lòng bàn tay chân hay hâm hấp nóng, miệng khô họng khát, thích uống nước đá, hay mất ngủ.</div>
-      </div>
-      <div class="enc-card">
-        <div class="enc-name">5. Thể Đàm Thấp</div>
-        <div class="enc-desc">Cơ thể nặng nề, bụng béo tích mỡ, da dầu nhờn, miệng dính ngọt, hay có đờm nhớt ở cổ họng.</div>
-      </div>
-      <div class="enc-card">
-        <div class="enc-name">6. Thể Thấp Nhiệt</div>
-        <div class="enc-desc">Dễ nổi mụn nhọt, da bóng nhờn, miệng đắng, hay bốc hỏa, tiểu tiện vàng sẫm, tính tình dễ nóng nảy.</div>
-      </div>
-      <div class="enc-card">
-        <div class="enc-name">7. Thể Huyết Ứ</div>
-        <div class="enc-desc">Sắc da sạm tối, môi thâm tím, quầng thâm mắt đậm, hay đau nhức cơ khớp cố định, dễ có vết bầm tím.</div>
-      </div>
-      <div class="enc-card">
-        <div class="enc-name">8. Thể Khí Trệ</div>
-        <div class="enc-desc">Hay thở dài, ngực sườn đầy trướng, dễ buồn rầu, ức chế căng thẳng, phụ nữ hay đau tức ngực trước kỳ kinh.</div>
-      </div>
-      <div class="enc-card">
-        <div class="enc-name">9. Thể Đặc Dị</div>
-        <div class="enc-desc">Cơ địa dị ứng bẩm sinh, nhạy cảm với phấn hoa, thời tiết, hải sản, dễ nổi mề đay hoặc hen suyễn.</div>
-      </div>
-    </div>
-  </section>
+      // 1. Scene & Camera
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(0, 0, 7.5);
 
-  <!-- Legal & Educational Disclaimer -->
-  <div class="disclaimer-card">
-    <strong>Tuyên Bố Pháp Lý & Miễn Trừ Y Khoa:</strong> Nền tảng BLOOM được thiết kế như một cẩm nang giáo dục lối sống và dưỡng sinh tự nhiên theo học thuyết thể trạng Đông Y. Toàn bộ thông tin không cấu thành chẩn đoán y tế, không kê đơn thuốc và không thay thế phác đồ điều trị của bác sĩ chuyên khoa.
-  </div>
+      // 2. Renderer with transparent background
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-</main>
+      // 3. Lighting - Jade & Amber bioluminescent lights
+      const ambientLight = new THREE.AmbientLight(0x064e3b, 1.2);
+      scene.add(ambientLight);
 
-<!-- Footer -->
-<footer class="page-footer">
-  <div class="container">
-    <div class="footer-links">
-      <a href="#top">Điều Khoản Dịch Vụ</a>
-      <a href="#top">Chính Sách Bảo Mật</a>
-      <a href="#top">Tài Liệu Nghiên Cứu Thể Tạng</a>
-      <a href="https://github.com/MaiLeac/revenue-copilot-international-phase0" target="_blank">Mã Nguồn GitHub</a>
-    </div>
-    <p>© 2026 BLOOM Botanical Intelligence. Nghệ thuật dưỡng sinh hòa hợp cùng thiên nhiên.</p>
-  </div>
-</footer>
+      const topLight = new THREE.DirectionalLight(0x34d399, 1.8);
+      topLight.position.set(2, 6, 4);
+      scene.add(topLight);
 
-<!-- Interactive Quiz Engine -->
-<script>
-  const QUESTIONS = [
-    {
-      title: "Bạn thường cảm thấy cơ thể thiên về nhiệt độ nào?",
-      desc: "Quan sát cảm giác hàng ngày khi ở trong phòng máy lạnh hoặc vào mùa đông.",
-      options: [
-        { text: "Rất sợ lạnh, tay chân luôn buốt giá, thích đồ ấm nóng", score: "duong_hu" },
-        { text: "Nóng trong, lòng bàn tay chân hay hâm hấp nóng, khát nước", score: "am_hu" },
-        { text: "Nhiệt độ bình thường, dễ thích nghi với môi trường", score: "binh_hoa" },
-        { text: "Hay ớn lạnh dọc sống lưng khi có gió lùa", score: "khi_hu" }
-      ]
-    },
-    {
-      title: "Chất lượng giấc ngủ và trạng thái tinh thần của bạn?",
-      desc: "Phản ánh trực tiếp sự điều hòa của Tâm Thần và Khí Huyết.",
-      options: [
-        { text: "Khó vào giấc, ngủ nông, hay mê mộng, giật mình", score: "am_hu" },
-        { text: "Ngủ nhiều nhưng dậy vẫn mệt mỏi, đầu óc nặng nề", score: "dam_thap" },
-        { text: "Hay thở dài, ngực sườn tức tối, dễ bồn chồn lo âu", score: "khi_tre" },
-        { text: "Ngủ sâu giấc, thức dậy sảng khoái và tràn đầy năng lượng", score: "binh_hoa" }
-      ]
-    },
-    {
-      title: "Biểu hiện sắc diện và làn da của bạn?",
-      desc: "Huyết vinh nhuận ra mặt, phơi bày trạng thái tạng phủ.",
-      options: [
-        { text: "Sắc mặt nhợt nhạt, da khô ráp, môi móng tay tái", score: "huyet_hu" },
-        { text: "Da nhiều dầu nhờn, dễ nổi mụn bọc, miệng hay đắng", score: "thap_nhiet" },
-        { text: "Da xỉn màu, có vết nám nội tiết, quầng thâm mắt đậm", score: "huyet_u" },
-        { text: "Da dẻ hồng hào, nhuận sắc, có độ đàn hồi tự nhiên", score: "binh_hoa" }
-      ]
-    },
-    {
-      title: "Hệ tiêu hóa và cảm giác ngon miệng của bạn?",
-      desc: "Tỳ vị là gốc của hậu thiên, nơi sinh hóa khí huyết.",
-      options: [
-        { text: "Ăn xong dễ chướng bụng, sợ đồ lạnh, đại tiện lỏng sệt", score: "duong_hu" },
-        { text: "Dễ đói nhưng ăn ít đã đầy, miệng dính nhớt, thèm ngọt", score: "dam_thap" },
-        { text: "Hay ợ chua, đau tức vùng thượng vị khi căng thẳng", score: "khi_tre" },
-        { text: "Ăn uống ngon miệng, tiêu hóa thông suốt, đại tiện đều đặn", score: "binh_hoa" }
-      ]
-    },
-    {
-      title: "Mức độ năng lượng và sức bền trong ngày?",
-      desc: "Đo lường nguyên khí và chính khí của cơ thể.",
-      options: [
-        { text: "Nhanh kiệt sức, leo vài tầng cầu thang là hụt hơi", score: "khi_hu" },
-        { text: "Nặng nề, lười vận động, tay chân rã rời vào buổi chiều", score: "dam_thap" },
-        { text: "Đau mỏi cổ vai gáy cố định, cơ bắp căng cứng", score: "huyet_u" },
-        { text: "Bền bỉ, năng lượng duy trì ổn định suốt cả ngày", score: "binh_hoa" }
-      ]
-    }
-  ];
+      const rimLight = new THREE.PointLight(0x38bdf8, 2.5, 20);
+      rimLight.position.set(-4, -2, -3);
+      scene.add(rimLight);
 
-  let currentQuestionIndex = 0;
-  let userAnswers = {};
+      const amberGlow = new THREE.PointLight(0xf59e0b, 1.5, 15);
+      amberGlow.position.set(0, 0, 2);
+      scene.add(amberGlow);
 
-  function renderQuestion() {
-    const q = QUESTIONS[currentQuestionIndex];
-    document.getElementById('quizStepTag').innerText = `Câu hỏi ${currentQuestionIndex + 1} / ${QUESTIONS.length} • Khảo Sát Thể Tạng`;
-    document.getElementById('quizQuestionTitle').innerText = q.title;
-    document.getElementById('quizQuestionDesc').innerText = q.desc;
-    document.getElementById('quizProgressFill').style.width = `${((currentQuestionIndex + 1) / QUESTIONS.length) * 100}%`;
+      // 4. Group for the complete holographic body
+      const bodyGroup = new THREE.Group();
+      scene.add(bodyGroup);
 
-    const optContainer = document.getElementById('quizOptionsGroup');
-    optContainer.innerHTML = '';
+      // --- 4.1 Stylized Translucent Human Form (X-Ray Hologram) ---
+      const glassMat = new THREE.MeshPhongMaterial({
+        color: 0x10b981,
+        emissive: 0x032b1d,
+        specular: 0x34d399,
+        shininess: 90,
+        transparent: true,
+        opacity: 0.22,
+        depthWrite: false,
+      });
 
-    q.options.forEach((opt, idx) => {
-      const btn = document.createElement('div');
-      btn.className = `option-btn ${userAnswers[currentQuestionIndex] === opt.score ? 'selected' : ''}`;
-      btn.innerHTML = `<span style="color: var(--color-emerald); font-weight: 700;">${String.fromCharCode(65 + idx)}.</span> <span>${opt.text}</span>`;
-      btn.onclick = () => {
-        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        userAnswers[currentQuestionIndex] = opt.score;
-      };
-      optContainer.appendChild(btn);
-    });
+      const wireframeMat = new THREE.MeshBasicMaterial({
+        color: 0x34d399,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.15,
+      });
 
-    document.getElementById('btnPrevQuiz').style.visibility = currentQuestionIndex > 0 ? 'visible' : 'hidden';
-    document.getElementById('btnNextQuiz').innerHTML = currentQuestionIndex === QUESTIONS.length - 1 ? 'Hoàn Thành Phân Tích' : 'Tiếp tục <span aria-hidden="true">&rarr;</span>';
-  }
+      // Head
+      const headGeom = new THREE.SphereGeometry(0.55, 24, 24);
+      headGeom.scale(1, 1.2, 1);
+      const headMesh = new THREE.Mesh(headGeom, glassMat);
+      headMesh.position.y = 2.4;
+      bodyGroup.add(headMesh);
+      const headWire = new THREE.Mesh(headGeom, wireframeMat);
+      headWire.position.y = 2.4;
+      bodyGroup.add(headWire);
 
-  function nextQuestion() {
-    if (!userAnswers[currentQuestionIndex]) {
-      alert("Vui lòng chọn một phương án phù hợp nhất với bạn!");
-      return;
-    }
-    if (currentQuestionIndex < QUESTIONS.length - 1) {
-      currentQuestionIndex++;
-      renderQuestion();
-    } else {
-      finishQuiz();
-    }
-  }
+      // Torso / Chest (Lồng ngực thấu quang)
+      const torsoGeom = new THREE.CylinderGeometry(0.7, 0.5, 2.2, 24, 8, true);
+      const torsoMesh = new THREE.Mesh(torsoGeom, glassMat);
+      torsoMesh.position.y = 0.8;
+      bodyGroup.add(torsoMesh);
+      const torsoWire = new THREE.Mesh(torsoGeom, wireframeMat);
+      torsoWire.position.y = 0.8;
+      bodyGroup.add(torsoWire);
 
-  function prevQuestion() {
-    if (currentQuestionIndex > 0) {
-      currentQuestionIndex--;
-      renderQuestion();
-    }
-  }
+      // Pelvis / Đan Điền
+      const pelvisGeom = new THREE.CylinderGeometry(0.5, 0.45, 0.8, 24);
+      const pelvisMesh = new THREE.Mesh(pelvisGeom, glassMat);
+      pelvisMesh.position.y = -0.6;
+      bodyGroup.add(pelvisMesh);
 
-  function toggleZone(el, zoneId) {
-    el.classList.toggle('active');
-  }
-
-  function finishQuiz() {
-    const tally = {};
-    Object.values(userAnswers).forEach(sc => {
-      tally[sc] = (tally[sc] || 0) + 1;
-    });
-
-    let topScore = 'khi_hu';
-    let maxCount = -1;
-    for (let k in tally) {
-      if (tally[k] > maxCount) {
-        maxCount = tally[k];
-        topScore = k;
+      // Legs
+      function createLimb(x, y, len) {
+        const geom = new THREE.CylinderGeometry(0.2, 0.14, len, 16);
+        const mesh = new THREE.Mesh(geom, glassMat);
+        mesh.position.set(x, y, 0);
+        bodyGroup.add(mesh);
+        const wire = new THREE.Mesh(geom, wireframeMat);
+        wire.position.set(x, y, 0);
+        bodyGroup.add(wire);
       }
-    }
+      createLimb(-0.35, -2.1, 2.2); // Left Leg
+      createLimb(0.35, -2.1, 2.2);  // Right Leg
+      createLimb(-1.0, 0.8, 1.8);   // Left Arm
+      createLimb(1.0, 0.8, 1.8);    // Right Arm
 
-    const CONSTITUTION_DATA = {
-      duong_hu: {
-        title: "Thể Dương Hư (Hàn Tạng)",
-        tags: ["Sợ Lạnh", "Tỳ Thận Dương Hư", "Khí Huyết Lưu Thông Kém"],
-        teaTitle: "Trà Gừng Nướng - Táo Đỏ - Quế Chi",
-        teaDesc: "Ôn trung tán hàn, hồi dương bổ khí, làm ấm tạng phủ và tứ chi."
-      },
-      am_hu: {
-        title: "Thể Âm Hư (Nhiệt Tạng)",
-        tags: ["Nóng Trong", "Âm Hư Hỏa Vượng", "Khô Khát"],
-        teaTitle: "Trà Bách Hợp - Mạch Môn - Kỷ Tử",
-        teaDesc: "Tư âm nhuận phế, thanh nhiệt giáng hỏa, dưỡng tâm an thần."
-      },
-      khi_hu: {
-        title: "Thể Khí Hư (Suy Nhược Khí Lực)",
-        tags: ["Dễ Hụt Hơi", "Mệt Mỏi", "Tỳ Khí Suy Yếu"],
-        teaTitle: "Trà Hoàng Kỳ Bổ Khí Dưỡng Nhan",
-        teaDesc: "Bổ trung ích khí, củng cố vệ khí, tăng sức bền tế bào."
-      },
-      dam_thap: {
-        title: "Thể Đàm Thấp (Tích Trệ Thủy Thấp)",
-        tags: ["Nặng Nề", "Tỳ Hư Sinh Đàm", "Chuyển Hóa Kém"],
-        teaTitle: "Trà Phục Linh - Trần Bì - Ý Dĩ",
-        teaDesc: "Kiện tỳ hóa đàm, trừ thấp tiêu trướng, thanh lọc cơ thể."
-      },
-      huyet_u: {
-        title: "Thể Huyết Ứ (Tắc Nghẽn Huyết Mạch)",
-        tags: ["Khí Trệ Huyết Ứ", "Sạm Nám", "Kém Lưu Thông"],
-        teaTitle: "Trà Hoa Hồng - Đan Sâm - Tam Thất",
-        teaDesc: "Hoạt huyết hóa ứ, thông kinh lạc, làm sáng mịn sắc diện."
-      },
-      binh_hoa: {
-        title: "Thể Bình Hòa (Âm Dương Cân Bằng)",
-        tags: ["Khí Huyết Điều Hòa", "Ngũ Tạng An Hòa", "Sức Khỏe Tối Ưu"],
-        teaTitle: "Trà Dưỡng Nhan Tứ Vị Thảo Mộc",
-        teaDesc: "Duy trì thanh xuân, dưỡng tâm ích trí, thanh lọc ngũ tạng."
+      // --- 4.2 Luminous Central Meridian Spine (Nhâm Mạch / Đốc Mạch) ---
+      const spinePoints = [];
+      for (let i = 0; i < 40; i++) {
+        const y = -3.2 + (i / 40) * 6.2;
+        spinePoints.push(new THREE.Vector3(0, y, 0));
       }
-    };
+      const spineGeom = new THREE.BufferGeometry().setFromPoints(spinePoints);
+      const spineMat = new THREE.PointsMaterial({
+        color: 0xfde68a,
+        size: 0.08,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending,
+      });
+      const spinePointsMesh = new THREE.Points(spineGeom, spineMat);
+      bodyGroup.add(spinePointsMesh);
 
-    const res = CONSTITUTION_DATA[topScore] || CONSTITUTION_DATA['khi_hu'];
-    document.getElementById('resConstitutionTitle').innerText = res.title;
-    document.getElementById('recTeaTitle').innerText = res.teaTitle;
+      // Meridian glowing contour curve
+      const meridianCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 3.1, 0),     // Bách Hội (đỉnh đầu)
+        new THREE.Vector3(0, 2.4, 0.4),   // Ấn Đường / Mặt
+        new THREE.Vector3(0, 1.5, 0.6),   // Đản Trung (ngực)
+        new THREE.Vector3(0, 0.4, 0.5),   // Trung Quản (thượng vị)
+        new THREE.Vector3(0, -0.4, 0.45), // Khí Hải / Đan Điền
+        new THREE.Vector3(0, -1.0, 0.2),  // Hội Âm
+      ]);
+      const meridianTubeGeom = new THREE.TubeGeometry(meridianCurve, 64, 0.035, 8, false);
+      const meridianTubeMat = new THREE.MeshBasicMaterial({
+        color: 0x34d399,
+        transparent: true,
+        opacity: 0.9,
+      });
+      const meridianTube = new THREE.Mesh(meridianTubeGeom, meridianTubeMat);
+      bodyGroup.add(meridianTube);
 
-    document.getElementById('quizPanel').style.display = 'none';
-    document.getElementById('diagnosticDossier').classList.add('active');
-    document.getElementById('diagnosticDossier').scrollIntoView({ behavior: 'smooth' });
-  }
+      // --- 4.3 Five Internal Organs (Ngũ Tạng Phát Sáng) ---
+      const organObjects = [];
 
-  function resetQuiz() {
-    userAnswers = {};
-    currentQuestionIndex = 0;
-    document.getElementById('quizPanel').style.display = 'flex';
-    document.getElementById('diagnosticDossier').classList.remove('active');
-    renderQuestion();
-  }
+      function createOrgan(id, name, color, position, size, info) {
+        const geom = new THREE.SphereGeometry(size, 20, 20);
+        const mat = new THREE.MeshPhongMaterial({
+          color: color,
+          emissive: color,
+          emissiveIntensity: 0.8,
+          transparent: true,
+          opacity: 0.85,
+          shininess: 100,
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.set(position.x, position.y, position.z);
+        mesh.userData = { id, name, color, info, baseScale: size };
+        bodyGroup.add(mesh);
 
-  renderQuestion();
-</script>
+        // Ambient halo
+        const haloGeom = new THREE.SphereGeometry(size * 1.5, 16, 16);
+        const haloMat = new THREE.MeshBasicMaterial({
+          color: color,
+          transparent: true,
+          opacity: 0.25,
+          wireframe: true,
+        });
+        const haloMesh = new THREE.Mesh(haloGeom, haloMat);
+        haloMesh.position.copy(mesh.position);
+        bodyGroup.add(haloMesh);
 
+        organObjects.push({ mesh, haloMesh });
+        return mesh;
+      }
+
+      // Ngũ Tạng: Tâm, Can, Tỳ, Phế, Thận
+      const organHeart = createOrgan('tam', 'Tâm (Tim - Hỏa)', 0xfb7185, { x: -0.12, y: 1.25, z: 0.2 }, 0.22, {
+        element: 'Hỏa',
+        desc: 'Chủ thần minh, chủ huyết mạch. Rối loạn gây hồi hộp, mất ngủ, tim đập nhanh, hay quên.',
+        remedy: 'Trà Tâm Sen, Long Nhãn, Táo Nhân. Uống giờ Tuất (19h-21h) dưỡng tâm an thần.',
+      });
+
+      const organLungs = createOrgan('phe', 'Phế (Phổi - Kim)', 0xf1f5f9, { x: 0.2, y: 1.35, z: 0.15 }, 0.24, {
+        element: 'Kim',
+        desc: 'Chủ khí, chủ bì mao, khai khiếu ra mũi. Hư nhược gây đoản hơi, da khô, dễ cảm mạo.',
+        remedy: 'Bách Hợp, Mạch Môn, Sa Sâm, Kỷ Tử. Tập thở bụng sâu 5h-7h sáng.',
+      });
+
+      const organLiver = createOrgan('can', 'Can (Gan - Mộc)', 0x10b981, { x: -0.22, y: 0.7, z: 0.2 }, 0.26, {
+        element: 'Mộc',
+        desc: 'Chủ tàng huyết, chủ sơ tiết khí cơ. Uất trệ sinh cáu gắt, hoa mắt, mắt mờ đỏ, ngực sườn tức ách.',
+        remedy: 'Hoa Cúc, Câu Kỷ Tử, Quyết Minh Tử. Ngủ sâu trước 23h để dưỡng huyết tạng can.',
+      });
+
+      const organSpleen = createOrgan('ty', 'Tỳ (Tiêu Hóa - Thổ)', 0xf59e0b, { x: 0.22, y: 0.65, z: 0.18 }, 0.24, {
+        element: 'Thổ',
+        desc: 'Chủ vận hóa thủy cốc, sinh huyết. Hư nhược gây bụng đầy mềm, ăn không tiêu, người uể oải tích mỡ.',
+        remedy: 'Bạch Truật, Phục Linh, Ý Dĩ, Trần Bì. Ăn ấm, tránh thức ăn lạnh 7h-9h sáng.',
+      });
+
+      const organKidney = createOrgan('than', 'Thận (Khí Lực - Thủy)', 0x38bdf8, { x: 0.0, y: 0.15, z: -0.2 }, 0.25, {
+        element: 'Thủy',
+        desc: 'Chủ tàng tinh, chủ cốt tủy, cội nguồn sinh mệnh. Thận hư gây mỏi gối, đau lưng, sợ lạnh, giảm sinh lực.',
+        remedy: 'Thục Địa, Hoài Sơn, Kỷ Tử, Đỗ Trọng. Ngâm chân nước ấm gừng muối giờ Dậu (17h-19h).',
+      });
+
+      // --- 4.4 Scanning Laser Beam (Vành Quét Xuyên Thấu) ---
+      const scanRingGeom = new THREE.RingGeometry(0.7, 0.85, 32);
+      const scanRingMat = new THREE.MeshBasicMaterial({
+        color: 0x34d399,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0,
+      });
+      const scanRing = new THREE.Mesh(scanRingGeom, scanRingMat);
+      scanRing.rotation.x = Math.PI / 2;
+      bodyGroup.add(scanRing);
+
+      let isScanning = false;
+      let scanDirection = 1;
+      let scanY = -3.0;
+
+      // 5. Interaction: Mouse Drag Rotation
+      let isDragging = false;
+      let previousMouseX = 0;
+      let targetRotationY = 0;
+
+      canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMouseX = e.clientX;
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - previousMouseX;
+        previousMouseX = e.clientX;
+        targetRotationY += deltaX * 0.008;
+      });
+
+      // Touch events for mobile
+      canvas.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          previousMouseX = e.touches[0].clientX;
+        }
+      });
+      window.addEventListener('touchend', () => { isDragging = false; });
+      canvas.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return;
+        const deltaX = e.touches[0].clientX - previousMouseX;
+        previousMouseX = e.touches[0].clientX;
+        targetRotationY += deltaX * 0.008;
+      });
+
+      // Raycaster for Organ Click
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      const popup = document.getElementById('organPopup');
+      const popupTitle = document.getElementById('popupOrganTitle');
+      const popupDesc = document.getElementById('popupOrganDesc');
+      const popupRemedy = document.getElementById('popupOrganRemedy');
+      const liveName = document.getElementById('organLiveName');
+      const pulseDot = document.getElementById('organPulseDot');
+
+      canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const meshesToTest = organObjects.map(o => o.mesh);
+        const intersects = raycaster.intersectObjects(meshesToTest);
+
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          const data = hit.userData;
+          
+          // Show popup
+          popupTitle.textContent = data.name;
+          popupDesc.textContent = data.info.desc;
+          popupRemedy.innerHTML = '<strong>Phác đồ thảo mộc:</strong> ' + data.info.remedy;
+          popup.style.display = 'block';
+
+          // Update live banner
+          liveName.textContent = data.name + ' • Hệ Hành ' + data.info.element;
+          pulseDot.style.background = '#' + data.color.toString(16).padStart(6, '0');
+          pulseDot.style.boxShadow = '0 0 16px #' + data.color.toString(16).padStart(6, '0');
+
+          // Highlight organ with pulse
+          hit.scale.set(1.4, 1.4, 1.4);
+          setTimeout(() => hit.scale.set(1, 1, 1), 300);
+        }
+      });
+
+      document.getElementById('popupCloseBtn').addEventListener('click', () => {
+        popup.style.display = 'none';
+      });
+
+      // 6. Trigger Scan Button
+      document.getElementById('btnTriggerScan').addEventListener('click', () => {
+        isScanning = true;
+        scanY = -3.0;
+        scanRingMat.opacity = 0.85;
+        document.getElementById('organScanStats').textContent = 'ĐANG QUÉT XUYÊN THẤU TOÀN DIỆN...';
+      });
+
+      // Controls
+      document.getElementById('btnLayerAll').addEventListener('click', (e) => {
+        setLayerMode(e.target, true, true);
+        document.getElementById('viewModeLabel').textContent = 'XUYÊN THẤU TOÀN PHẦN';
+      });
+      document.getElementById('btnLayerOrgans').addEventListener('click', (e) => {
+        setLayerMode(e.target, true, false);
+        document.getElementById('viewModeLabel').textContent = 'TẬP TRUNG NGŨ TẠNG';
+      });
+      document.getElementById('btnLayerMeridians').addEventListener('click', (e) => {
+        setLayerMode(e.target, false, true);
+        document.getElementById('viewModeLabel').textContent = 'ĐƯỜNG KINH LẠC 12 KINH';
+      });
+      document.getElementById('btnResetView').addEventListener('click', () => {
+        targetRotationY = 0;
+        bodyGroup.rotation.y = 0;
+      });
+
+      function setLayerMode(btn, showOrgans, showMeridians) {
+        document.querySelectorAll('.hud-controls .hud-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        organObjects.forEach(o => {
+          o.mesh.visible = showOrgans;
+          o.haloMesh.visible = showOrgans;
+        });
+        meridianTube.visible = showMeridians;
+        spinePointsMesh.visible = showMeridians;
+      }
+
+      // 7. Animation Loop (60 FPS)
+      let clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const elapsedTime = clock.getElapsedTime();
+
+        // Smooth rotation damping
+        bodyGroup.rotation.y += (targetRotationY - bodyGroup.rotation.y) * 0.08;
+
+        // Auto gentle drift when idle
+        if (!isDragging) {
+          targetRotationY += 0.0015;
+        }
+
+        // Heart pulse effect
+        const heartPulse = 1.0 + Math.sin(elapsedTime * 4.5) * 0.08;
+        organHeart.scale.set(heartPulse, heartPulse, heartPulse);
+
+        // Liver & Kidney subtle breathing
+        const breath = 1.0 + Math.sin(elapsedTime * 1.8) * 0.04;
+        organLungs.scale.set(breath, breath, breath);
+
+        // Meridian energy particle flow
+        const positions = spineGeom.attributes.position.array;
+        for (let i = 0; i < 40; i++) {
+          positions[i * 3 + 1] = -3.2 + ((i + (elapsedTime * 8) % 40) / 40) * 6.2;
+        }
+        spineGeom.attributes.position.needsUpdate = true;
+
+        // Scanning beam motion
+        if (isScanning) {
+          scanY += 0.06 * scanDirection;
+          scanRing.position.y = scanY;
+          if (scanY > 3.0) {
+            scanDirection = -1;
+          } else if (scanY < -3.0 && scanDirection === -1) {
+            isScanning = false;
+            scanRingMat.opacity = 0;
+            document.getElementById('organScanStats').textContent = 'QUÉT HOÀN TẤT • ĐÃ LẬP HỒ SƠ 9 THỂ TẠNG';
+          }
+        }
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Resize handler
+      window.addEventListener('resize', () => {
+        const newWidth = canvas.clientWidth;
+        const newHeight = canvas.clientHeight;
+        camera.aspect = newWidth / newHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(newWidth, newHeight);
+      });
+    })();
+
+    // Interactive Quiz Logic
+    (function initQuizLogic() {
+      const buttons = document.querySelectorAll('.quiz-opt-btn');
+      const resultBox = document.getElementById('quizResultBox');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultDesc = document.getElementById('resultDesc');
+      const selected = {};
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const parent = btn.closest('.quiz-options');
+          parent.querySelectorAll('.quiz-opt-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+
+          const organ = btn.dataset.organ;
+          const type = btn.dataset.type;
+          selected[parent] = { organ, type, text: btn.textContent };
+
+          // Trigger simulated scan pulse
+          const scanBtn = document.getElementById('btnTriggerScan');
+          if (scanBtn) scanBtn.click();
+
+          // If answered both questions
+          const answeredCount = document.querySelectorAll('.quiz-opt-btn.selected').length;
+          if (answeredCount >= 2) {
+            resultBox.style.display = 'block';
+            if (type === 'khi-hu') {
+              resultTitle.textContent = 'CHẨN ĐOÁN: BẠN THUỘC THỂ KHÍ HƯ (TẠNG PHẾ & TỲ SUY GIẢM)';
+              resultDesc.textContent = 'Năng lượng tế bào hao hụt, chuyển hóa kém. Cần bồi bổ phế khí và kiện tỳ bằng Hoàng Kỳ, Đảng Sâm kết hợp tập thở sâu 5h sáng.';
+            } else if (type === 'duong-hu') {
+              resultTitle.textContent = 'CHẨN ĐOÁN: BẠN THUỘC THỂ DƯƠNG HƯ (TẠNG THẬN HÀN LẠNH)';
+              resultDesc.textContent = 'Hỏa khí nguyên dương suy yếu, sợ lạnh. Cần ôn bổ thận dương với Quế Nhục, Can Khương và ngâm chân nước gừng ấm buổi tối.';
+            } else if (type === 'am-hu') {
+              resultTitle.textContent = 'CHẨN ĐOÁN: BẠN THUỘC THỂ ÂM HƯ (TẠNG TÂM & CAN HỎA VƯỢNG)';
+              resultDesc.textContent = 'Tân dịch hao tổn, âm hư sinh nội nhiệt gây mất ngủ bốc hỏa. Cần tư âm giáng hỏa với Bách Hợp, Mạch Môn và trà Tâm Sen.';
+            } else {
+              resultTitle.textContent = 'CHẨN ĐOÁN: CƠ THỂ GẦN ĐẠT THỂ BÌNH HÒA';
+              resultDesc.textContent = 'Ngũ tạng đang ở trạng thái tương đối cân bằng. Tiếp tục duy trì dưỡng sinh thuận tự nhiên và uống trà thảo mộc phòng ngừa tắc nghẽn.';
+            }
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

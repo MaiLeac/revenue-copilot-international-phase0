@@ -21,7 +21,6 @@
     --bg-page: #fbfaf6;
     --bg-page-soft: #f4f8f4;
     --bg-card: #ffffff;
-    --bg-card-glass: rgba(255, 255, 255, 0.92);
     --border-soft: rgba(16, 185, 129, 0.16);
     --border-glow: rgba(16, 185, 129, 0.35);
     
@@ -33,11 +32,9 @@
     --brand-emerald-dark: #064e3b;
     --brand-mint: #10b981;
     --brand-rose: #f43f5e;
-    --brand-rose-soft: #fecdd3;
     --brand-peach: #fb7185;
     --brand-amber: #d97706;
     --brand-gold: #fbbf24;
-    --brand-gold-soft: #fef3c7;
 
     --font-heading: 'Playfair Display', Georgia, serif;
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -103,16 +100,17 @@
     position: relative;
     z-index: 100;
   }
-  .top-announcement span {
+  .top-announcement a {
     color: #fde68a;
     font-weight: 700;
+    text-decoration: underline;
   }
 
   .nav-bar {
     position: sticky;
     top: 0;
     z-index: 90;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.92);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-soft);
@@ -134,13 +132,13 @@
     height: 40px;
     border-radius: 50%;
     background: linear-gradient(135deg, #fecdd3 0%, #a7f3d0 100%);
-    border: 1.5px solid #059669;
+    border: 1.5px solid var(--brand-emerald);
     box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
-    color: #064e3b;
+    color: var(--brand-emerald-dark);
     font-weight: 800;
   }
   .brand-title {
@@ -152,7 +150,7 @@
     line-height: 1.2;
   }
   .brand-tagline {
-    font-size: 0.76rem;
+    font-size: 0.74rem;
     color: var(--brand-emerald);
     letter-spacing: 0.04em;
     font-weight: 700;
@@ -205,7 +203,7 @@
     margin: 0 auto;
     padding: 40px 24px 60px;
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: 1.05fr 1fr;
     gap: 40px;
     align-items: center;
     min-height: 85vh;
@@ -233,7 +231,7 @@
   }
   .hero-heading {
     font-family: var(--font-heading);
-    font-size: clamp(2.4rem, 4.5vw, 4rem);
+    font-size: clamp(2.4rem, 4.4vw, 3.8rem);
     font-weight: 700;
     line-height: 1.18;
     color: var(--text-heading);
@@ -246,7 +244,7 @@
     font-style: italic;
   }
   .hero-desc {
-    font-size: 1.1rem;
+    font-size: 1.08rem;
     color: var(--text-body);
     line-height: 1.75;
     margin-bottom: 32px;
@@ -292,7 +290,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
   }
   .btn-outline-bloom:hover {
     border-color: var(--brand-emerald);
@@ -302,7 +300,7 @@
   /* Botanical Ingredients Highlight Row */
   .botanical-strip {
     display: flex;
-    gap: 18px;
+    gap: 14px;
     flex-wrap: wrap;
     align-items: center;
     padding-top: 24px;
@@ -312,11 +310,11 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(16, 185, 129, 0.22);
     padding: 6px 14px;
     border-radius: 999px;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     font-weight: 600;
     color: var(--text-heading);
     box-shadow: 0 2px 6px rgba(0,0,0,0.02);
@@ -327,12 +325,12 @@
     border-radius: 50%;
   }
 
-  /* 3D Botanical Stage Card */
+  /* 3D Botanical Stage Card - Deep Emerald Conservatory Backdrop */
   .viewport-3d-card {
     position: relative;
     width: 100%;
-    height: 640px;
-    background: radial-gradient(circle at 50% 50%, rgba(254, 205, 211, 0.2) 0%, rgba(240, 253, 244, 0.9) 70%), #ffffff;
+    height: 650px;
+    background: radial-gradient(circle at 50% 40%, #063826 0%, #021a11 85%);
     border: 1.5px solid var(--border-glow);
     border-radius: 32px;
     box-shadow: var(--shadow-float);
@@ -362,15 +360,15 @@
     z-index: 20;
   }
   .hud-tag {
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid var(--border-soft);
+    background: rgba(2, 26, 17, 0.85);
+    border: 1px solid rgba(52, 211, 153, 0.35);
     padding: 6px 14px;
     border-radius: 12px;
     font-size: 0.78rem;
     font-family: var(--font-mono);
-    color: var(--brand-emerald-dark);
+    color: #34d399;
     font-weight: 700;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     pointer-events: auto;
   }
   .hud-controls {
@@ -379,21 +377,21 @@
     pointer-events: auto;
   }
   .hud-btn {
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid var(--border-soft);
-    color: var(--text-heading);
+    background: rgba(3, 30, 20, 0.85);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    color: #ffffff;
     padding: 6px 14px;
     border-radius: 10px;
     font-size: 0.8rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   }
   .hud-btn:hover, .hud-btn.active {
-    background: var(--brand-emerald);
+    background: #059669;
     color: #ffffff;
-    border-color: var(--brand-emerald);
+    border-color: #34d399;
   }
 
   /* Scan Status Bar */
@@ -402,15 +400,15 @@
     bottom: 20px;
     left: 20px;
     right: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid var(--border-soft);
+    background: rgba(2, 26, 17, 0.92);
+    border: 1px solid rgba(52, 211, 153, 0.35);
     border-radius: 18px;
     padding: 16px 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 20;
-    box-shadow: 0 10px 30px rgba(6, 78, 59, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   }
   .organ-live-indicator {
     display: flex;
@@ -421,8 +419,8 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #10b981;
-    box-shadow: 0 0 12px #10b981;
+    background: #34d399;
+    box-shadow: 0 0 12px #34d399;
     animation: pulseGlow 1.8s infinite;
   }
   @keyframes pulseGlow {
@@ -436,11 +434,12 @@
     top: 70px;
     right: 20px;
     width: 330px;
-    background: #ffffff;
-    border: 1.5px solid var(--border-glow);
+    background: rgba(2, 26, 17, 0.95);
+    border: 1.5px solid rgba(52, 211, 153, 0.5);
     border-radius: 20px;
     padding: 22px;
-    box-shadow: 0 20px 50px rgba(6, 78, 59, 0.16);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
     z-index: 30;
     display: none;
     animation: fadeIn 0.25s ease-out;
@@ -452,7 +451,7 @@
   .organ-detail-popup h4 {
     font-family: var(--font-heading);
     font-size: 1.25rem;
-    color: var(--text-heading);
+    color: #ffffff;
     margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
@@ -461,12 +460,12 @@
   .organ-close-btn {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: #94a3b8;
     font-size: 1.4rem;
     cursor: pointer;
     line-height: 1;
   }
-  .organ-close-btn:hover { color: var(--brand-rose); }
+  .organ-close-btn:hover { color: #ffffff; }
 
   /* Sections */
   .section-container {
@@ -488,90 +487,8 @@
   }
   .section-subtitle {
     color: var(--text-body);
-    font-size: 1.1rem;
+    font-size: 1.08rem;
     line-height: 1.7;
-  }
-
-  /* 9 Thể Tạng Matrix (Sáng sủa, thanh nhã) */
-  .matrix-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 26px;
-  }
-  .matrix-card {
-    background: var(--bg-card);
-    border: 1.5px solid var(--border-soft);
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .matrix-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-hover);
-    border-color: var(--brand-mint);
-  }
-  .matrix-card-title {
-    font-family: var(--font-heading);
-    font-size: 1.35rem;
-    color: var(--text-heading);
-    margin: 14px 0 10px;
-  }
-  .matrix-card-desc {
-    color: var(--text-body);
-    font-size: 0.95rem;
-    line-height: 1.65;
-    margin-bottom: 20px;
-  }
-  .remedy-box {
-    background: #f0fdf4;
-    border: 1px solid rgba(16, 185, 129, 0.25);
-    border-radius: 14px;
-    padding: 14px 18px;
-    font-size: 0.9rem;
-    color: var(--brand-emerald-dark);
-  }
-
-  /* Diagnostic Questionnaire Zone */
-  .quiz-section {
-    background: #ffffff;
-    border: 1.5px solid var(--border-glow);
-    border-radius: 32px;
-    padding: 48px;
-    margin-bottom: 80px;
-    box-shadow: var(--shadow-float);
-  }
-  .quiz-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-  .quiz-opt-btn {
-    background: var(--bg-page);
-    border: 1.5px solid var(--border-soft);
-    color: var(--text-heading);
-    padding: 16px 20px;
-    border-radius: 16px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
-  }
-  .quiz-opt-btn:hover {
-    background: #f0fdf4;
-    border-color: var(--brand-mint);
-  }
-  .quiz-opt-btn.selected {
-    background: #dcfce7;
-    border-color: var(--brand-emerald);
-    color: var(--brand-emerald-dark);
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
   }
 
   /* E-COMMERCE PRODUCTS SHELF (BÁN TRÀ TẶNG SÁCH) */
@@ -645,7 +562,7 @@
     gap: 12px;
     font-size: 0.95rem;
     color: var(--text-body);
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
   .product-features li {
     display: flex;
@@ -667,6 +584,70 @@
     color: #9f1239;
     font-weight: 600;
     margin-bottom: 20px;
+  }
+
+  .card-action-row {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-buy-direct {
+    flex: 1.2;
+    text-align: center;
+    justify-content: center;
+  }
+  .btn-add-cart-mini {
+    flex: 0.8;
+    background: #ffffff;
+    border: 1.5px solid var(--border-soft);
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--text-heading);
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .btn-add-cart-mini:hover {
+    border-color: var(--brand-emerald);
+    background: #f0fdf4;
+  }
+
+  /* 7 Thể Chất Đông Y & Diagnostic Zone */
+  .quiz-section {
+    background: #ffffff;
+    border: 1.5px solid var(--border-glow);
+    border-radius: 32px;
+    padding: 48px;
+    margin-bottom: 80px;
+    box-shadow: var(--shadow-float);
+  }
+  .quiz-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .quiz-opt-btn {
+    background: var(--bg-page);
+    border: 1.5px solid var(--border-soft);
+    color: var(--text-heading);
+    padding: 16px 20px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .quiz-opt-btn:hover {
+    background: #f0fdf4;
+    border-color: var(--brand-mint);
+  }
+  .quiz-opt-btn.selected {
+    background: #dcfce7;
+    border-color: var(--brand-emerald);
+    color: var(--brand-emerald-dark);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
   }
 
   /* SLIDE-OVER CART DRAWER */
@@ -693,7 +674,7 @@
     top: 0;
     right: 0;
     width: 100%;
-    max-width: 460px;
+    max-width: 440px;
     height: 100%;
     background: #ffffff;
     box-shadow: -15px 0 40px rgba(0,0,0,0.15);
@@ -784,154 +765,13 @@
     margin-bottom: 18px;
   }
 
-  /* CHECKOUT MODAL (Modern E-commerce) */
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(4, 38, 26, 0.6);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    z-index: 300;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .modal-backdrop.open { display: flex; }
-  .checkout-card {
-    background: #ffffff;
-    border-radius: 28px;
-    max-width: 680px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 36px 40px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-    position: relative;
-  }
-  .checkout-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    border-bottom: 1px solid var(--border-soft);
-    padding-bottom: 16px;
-  }
-  .checkout-title {
-    font-family: var(--font-heading);
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--text-heading);
-  }
-  .form-group {
-    margin-bottom: 18px;
-  }
-  .form-label {
-    display: block;
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: var(--text-heading);
-    margin-bottom: 6px;
-  }
-  .form-input {
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: 12px;
-    border: 1.5px solid var(--border-soft);
-    font-size: 0.95rem;
-    font-family: var(--font-body);
-    color: var(--text-heading);
-    outline: none;
-  }
-  .form-input:focus {
-    border-color: var(--brand-emerald);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-  }
-
-  /* Payment Method Tabs */
-  .payment-tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 22px;
-  }
-  .pay-tab-btn {
-    background: #ffffff;
-    border: 1.5px solid var(--border-soft);
-    padding: 12px 10px;
-    border-radius: 14px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--text-heading);
-    cursor: pointer;
-    text-align: center;
-    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
-  }
-  .pay-tab-btn.active {
-    border-color: var(--brand-emerald);
-    background: #f0fdf4;
-    color: var(--brand-emerald-dark);
-  }
-
-  /* VietQR Presentation Box */
-  .qr-box {
-    background: #ffffff;
-    border: 1.5px solid var(--border-glow);
-    border-radius: 20px;
-    padding: 24px;
-    text-align: center;
-    margin-bottom: 24px;
-  }
-  .qr-image-frame {
-    display: inline-block;
-    padding: 12px;
-    background: #ffffff;
-    border: 1px solid var(--border-soft);
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    margin-bottom: 16px;
-  }
-  .bank-detail-table {
-    width: 100%;
-    margin-top: 14px;
-    font-size: 0.88rem;
-    border-collapse: collapse;
-  }
-  .bank-detail-table td {
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    text-align: left;
-  }
-  .bank-detail-table td:first-child {
-    color: var(--text-muted);
-    width: 38%;
-  }
-  .bank-detail-table td:last-child {
-    font-weight: 700;
-    color: var(--text-heading);
-  }
-  .copy-chip {
-    background: #ecfdf5;
-    color: #065f46;
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin-left: 6px;
-  }
-
   footer {
     border-top: 1px solid var(--border-soft);
-    padding: 50px 24px;
+    padding: 40px 24px;
     background: #ffffff;
     text-align: center;
     color: var(--text-muted);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
   }
   footer a { color: var(--brand-emerald); text-decoration: none; font-weight: 600; }
 </style>
@@ -943,7 +783,7 @@
 
   <!-- Top Announcement Bar -->
   <div class="top-announcement">
-    &#10047; Ưu Đãi Khởi Sắc: <span>Đặt Mua Set Trà Dưỡng Nhan Ngũ Tạng</span> — TẶNG 100% Cẩm Nang Dưỡng Nhan 28 Ngày (Trị Giá 299.000₫)
+    &#10047; Ưu Đãi Khởi Sắc: Đặt Mua Set Trà Dưỡng Nhan Ngũ Tạng — <a href="checkout.html?plan=combo-30">TẶNG 100% Cẩm Nang Dưỡng Nhan 28 Ngày (Trị Giá 299.000₫) &rarr;</a>
   </div>
 
   <!-- Navigation Bar -->
@@ -958,6 +798,7 @@
     <div class="nav-actions">
       <a class="btn-outline-bloom" href="#quiz-zone" style="padding: 8px 16px; font-size: 0.85rem;">Trắc Nghiệm 7 Thể Chất</a>
       <a class="btn-outline-bloom" href="#products-zone" style="padding: 8px 16px; font-size: 0.85rem;">Bộ Sưu Tập Trà</a>
+      <a class="btn-primary-bloom" href="checkout.html" style="padding: 8px 18px; font-size: 0.88rem;">Trang Thanh Toán &rarr;</a>
       <button class="cart-trigger-btn" id="btnOpenCart" type="button">
         <span>&#128722; Giỏ Hàng</span>
         <span class="cart-badge" id="cartBadgeCount">1</span>
@@ -980,7 +821,7 @@
         </p>
 
         <div class="hero-cta-group">
-          <a class="btn-primary-bloom" href="#products-zone">
+          <a class="btn-primary-bloom" href="checkout.html?plan=combo-30">
             Đặt Set Trà &bull; Nhận Cẩm Nang 28 Ngày &rarr;
           </a>
           <button class="btn-outline-bloom" id="btnScanHero" type="button">
@@ -998,11 +839,11 @@
         </div>
       </div>
 
-      <!-- 3D Luminous Translucent Botanical Stage -->
+      <!-- 3D Botanical Stage: Rich Emerald Glass Backdrop with Visible Sculpted Translucent Body -->
       <div class="viewport-3d-card">
         <div class="hud-top-bar">
           <div class="hud-tag">
-            CHẾ ĐỘ: <span id="viewModeLabel" style="color:#064e3b;">CỘNG SINH HOA LÁ &amp; NGŨ TẠNG</span>
+            CHẾ ĐỘ: <span id="viewModeLabel" style="color:#ffffff;">XUYÊN THẤU KINH LẠC 3D</span>
           </div>
           <div class="hud-controls">
             <button class="hud-btn active" id="btnLayerBotanical" type="button">Hoa Lá</button>
@@ -1012,7 +853,7 @@
           </div>
         </div>
 
-        <!-- Three.js Canvas -->
+        <!-- Three.js Canvas Element -->
         <canvas id="canvas3d"></canvas>
 
         <!-- Live Scan Banner -->
@@ -1020,26 +861,26 @@
           <div class="organ-live-indicator">
             <div class="organ-dot" id="organPulseDot"></div>
             <div>
-              <div style="font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono); font-weight:700;">TRẠNG THÁI KHÍ HUYẾT</div>
-              <div style="font-weight: 800; color: var(--text-heading);" id="organLiveName">5 Tạng Phủ Nở Hoa &bull; Kinh Lạc Hanh Thông</div>
+              <div style="font-size: 0.78rem; color: #94a3b8; font-family: var(--font-mono); font-weight:700;">TRẠNG THÁI KHÍ HUYẾT</div>
+              <div style="font-weight: 800; color: #ffffff;" id="organLiveName">5 Tạng Phủ Nở Hoa &bull; Kinh Lạc Hanh Thông</div>
             </div>
           </div>
-          <div style="font-size: 0.8rem; color: var(--brand-emerald-dark); font-family: var(--font-mono); font-weight: 700;" id="organScanStats">
-            RÊ CHUỘT XOAY 360&deg; &bull; CLICK VÀO HOA / TẠNG
+          <div style="font-size: 0.8rem; color: #fde68a; font-family: var(--font-mono); font-weight: 700;" id="organScanStats">
+            RÊ CHUỘT XOAY 360&deg; &bull; CLICK VÀO TẠNG / HOA
           </div>
         </div>
 
         <!-- Organ Detail Popup -->
         <div class="organ-detail-popup" id="organPopup">
           <h4>
-            <span id="popupOrganTitle">Tâm (Tim - Hoa Mẫu Đơn)</span>
+            <span id="popupOrganTitle">Tâm (Tim - Hoa Mẫu Đơn Đỏ)</span>
             <button class="organ-close-btn" id="popupCloseBtn" type="button">&times;</button>
           </h4>
-          <p style="font-size: 0.88rem; color: var(--text-body); margin-bottom: 12px;" id="popupOrganDesc">
-            Chủ thần minh, chủ huyết mạch. Khi khí huyết hao tổn dễ sinh mất ngủ, bốc hỏa, tim đập nhanh.
+          <p style="font-size: 0.88rem; color: #e2e8f0; margin-bottom: 12px;" id="popupOrganDesc">
+            Chủ thần minh, chủ huyết mạch. Tâm khí vượng giúp sắc mặt hồng hào nhuận sắc, ngủ sâu giấc.
           </p>
-          <div class="remedy-box" id="popupOrganRemedy">
-            <strong>Trà Thảo Mộc Đối Trị:</strong> Trà Tâm Sen, Long Nhãn, Táo Nhân (Uống 19h - 21h dưỡng tâm).
+          <div style="background: rgba(3, 30, 20, 0.8); border: 1px solid rgba(52, 211, 153, 0.4); border-radius: 12px; padding: 12px 14px; font-size: 0.86rem; color: #fde68a;" id="popupOrganRemedy">
+            <strong>Trà Thảo Mộc Đối Trị:</strong> Trà Tâm Sen, Long Nhãn, Táo Nhân (Uống 19h - 21h).
           </div>
         </div>
       </div>
@@ -1081,9 +922,14 @@
             </ul>
           </div>
 
-          <button class="btn-primary-bloom btn-add-to-cart" data-id="combo-14" data-name="Combo Khởi Sắc Dưỡng Nhan (14 Ngày)" data-price="199000" type="button" style="width: 100%; justify-content: center;">
-            Thêm Vào Giỏ Hàng &bull; 199.000₫
-          </button>
+          <div class="card-action-row">
+            <a class="btn-primary-bloom btn-buy-direct" href="checkout.html?plan=combo-14">
+              Mua Ngay &rarr;
+            </a>
+            <button class="btn-add-cart-mini btn-add-to-cart" data-id="combo-14" data-name="Combo Khởi Sắc Dưỡng Nhan (14 Ngày)" data-price="199000" type="button">
+              + Giỏ Hàng
+            </button>
+          </div>
         </div>
 
         <!-- Package 2: Liệu Trình Hoàng Gia 30 Ngày (FEATURED) -->
@@ -1113,9 +959,14 @@
             </ul>
           </div>
 
-          <button class="btn-primary-bloom btn-add-to-cart" data-id="combo-30" data-name="Liệu Trình Trà Hoàng Gia Ngũ Tạng (30 Ngày)" data-price="389000" type="button" style="width: 100%; justify-content: center;">
-            Chọn Liệu Trình 30 Ngày &bull; 389.000₫
-          </button>
+          <div class="card-action-row">
+            <a class="btn-primary-bloom btn-buy-direct" href="checkout.html?plan=combo-30">
+              Mua Ngay &rarr;
+            </a>
+            <button class="btn-add-cart-mini btn-add-to-cart" data-id="combo-30" data-name="Liệu Trình Trà Hoàng Gia Ngũ Tạng (30 Ngày)" data-price="389000" type="button">
+              + Giỏ Hàng
+            </button>
+          </div>
         </div>
 
         <!-- Package 3: Ebook Kỹ Thuật Số (Chỉ Sách) -->
@@ -1143,9 +994,14 @@
             </ul>
           </div>
 
-          <button class="btn-outline-bloom btn-add-to-cart" data-id="ebook-digital" data-name="Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (Digital)" data-price="69000" type="button" style="width: 100%; justify-content: center;">
-            Mua Bản Ebook &bull; 69.000₫
-          </button>
+          <div class="card-action-row">
+            <a class="btn-primary-bloom btn-buy-direct" href="checkout.html?plan=ebook-digital">
+              Tải Ebook &bull; 69.000₫ &rarr;
+            </a>
+            <button class="btn-add-cart-mini btn-add-to-cart" data-id="ebook-digital" data-name="Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (Digital)" data-price="69000" type="button">
+              + Giỏ
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -1160,7 +1016,7 @@
           </p>
         </div>
 
-        <div class="quiz-question-card" style="margin-bottom: 24px;">
+        <div style="margin-bottom: 24px;">
           <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-heading); margin-bottom: 14px;">
             1. Bạn thường có biểu hiện thể lực và hô hấp như thế nào?
           </div>
@@ -1172,7 +1028,7 @@
           </div>
         </div>
 
-        <div class="quiz-question-card">
+        <div>
           <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-heading); margin-bottom: 14px;">
             2. Thần thái sắc diện và giấc ngủ của bạn phản ánh điều gì?
           </div>
@@ -1186,7 +1042,7 @@
         <div id="quizResultBox" style="margin-top: 32px; display: none; background: #ecfdf5; border: 1.5px solid var(--brand-emerald); border-radius: 20px; padding: 28px; text-align: center;">
           <h3 style="font-family: var(--font-heading); font-size: 1.6rem; color: var(--brand-emerald-dark); margin-bottom: 10px;" id="resultTitle">KẾT QUẢ CHẨN ĐOÁN THỂ TẠNG</h3>
           <p style="font-size: 1.05rem; color: var(--text-body); max-width: 650px; margin: 0 auto 20px;" id="resultDesc"></p>
-          <a class="btn-primary-bloom" href="#products-zone">Chọn Mua Hộp Trà Đối Trị Ngay &rarr;</a>
+          <a class="btn-primary-bloom" href="checkout.html?plan=combo-30">Chọn Mua Hộp Trà Đối Trị Ngay &rarr;</a>
         </div>
       </div>
     </section>
@@ -1207,151 +1063,16 @@
     <div class="cart-footer">
       <div class="cart-subtotal-row">
         <span>Tổng Thanh Toán:</span>
-        <span id="cartSubtotalText">199.000₫</span>
+        <span id="cartSubtotalText">389.000₫</span>
       </div>
       <button class="btn-primary-bloom" id="btnCheckoutModal" type="button" style="width: 100%; justify-content: center; font-size: 1.05rem;">
         Tiến Hành Đặt Hàng &rarr;
       </button>
       <div style="font-size: 0.8rem; text-align: center; color: var(--text-muted); margin-top: 10px;">
-        &#128274; Bảo mật thông tin 100% &bull; Miễn phí đổi trả trong 7 ngày
+        &#128274; Thanh toán an toàn qua VietQR Techcombank &bull; Miễn phí đổi trả 7 ngày
       </div>
     </div>
   </aside>
-
-  <!-- MODERN CHECKOUT MODAL -->
-  <div class="modal-backdrop" id="checkoutModal">
-    <div class="checkout-card">
-      <div class="checkout-header">
-        <h3 class="checkout-title">Thông Tin Giao Hàng &amp; Thanh Toán</h3>
-        <button class="organ-close-btn" id="btnCloseCheckout" type="button">&times;</button>
-      </div>
-
-      <!-- Shipping Form -->
-      <form id="checkoutForm" onsubmit="return false;">
-        <div class="form-group">
-          <label class="form-label">Họ và tên người nhận *</label>
-          <input class="form-input" id="custName" type="text" placeholder="Ví dụ: Nguyễn Thị Mai" required value="Lê Thị Thanh Mai">
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div class="form-group">
-            <label class="form-label">Số điện thoại *</label>
-            <input class="form-input" id="custPhone" type="tel" placeholder="0985 xxx xxx" required value="0985250444">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email (để nhận Ebook ngay) *</label>
-            <input class="form-input" id="custEmail" type="email" placeholder="email@gmail.com" required value="lethanhmaicombo@gmail.com">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Địa chỉ nhận hàng (cho sản phẩm trà/quà tặng)</label>
-          <input class="form-input" id="custAddress" type="text" placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">
-        </div>
-
-        <!-- Monthly Subscription Checkbox -->
-        <div style="background: #f0fdf4; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
-          <input type="checkbox" id="chkSubscription" style="width: 18px; height: 18px; accent-color: #059669;">
-          <label for="chkSubscription" style="font-size: 0.88rem; color: #064e3b; font-weight: 600; cursor: pointer;">
-            Đăng ký giao trà định kỳ hàng tháng (Tiết kiệm thêm 10% + Miễn phí vận chuyển trọn đời)
-          </label>
-        </div>
-
-        <!-- Payment Method Tabs -->
-        <label class="form-label" style="margin-bottom: 8px;">Phương thức thanh toán</label>
-        <div class="payment-tabs">
-          <button class="pay-tab-btn active" id="tabVietQR" type="button">&#9889; Chuyển Khoản / VietQR</button>
-          <button class="pay-tab-btn" id="tabCard" type="button">&#128179; Thẻ Visa / Payoneer</button>
-          <button class="pay-tab-btn" id="tabMomo" type="button">&#128241; Ví MoMo</button>
-        </div>
-
-        <!-- Tab 1: VietQR Napas 24/7 (Techcombank 1022 7786 86 - LE THI THANH MAI) -->
-        <div class="qr-box" id="payBoxVietQR">
-          <div style="font-size: 0.95rem; font-weight: 700; color: var(--brand-emerald-dark); margin-bottom: 12px;">
-            QUÉT VIETQR CHUYỂN KHOẢN TỰ ĐỘNG 24/7
-          </div>
-
-          <div class="qr-image-frame">
-            <!-- Dynamic VietQR image rendered with Techcombank 1022 7786 86 -->
-            <img id="vietqrImg" src="https://img.vietqr.io/image/TCB-1022778686-compact2.png?amount=199000&addInfo=DUONGNHAN%208942&accountName=LE%20THI%20THANH%20MAI" alt="VietQR Thanh Toán Dưỡng Nhan" width="220" height="220" style="display: block; border-radius: 8px;">
-          </div>
-
-          <table class="bank-detail-table">
-            <tr>
-              <td>Ngân hàng:</td>
-              <td><strong>TECHCOMBANK (TCB)</strong></td>
-            </tr>
-            <tr>
-              <td>Số tài khoản:</td>
-              <td>
-                <span id="valSTK">1022 7786 86</span>
-                <button class="copy-chip" onclick="copyText('1022778686', this)">Sao chép</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Chủ tài khoản:</td>
-              <td><strong>LE THI THANH MAI</strong></td>
-            </tr>
-            <tr>
-              <td>Số tiền thanh toán:</td>
-              <td>
-                <span id="valAmountText" style="color: #059669;">199.000₫</span>
-                <button class="copy-chip" onclick="copyText(currentCartTotal, this)">Sao chép</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Nội dung chuyển khoản:</td>
-              <td>
-                <span id="valMemo" style="color: #d97706; font-family: var(--font-mono);">DUONGNHAN 8942</span>
-                <button class="copy-chip" onclick="copyText(document.getElementById('valMemo').textContent, this)">Sao chép</button>
-              </td>
-            </tr>
-          </table>
-
-          <div style="margin-top: 18px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-            <a class="btn-primary-bloom" id="btnDeepLinkBank" href="https://img.vietqr.io/image/TCB-1022778686-compact2.png" target="_blank" rel="noopener" style="font-size: 0.88rem; padding: 10px 20px;">
-              &#128242; Mở App Ngân Hàng Trên Điện Thoại
-            </a>
-            <button class="btn-outline-bloom" id="btnConfirmPaid" type="button" style="font-size: 0.88rem; padding: 10px 20px;">
-              &#10003; Tôi Đã Chuyển Khoản Thành Công
-            </button>
-          </div>
-        </div>
-
-        <!-- Tab 2: International Card / Payoneer -->
-        <div class="qr-box" id="payBoxCard" style="display: none;">
-          <div style="font-size: 1rem; font-weight: 700; color: var(--text-heading); margin-bottom: 8px;">
-            Thanh Toán Bằng Thẻ Quốc Tế (Visa / Mastercard)
-          </div>
-          <p style="font-size: 0.9rem; color: var(--text-body); margin-bottom: 16px;">
-            Dành cho khách hàng tại nước ngoài (US, Canada, Châu Âu, Nhật Bản...). Thanh toán an toàn qua cổng Payoneer Global.
-          </p>
-          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px; margin-bottom: 16px; font-size: 0.88rem;">
-            <div>Số tiền quy đổi: <strong>$12 - $19 USD</strong> (tùy gói sản phẩm)</div>
-            <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px;">Phí giao dịch thẻ quốc tế: ~3% do Payoneer xử lý.</div>
-          </div>
-          <a class="btn-primary-bloom" href="https://myaccount.payoneer.com/" target="_blank" rel="noopener" style="display: inline-flex; justify-content: center;">
-            Thanh Toán Thẻ Qua Payoneer Link &rarr;
-          </a>
-        </div>
-
-        <!-- Tab 3: MoMo -->
-        <div class="qr-box" id="payBoxMomo" style="display: none;">
-          <div style="font-size: 1rem; font-weight: 700; color: #a21caf; margin-bottom: 8px;">
-            Thanh Toán Qua Ví MoMo
-          </div>
-          <p style="font-size: 0.9rem; color: var(--text-body); margin-bottom: 14px;">
-            Chuyển tiền qua số MoMo hoặc quét mã QR MoMo thuận tiện.
-          </p>
-          <div style="font-size: 1.1rem; font-weight: 800; color: #86198f; margin-bottom: 6px;">0985 250 444</div>
-          <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">Chủ ví: LÊ THỊ THANH MAI</div>
-          <button class="btn-primary-bloom" onclick="copyText('0985250444', this)" type="button" style="background: #a21caf;">
-            Sao Chép Số Ví MoMo
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <footer>
     <div style="max-width: 900px; margin: 0 auto;">
@@ -1366,7 +1087,7 @@
         Hotline / Zalo: <strong>0985 250 444</strong> &bull; Email: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a>
       </div>
       <div style="margin-top: 14px; font-size: 0.8rem; color: #94a3b8;">
-        &copy; 2026 Bản Thảo Thấu Thể. Tích hợp thanh toán an toàn qua Napas 24/7 VietQR Techcombank &amp; Payoneer Global.
+        &copy; 2026 Bản Thảo Thấu Thể. Tích hợp thanh toán an toàn qua Napas 24/7 VietQR Techcombank (<a href="https://img.vietqr.io" target="_blank" rel="noopener">img.vietqr.io</a>) &amp; Payoneer Global.
       </div>
     </div>
   </footer>
@@ -1386,10 +1107,10 @@
       });
 
       const petalColors = [
-        'rgba(254, 205, 211, 0.65)', // Peach blossom
-        'rgba(251, 113, 133, 0.45)', // Rose petal
-        'rgba(167, 243, 208, 0.55)', // Young green tea leaf
-        'rgba(254, 243, 199, 0.6)'   // Golden chrysanthemum
+        'rgba(254, 205, 211, 0.65)',
+        'rgba(251, 113, 133, 0.45)',
+        'rgba(167, 243, 208, 0.55)',
+        'rgba(254, 243, 199, 0.6)'
       ];
 
       const petals = [];
@@ -1419,13 +1140,11 @@
           ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4);
           ctx.stroke();
 
-          // Movement
           p.tiltAngle += p.tiltAngleIncremental;
           p.y += (Math.cos(p.d) + 1 + p.r / 4) * 0.5;
           p.x += Math.sin(p.tiltAngle) * 0.8;
           p.tilt = Math.sin(p.tiltAngle) * 12;
 
-          // Wrap around
           if (p.x > w + 20 || p.x < -20 || p.y > h) {
             p.x = Math.random() * w;
             p.y = -20;
@@ -1437,103 +1156,131 @@
     })();
   </script>
 
-  <!-- 3D Botanical Torso & Blooming Flowers Engine (Three.js) -->
+  <!-- 3D Botanical Mannequin & Blooming Flowers Engine (Three.js) -->
   <script>
     (function init3DBotanicalScene() {
       const canvas = document.getElementById('canvas3d');
       if (!canvas || typeof THREE === 'undefined') return;
 
       const width = canvas.clientWidth || 600;
-      const height = canvas.clientHeight || 640;
+      const height = canvas.clientHeight || 650;
 
       // 1. Scene & Camera
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-      camera.position.set(0, 0, 7.2);
+      camera.position.set(0, 0, 7.5);
 
       // 2. Renderer
       const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      // 3. Bright Luminous Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+      // 3. Cinematic Studio Lighting
+      const ambientLight = new THREE.AmbientLight(0x064e3b, 1.6);
       scene.add(ambientLight);
 
-      const keyLight = new THREE.DirectionalLight(0x10b981, 1.2);
-      keyLight.position.set(3, 5, 4);
-      scene.add(keyLight);
+      const topKeyLight = new THREE.DirectionalLight(0x34d399, 2.2);
+      topKeyLight.position.set(3, 6, 4);
+      scene.add(topKeyLight);
 
-      const roseGlow = new THREE.PointLight(0xfb7185, 2.0, 15);
-      roseGlow.position.set(-3, 2, 2);
-      scene.add(roseGlow);
+      const roseRimLight = new THREE.PointLight(0xfb7185, 2.5, 18);
+      roseRimLight.position.set(-4, 2, 2);
+      scene.add(roseRimLight);
 
-      const goldSun = new THREE.PointLight(0xf59e0b, 1.6, 12);
-      goldSun.position.set(0, -2, 3);
-      scene.add(goldSun);
+      const goldFillLight = new THREE.PointLight(0xf59e0b, 2.0, 15);
+      goldFillLight.position.set(0, -3, 3);
+      scene.add(goldFillLight);
 
-      // 4. Group for the complete model
+      // 4. Complete Human Body Group
       const bodyGroup = new THREE.Group();
       scene.add(bodyGroup);
 
-      // --- 4.1 Elegant Luminous Glass Torso Silhouette ---
-      const pearlGlassMat = new THREE.MeshPhongMaterial({
-        color: 0xecfdf5,
-        emissive: 0x10b981,
-        emissiveIntensity: 0.15,
+      // --- 4.1 Sculpted Translucent Human Body ---
+      const crystalSkinMat = new THREE.MeshPhongMaterial({
+        color: 0x34d399,
+        emissive: 0x064e3b,
+        emissiveIntensity: 0.6,
         specular: 0xffffff,
         shininess: 90,
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.45,
         side: THREE.DoubleSide
       });
 
-      // Smooth contoured torso
-      const torsoCurve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0, 2.4, 0),
-        new THREE.Vector3(0, 1.6, 0),
-        new THREE.Vector3(0, 0.6, 0),
-        new THREE.Vector3(0, -0.4, 0),
-        new THREE.Vector3(0, -1.8, 0)
-      ]);
-      const torsoGeom = new THREE.CylinderGeometry(0.72, 0.52, 2.8, 32, 16, true);
-      const torsoMesh = new THREE.Mesh(torsoGeom, pearlGlassMat);
-      torsoMesh.position.y = 0.4;
-      bodyGroup.add(torsoMesh);
-
-      // Head (Smooth Glass Sphere)
-      const headGeom = new THREE.SphereGeometry(0.55, 32, 32);
-      headGeom.scale(1, 1.25, 0.95);
-      const headMesh = new THREE.Mesh(headGeom, pearlGlassMat);
-      headMesh.position.y = 2.4;
-      bodyGroup.add(headMesh);
-
-      // Shoulders & Arms Soft Contours
-      function createArm(x) {
-        const armGeom = new THREE.CylinderGeometry(0.18, 0.12, 2.4, 24);
-        const armMesh = new THREE.Mesh(armGeom, pearlGlassMat);
-        armMesh.position.set(x, 0.5, 0);
-        armMesh.rotation.z = x > 0 ? -0.15 : 0.15;
-        bodyGroup.add(armMesh);
-      }
-      createArm(-0.95);
-      createArm(0.95);
-
-      // --- 4.2 Central Luminous Spine & Meridian Vines ---
-      const meridianPoints = [];
-      for (let i = 0; i < 45; i++) {
-        const y = -2.8 + (i / 45) * 5.6;
-        meridianPoints.push(new THREE.Vector3(Math.sin(y * 2) * 0.08, y, 0.15));
-      }
-      const meridianGeom = new THREE.BufferGeometry().setFromPoints(meridianPoints);
-      const meridianMat = new THREE.PointsMaterial({
-        color: 0xd97706,
-        size: 0.09,
+      const contourWireMat = new THREE.MeshBasicMaterial({
+        color: 0xa7f3d0,
+        wireframe: true,
         transparent: true,
-        opacity: 0.9
+        opacity: 0.22
       });
-      const meridianMesh = new THREE.Points(meridianGeom, meridianMat);
-      bodyGroup.add(meridianMesh);
+
+      function addBodyPart(geom, y, x = 0, scaleX = 1, scaleZ = 1, rotZ = 0) {
+        const mesh = new THREE.Mesh(geom, crystalSkinMat);
+        mesh.position.set(x, y, 0);
+        mesh.scale.set(scaleX, 1, scaleZ);
+        mesh.rotation.z = rotZ;
+        bodyGroup.add(mesh);
+
+        const wire = new THREE.Mesh(geom, contourWireMat);
+        wire.position.set(x, y, 0);
+        wire.scale.set(scaleX, 1, scaleZ);
+        wire.rotation.z = rotZ;
+        bodyGroup.add(wire);
+        return mesh;
+      }
+
+      // Head
+      const headGeom = new THREE.SphereGeometry(0.52, 28, 28);
+      addBodyPart(headGeom, 2.45, 0, 0.9, 0.95);
+
+      // Neck
+      const neckGeom = new THREE.CylinderGeometry(0.2, 0.24, 0.48, 24);
+      addBodyPart(neckGeom, 1.85);
+
+      // Shoulders & Chest (Thorax)
+      const thoraxGeom = new THREE.CylinderGeometry(0.78, 0.55, 1.1, 32);
+      addBodyPart(thoraxGeom, 1.15, 0, 1.15, 0.8);
+
+      // Waist & Abdomen
+      const abdomenGeom = new THREE.CylinderGeometry(0.52, 0.56, 0.75, 32);
+      addBodyPart(abdomenGeom, 0.35, 0, 1.05, 0.75);
+
+      // Pelvis (Đan Điền)
+      const pelvisGeom = new THREE.CylinderGeometry(0.58, 0.5, 0.65, 32);
+      addBodyPart(pelvisGeom, -0.35, 0, 1.1, 0.8);
+
+      // Upper Arms & Forearms
+      const armGeom = new THREE.CylinderGeometry(0.16, 0.12, 1.1, 20);
+      addBodyPart(armGeom, 0.95, -0.92, 1, 1, 0.18);
+      addBodyPart(armGeom, 0.95, 0.92, 1, 1, -0.18);
+      addBodyPart(armGeom, -0.05, -1.05, 0.9, 0.9, 0.08);
+      addBodyPart(armGeom, -0.05, 1.05, 0.9, 0.9, -0.08);
+
+      // Thighs & Calves (Legs)
+      const thighGeom = new THREE.CylinderGeometry(0.22, 0.16, 1.3, 24);
+      addBodyPart(thighGeom, -1.35, -0.32);
+      addBodyPart(thighGeom, -1.35, 0.32);
+
+      const calfGeom = new THREE.CylinderGeometry(0.16, 0.11, 1.3, 24);
+      addBodyPart(calfGeom, -2.55, -0.32);
+      addBodyPart(calfGeom, -2.55, 0.32);
+
+      // --- 4.2 Central Luminous Spine & Golden Meridians ---
+      const spinePoints = [];
+      for (let i = 0; i < 45; i++) {
+        const y = -2.8 + (i / 45) * 5.8;
+        spinePoints.push(new THREE.Vector3(0, y, 0.12));
+      }
+      const spineGeom = new THREE.BufferGeometry().setFromPoints(spinePoints);
+      const spineMat = new THREE.PointsMaterial({
+        color: 0xfde68a,
+        size: 0.1,
+        transparent: true,
+        opacity: 0.95,
+        blending: THREE.AdditiveBlending
+      });
+      const spinePointsMesh = new THREE.Points(spineGeom, spineMat);
+      bodyGroup.add(spinePointsMesh);
 
       // --- 4.3 Blooming 3D Flowers at the 5 Internal Organs ---
       const organObjects = [];
@@ -1542,39 +1289,38 @@
         const flowerGroup = new THREE.Group();
         flowerGroup.position.set(position.x, position.y, position.z);
 
-        // Core Glowing Seed / Organ
+        // Glowing Core
         const coreGeom = new THREE.SphereGeometry(0.18, 20, 20);
         const coreMat = new THREE.MeshPhongMaterial({
           color: color,
           emissive: color,
-          emissiveIntensity: 0.9,
+          emissiveIntensity: 0.95,
           shininess: 100
         });
         const coreMesh = new THREE.Mesh(coreGeom, coreMat);
         flowerGroup.add(coreMesh);
 
-        // Blooming Petals surrounding the core
+        // Blooming 8 Petals
         const petalShape = new THREE.Shape();
         petalShape.moveTo(0, 0);
-        petalShape.quadraticCurveTo(0.1, 0.2, 0, 0.38);
-        petalShape.quadraticCurveTo(-0.1, 0.2, 0, 0);
+        petalShape.quadraticCurveTo(0.12, 0.22, 0, 0.42);
+        petalShape.quadraticCurveTo(-0.12, 0.22, 0, 0);
         const petalGeom = new THREE.ShapeGeometry(petalShape);
         const petalMat = new THREE.MeshPhongMaterial({
           color: color,
           emissive: color,
-          emissiveIntensity: 0.4,
+          emissiveIntensity: 0.45,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.8
+          opacity: 0.85
         });
 
-        const numPetals = 8;
-        for (let i = 0; i < numPetals; i++) {
+        for (let i = 0; i < 8; i++) {
           const petal = new THREE.Mesh(petalGeom, petalMat);
-          const angle = (i / numPetals) * Math.PI * 2;
+          const angle = (i / 8) * Math.PI * 2;
           petal.rotation.z = angle;
           petal.rotation.x = 0.35;
-          petal.scale.set(0.85, 0.85, 0.85);
+          petal.scale.set(0.9, 0.9, 0.9);
           flowerGroup.add(petal);
         }
 
@@ -1587,31 +1333,31 @@
       }
 
       // Ngũ Tạng Nở Hoa:
-      const flowerHeart = createBloomingFlower('tam', 'Tâm (Tim - Hoa Mẫu Đơn Đỏ)', 0xf43f5e, { x: -0.15, y: 1.15, z: 0.2 }, 1.1, {
+      const flowerHeart = createBloomingFlower('tam', 'Tâm (Tim - Hoa Mẫu Đơn Đỏ)', 0xf43f5e, { x: -0.15, y: 1.18, z: 0.2 }, 1.15, {
         element: 'Hỏa',
-        desc: 'Chủ thần minh, chủ huyết mạch. Tâm khí vượng giúp sắc mặt hồng hào nhuận sắc, ngủ ngon an giấc.',
+        desc: 'Chủ thần minh, chủ huyết mạch. Tâm khí vượng giúp sắc mặt hồng hào nhuận sắc, ngủ sâu giấc.',
         remedy: 'Trà Tâm Sen, Long Nhãn, Táo Nhân (Uống 19h-21h dưỡng tâm).'
       });
 
-      const flowerLungs = createBloomingFlower('phe', 'Phế (Phổi - Hoa Bách Hợp Trắng)', 0xffffff, { x: 0.2, y: 1.25, z: 0.18 }, 1.05, {
+      const flowerLungs = createBloomingFlower('phe', 'Phế (Phổi - Hoa Bách Hợp Trắng)', 0xffffff, { x: 0.2, y: 1.25, z: 0.18 }, 1.1, {
         element: 'Kim',
         desc: 'Chủ khí, chủ bì mao, khai khiếu ra mũi. Phế dưỡng tốt giúp làn da căng bóng mịn màng, chống khô nám.',
         remedy: 'Trà Bách Hợp, Sa Sâm, Kỷ Tử, Mạch Môn (Uống sáng sớm 5h-7h).'
       });
 
-      const flowerLiver = createBloomingFlower('can', 'Can (Gan - Cúc Hoa Hoàng Gia)', 0x10b981, { x: -0.22, y: 0.6, z: 0.2 }, 1.15, {
+      const flowerLiver = createBloomingFlower('can', 'Can (Gan - Cúc Hoa Hoàng Gia)', 0x10b981, { x: -0.22, y: 0.58, z: 0.2 }, 1.2, {
         element: 'Mộc',
         desc: 'Chủ tàng huyết, sơ tiết khí cơ. Can khí điều hòa giải trừ độc tố, sạch mụn nhọt, mắt sáng trong.',
         remedy: 'Cúc La Mã, Câu Kỷ Tử, Quyết Minh Tử (Ngủ sâu trước 23h).'
       });
 
-      const flowerSpleen = createBloomingFlower('ty', 'Tỳ (Tiêu Hóa - Hoàng Kỳ & Quế Hoa)', 0xf59e0b, { x: 0.22, y: 0.55, z: 0.18 }, 1.05, {
+      const flowerSpleen = createBloomingFlower('ty', 'Tỳ (Tiêu Hóa - Hoàng Kỳ & Quế Hoa)', 0xf59e0b, { x: 0.22, y: 0.52, z: 0.18 }, 1.1, {
         element: 'Thổ',
         desc: 'Hậu thiên chi bản, chủ vận hóa dinh dưỡng sinh huyết. Tỳ khỏe giúp bụng thon gọn, không tích mỡ mềm.',
         remedy: 'Bạch Truật, Phục Linh, Ý Dĩ, Trần Bì (Ăn ấm 7h-9h sáng).'
       });
 
-      const flowerKidney = createBloomingFlower('than', 'Thận (Khí Lực - Hoa Súng Thục Địa)', 0x0284c7, { x: 0.0, y: 0.05, z: -0.1 }, 1.1, {
+      const flowerKidney = createBloomingFlower('than', 'Thận (Khí Lực - Hoa Súng Thục Địa)', 0x38bdf8, { x: 0.0, y: 0.0, z: -0.12 }, 1.15, {
         element: 'Thủy',
         desc: 'Tiên thiên chi bản, chủ tàng tinh cốt tủy. Thận khỏe tóc đen dày mượt, sắc diện trẻ trung dồi dào sinh lực.',
         remedy: 'Thục Địa, Kỷ Tử, Đỗ Trọng, Mè Đen (Ngâm chân nước gừng ấm 21h).'
@@ -1620,14 +1366,14 @@
       // --- 4.4 Major Golden Acupoints (Huyệt Vị Vàng) ---
       const acupoints = [
         { name: 'Bách Hội (GV20)', y: 3.05, z: 0.0, desc: 'Hội tụ trăm mạch, định tâm an thần.' },
-        { name: 'Ấn Đường (EX-HN3)', y: 2.45, z: 0.42, desc: 'Khai thông trí não, giảm âu lo căng thẳng.' },
-        { name: 'Đản Trung (CV17)', y: 1.35, z: 0.55, desc: 'Huyệt hội của khí, dưỡng tâm an thần.' },
-        { name: 'Thần Khuyết (CV8 - Rốn)', y: -0.05, z: 0.45, desc: 'Ôn bổ nguyên dương, làm ấm bụng dưới.' },
-        { name: 'Khí Hải (CV6 - Đan Điền)', y: -0.45, z: 0.42, desc: 'Bể chứa sinh lực, bồi bổ nguyên khí.' }
+        { name: 'Ấn Đường (EX-HN3)', y: 2.45, z: 0.45, desc: 'Khai thông trí não, giảm âu lo căng thẳng.' },
+        { name: 'Đản Trung (CV17)', y: 1.35, z: 0.58, desc: 'Huyệt hội của khí, dưỡng tâm an thần.' },
+        { name: 'Thần Khuyết (CV8 - Rốn)', y: -0.05, z: 0.52, desc: 'Ôn bổ nguyên dương, làm ấm bụng dưới.' },
+        { name: 'Khí Hải (CV6 - Đan Điền)', y: -0.45, z: 0.48, desc: 'Bể chứa sinh lực, bồi bổ nguyên khí.' }
       ];
       const acupointMeshes = [];
       acupoints.forEach(pt => {
-        const ptGeom = new THREE.OctahedronGeometry(0.06, 0);
+        const ptGeom = new THREE.OctahedronGeometry(0.065, 0);
         const ptMat = new THREE.MeshPhongMaterial({
           color: 0xf59e0b,
           emissive: 0xfbbf24,
@@ -1641,13 +1387,13 @@
         acupointMeshes.push(ptMesh);
       });
 
-      // --- 4.5 Floating 3D Botanical Petals (Hoa lá bay trong không gian 3D) ---
+      // --- 4.5 Floating 3D Botanical Petals ---
       const floating3DPetalsGroup = new THREE.Group();
       scene.add(floating3DPetalsGroup);
 
       const petalColors = [0xfb7185, 0xfde68a, 0x10b981, 0xf472b6, 0xa7f3d0];
       const petals3D = [];
-      for (let i = 0; i < 40; i++) {
+      for (let i = 0; i < 45; i++) {
         const pShape = new THREE.Shape();
         pShape.moveTo(0, 0);
         pShape.quadraticCurveTo(0.12, 0.18, 0, 0.35);
@@ -1657,13 +1403,13 @@
         const pMat = new THREE.MeshPhongMaterial({
           color: col,
           emissive: col,
-          emissiveIntensity: 0.3,
+          emissiveIntensity: 0.35,
           side: THREE.DoubleSide,
           transparent: true,
           opacity: 0.75
         });
         const pMesh = new THREE.Mesh(pGeom, pMat);
-        const radius = 1.4 + Math.random() * 2.4;
+        const radius = 1.3 + Math.random() * 2.3;
         const angle = Math.random() * Math.PI * 2;
         pMesh.position.set(Math.cos(angle) * radius, (Math.random() - 0.5) * 5.5, Math.sin(angle) * radius);
         pMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
@@ -1681,9 +1427,9 @@
       }
 
       // --- 4.6 Scanning Ring Beam ---
-      const scanRingGeom = new THREE.RingGeometry(0.7, 0.82, 32);
+      const scanRingGeom = new THREE.RingGeometry(0.75, 0.88, 32);
       const scanRingMat = new THREE.MeshBasicMaterial({
-        color: 0x059669,
+        color: 0x34d399,
         side: THREE.DoubleSide,
         transparent: true,
         opacity: 0
@@ -1713,7 +1459,6 @@
         targetRotationY += deltaX * 0.008;
       });
 
-      // Touch events for mobile
       canvas.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           isDragging = true;
@@ -1807,7 +1552,7 @@
         document.querySelectorAll('.hud-controls .hud-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         organObjects.forEach(o => { o.group.visible = showOrgans; });
-        meridianMesh.visible = showMeridians;
+        spinePointsMesh.visible = showMeridians;
         acupointMeshes.forEach(m => { m.visible = showMeridians; });
         floating3DPetalsGroup.visible = showBotanicals;
       }
@@ -1819,7 +1564,6 @@
         requestAnimationFrame(animate);
         const elapsedTime = clock.getElapsedTime();
 
-        // Smooth rotation damping
         bodyGroup.rotation.y += (targetRotationY - bodyGroup.rotation.y) * 0.08;
         if (!isDragging) {
           targetRotationY += 0.0018;
@@ -1827,11 +1571,11 @@
 
         // Heart flower gentle pulse
         const heartPulse = 1.0 + Math.sin(elapsedTime * 4.2) * 0.08;
-        flowerHeart.scale.set(heartPulse * 1.1, heartPulse * 1.1, heartPulse * 1.1);
+        flowerHeart.scale.set(heartPulse * 1.15, heartPulse * 1.15, heartPulse * 1.15);
 
         // Liver & Kidney flowers gentle breathing
         const breath = 1.0 + Math.sin(elapsedTime * 1.8) * 0.05;
-        flowerLungs.scale.set(breath * 1.05, breath * 1.05, breath * 1.05);
+        flowerLungs.scale.set(breath * 1.1, breath * 1.1, breath * 1.1);
 
         // Acupoints subtle twinkle
         const ptTwinkle = 1.0 + Math.sin(elapsedTime * 3.0) * 0.15;
@@ -1877,23 +1621,18 @@
     })();
   </script>
 
-  <!-- E-Commerce Cart & Interactive Checkout Logic -->
+  <!-- E-Commerce Cart Logic (No Popups - Direct Checkout Navigation) -->
   <script>
-    // State
     const cart = [
-      { id: 'combo-14', name: 'Combo Khởi Sắc Dưỡng Nhan (14 Ngày)', price: 199000, qty: 1 }
+      { id: 'combo-30', name: 'Liệu Trình Hoàng Gia Ngũ Tạng (30 Ngày)', price: 389000, qty: 1 }
     ];
-    let currentCartTotal = 199000;
-    let currentOrderCode = 'DN' + Math.floor(1000 + Math.random() * 9000);
 
-    // DOM Elements
     const cartDrawer = document.getElementById('cartDrawer');
     const cartBackdrop = document.getElementById('cartBackdrop');
     const cartBadgeCount = document.getElementById('cartBadgeCount');
     const cartDrawerCount = document.getElementById('cartDrawerCount');
     const cartItemsList = document.getElementById('cartItemsList');
     const cartSubtotalText = document.getElementById('cartSubtotalText');
-    const checkoutModal = document.getElementById('checkoutModal');
 
     function formatVND(n) {
       return n.toLocaleString('vi-VN') + '₫';
@@ -1925,13 +1664,9 @@
         cartItemsList.appendChild(el);
       });
 
-      currentCartTotal = total;
       cartBadgeCount.textContent = count;
       cartDrawerCount.textContent = count;
       cartSubtotalText.textContent = formatVND(total);
-
-      // Update VietQR dynamic image and bank details
-      updateVietQRImage(total);
     }
 
     window.updateQty = function(index, delta) {
@@ -1943,22 +1678,6 @@
       renderCart();
     };
 
-    function updateVietQRImage(amount) {
-      const img = document.getElementById('vietqrImg');
-      const valAmount = document.getElementById('valAmountText');
-      const valMemo = document.getElementById('valMemo');
-      const deepLink = document.getElementById('btnDeepLinkBank');
-
-      if (!valAmount || !img) return;
-      valAmount.textContent = formatVND(amount);
-      valMemo.textContent = 'DUONGNHAN ' + currentOrderCode;
-
-      const qrUrl = `https://img.vietqr.io/image/TCB-1022778686-compact2.png?amount=${amount}&addInfo=DUONGNHAN%20${currentOrderCode}&accountName=LE%20THI%20THANH%20MAI`;
-      img.src = qrUrl;
-      deepLink.href = qrUrl;
-    }
-
-    // Add to cart buttons listener
     document.querySelectorAll('.btn-add-to-cart').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.id;
@@ -1989,48 +1708,11 @@
     document.getElementById('btnCloseCart').addEventListener('click', closeCartDrawer);
     cartBackdrop.addEventListener('click', closeCartDrawer);
 
-    // Open Checkout Modal
+    // Direct navigation to clean full-page checkout.html (No popup modal!)
     document.getElementById('btnCheckoutModal').addEventListener('click', () => {
       closeCartDrawer();
-      checkoutModal.classList.add('open');
-    });
-    document.getElementById('btnCloseCheckout').addEventListener('click', () => {
-      checkoutModal.classList.remove('open');
-    });
-
-    // Payment Tabs Switcher
-    const tabVietQR = document.getElementById('tabVietQR');
-    const tabCard = document.getElementById('tabCard');
-    const tabMomo = document.getElementById('tabMomo');
-    const payBoxVietQR = document.getElementById('payBoxVietQR');
-    const payBoxCard = document.getElementById('payBoxCard');
-    const payBoxMomo = document.getElementById('payBoxMomo');
-
-    function switchPaymentTab(activeTab, activeBox) {
-      [tabVietQR, tabCard, tabMomo].forEach(t => t.classList.remove('active'));
-      [payBoxVietQR, payBoxCard, payBoxMomo].forEach(b => b.style.display = 'none');
-      activeTab.classList.add('active');
-      activeBox.style.display = 'block';
-    }
-
-    tabVietQR.addEventListener('click', () => switchPaymentTab(tabVietQR, payBoxVietQR));
-    tabCard.addEventListener('click', () => switchPaymentTab(tabCard, payBoxCard));
-    tabMomo.addEventListener('click', () => switchPaymentTab(tabMomo, payBoxMomo));
-
-    // Copy to clipboard utility
-    window.copyText = function(text, btn) {
-      navigator.clipboard.writeText(text).then(() => {
-        const oldText = btn.textContent;
-        btn.textContent = 'Đã sao chép!';
-        setTimeout(() => { btn.textContent = oldText; }, 1800);
-      });
-    };
-
-    // Confirm Payment
-    document.getElementById('btnConfirmPaid').addEventListener('click', () => {
-      const email = document.getElementById('custEmail').value || 'quý khách';
-      alert(`Cảm ơn bạn! Hệ thống đã ghi nhận đơn hàng DUONGNHAN ${currentOrderCode}. Cẩm nang và mã tra cứu sẽ được gửi tức thì về email: ${email}`);
-      checkoutModal.classList.remove('open');
+      const planId = cart[0] ? cart[0].id : 'combo-30';
+      window.location.href = `checkout.html?plan=${planId}`;
     });
 
     // Initial render

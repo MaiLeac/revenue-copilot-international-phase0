@@ -528,6 +528,7 @@
             <button class="hud-btn active" id="btnLayerAll" type="button">Tất Cả</button>
             <button class="hud-btn" id="btnLayerOrgans" type="button">Ngũ Tạng</button>
             <button class="hud-btn" id="btnLayerMeridians" type="button">Kinh Lạc</button>
+            <button class="hud-btn" id="btnLayerBotanicals" type="button">Thảo Mộc Bay</button>
             <button class="hud-btn" id="btnResetView" type="button">Góc Chuẩn</button>
           </div>
         </div>
@@ -624,7 +625,7 @@
       <div class="quiz-section">
         <div class="section-header" style="margin-bottom: 32px;">
           <h2 class="section-title">Trắc Nghiệm Quét Thể Trạng Tương Tác</h2>
-          <p class="section-subtitle">Trả lời 3 câu hỏi chính xác để hệ thống tính điểm ngũ tạng và phản chiếu trực tiếp lên mô hình 3D.</p>
+          <p class="section-subtitle">Trắc Nghiệm Chẩn Đoán Nhanh 7 Thể Chất Đông Y &amp; 9 Thể Tạng Khoa Học. Trả lời 3 câu hỏi chính xác để hệ thống tính điểm ngũ tạng và phản chiếu trực tiếp lên mô hình 3D.</p>
         </div>
 
         <div class="quiz-question-card">
@@ -667,7 +668,7 @@
             Bao gồm file Cẩm nang PDF chuẩn in ấn A4, sơ đồ 108 huyệt vị dưỡng nhan độc quyền, bản audio dẫn thiền thở theo Tý Ngọ Lưu Chú và tư vấn theo dõi 1-1.
           </p>
           <div style="font-size: 1.8rem; font-weight: 800; color: #fde68a; margin-bottom: 8px;">
-            69.000&dstrok; <span style="font-size: 0.95rem; font-weight: 400; color: #94a3b8; text-decoration: line-through;">299.000&dstrok;</span>
+            69.000₫ <span style="font-size: 0.95rem; font-weight: 400; color: #94a3b8; text-decoration: line-through;">299.000₫</span>
           </div>
           <div style="font-size: 0.9rem; color: #34d399; margin-bottom: 24px;">Khách quốc tế: $12 USD qua Payoneer (lethanhmaicombo@gmail.com)</div>
           <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; color: #cbd5e1;">
@@ -892,7 +893,75 @@
         remedy: 'Thục Địa, Hoài Sơn, Kỷ Tử, Đỗ Trọng. Ngâm chân nước ấm gừng muối giờ Dậu (17h-19h).',
       });
 
-      // --- 4.4 Scanning Laser Beam (Vành Quét Xuyên Thấu) ---
+      // --- 4.4 Major Acupoints (Huyệt Vị Hoàng Kim) ---
+      const acupointList = [
+        { name: 'Bách Hội (GV20)', y: 3.1, z: 0.0, desc: 'Đỉnh đầu hội tụ trăm mạch, định tâm an thần, trị đau đầu chóng mặt.' },
+        { name: 'Ấn Đường (EX-HN3)', y: 2.45, z: 0.45, desc: 'Giữa hai đầu lông mày, khai thông tâm trí, giảm căng thẳng mất ngủ.' },
+        { name: 'Đản Trung (CV17)', y: 1.45, z: 0.58, desc: 'Huyệt hội của khí, giải tỏa u uất lồng ngực, điều hòa phế khí.' },
+        { name: 'Trung Quản (CV12)', y: 0.45, z: 0.52, desc: 'Huyệt mộ của dạ dày, kiện tỳ hóa thấp, giảm đầy trướng bụng.' },
+        { name: 'Thần Khuyết (CV8)', y: -0.05, z: 0.48, desc: 'Rốn, ôn bổ nguyên dương, điều hòa tràng vị, giữ ấm hạ tiêu.' },
+        { name: 'Khí Hải (CV6)', y: -0.45, z: 0.46, desc: 'Bể chứa khí, đan điền chủ lực, bổ khí cố tinh, tăng cường nguyên khí.' },
+      ];
+      const acupointMeshes = [];
+      acupointList.forEach(pt => {
+        const ptGeom = new THREE.OctahedronGeometry(0.06, 0);
+        const ptMat = new THREE.MeshPhongMaterial({
+          color: 0xfde68a,
+          emissive: 0xf59e0b,
+          emissiveIntensity: 1.0,
+          shininess: 120
+        });
+        const ptMesh = new THREE.Mesh(ptGeom, ptMat);
+        ptMesh.position.set(0, pt.y, pt.z);
+        ptMesh.userData = { isAcupoint: true, name: pt.name, desc: pt.desc };
+        bodyGroup.add(ptMesh);
+        acupointMeshes.push(ptMesh);
+      });
+
+      // --- 4.5 Floating Botanical Symbiosis (Cánh Hoa Thảo Mộc Bay) ---
+      const botanicalsGroup = new THREE.Group();
+      scene.add(botanicalsGroup);
+
+      const petalColors = [0xfb7185, 0xfde68a, 0x34d399, 0xf472b6, 0xa7f3d0];
+      const petals = [];
+      for (let i = 0; i < 36; i++) {
+        const petalShape = new THREE.Shape();
+        petalShape.moveTo(0, 0);
+        petalShape.quadraticCurveTo(0.12, 0.18, 0, 0.35);
+        petalShape.quadraticCurveTo(-0.12, 0.18, 0, 0);
+        const petalGeom = new THREE.ShapeGeometry(petalShape);
+        const col = petalColors[i % petalColors.length];
+        const petalMat = new THREE.MeshPhongMaterial({
+          color: col,
+          emissive: col,
+          emissiveIntensity: 0.3,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.65
+        });
+        const petalMesh = new THREE.Mesh(petalGeom, petalMat);
+        const radius = 1.6 + Math.random() * 2.2;
+        const angle = Math.random() * Math.PI * 2;
+        petalMesh.position.set(
+          Math.cos(angle) * radius,
+          (Math.random() - 0.5) * 6,
+          Math.sin(angle) * radius
+        );
+        petalMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+        const scale = 0.5 + Math.random() * 0.8;
+        petalMesh.scale.set(scale, scale, scale);
+        petalMesh.userData = {
+          speedY: 0.003 + Math.random() * 0.007,
+          rotSpeed: (Math.random() - 0.5) * 0.02,
+          radius: radius,
+          angle: angle,
+          orbitSpeed: (Math.random() - 0.5) * 0.006
+        };
+        botanicalsGroup.add(petalMesh);
+        petals.push(petalMesh);
+      }
+
+      // --- 4.6 Scanning Laser Beam (Vành Quét Xuyên Thấu) ---
       const scanRingGeom = new THREE.RingGeometry(0.7, 0.85, 32);
       const scanRingMat = new THREE.MeshBasicMaterial({
         color: 0x34d399,
@@ -958,25 +1027,36 @@
         mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
-        const meshesToTest = organObjects.map(o => o.mesh);
+        const meshesToTest = organObjects.map(o => o.mesh).concat(acupointMeshes);
         const intersects = raycaster.intersectObjects(meshesToTest);
 
         if (intersects.length > 0) {
           const hit = intersects[0].object;
           const data = hit.userData;
           
-          // Show popup
-          popupTitle.textContent = data.name;
-          popupDesc.textContent = data.info.desc;
-          popupRemedy.innerHTML = '<strong>Phác đồ thảo mộc:</strong> ' + data.info.remedy;
-          popup.style.display = 'block';
+          if (data.isAcupoint) {
+            // Acupoint click
+            popupTitle.textContent = data.name;
+            popupDesc.textContent = data.desc;
+            popupRemedy.innerHTML = '<strong>Huyệt Vị Đông Y:</strong> Bấm huyệt hoặc cứu ngải 3-5 phút giúp khai thông kinh mạch tương ứng.';
+            popup.style.display = 'block';
+            liveName.textContent = data.name + ' • Huyệt Vị Hoàng Kim';
+            pulseDot.style.background = '#fde68a';
+            pulseDot.style.boxShadow = '0 0 16px #fde68a';
+          } else {
+            // Show organ popup
+            popupTitle.textContent = data.name;
+            popupDesc.textContent = data.info.desc;
+            popupRemedy.innerHTML = '<strong>Phác đồ thảo mộc:</strong> ' + data.info.remedy;
+            popup.style.display = 'block';
 
-          // Update live banner
-          liveName.textContent = data.name + ' • Hệ Hành ' + data.info.element;
-          pulseDot.style.background = '#' + data.color.toString(16).padStart(6, '0');
-          pulseDot.style.boxShadow = '0 0 16px #' + data.color.toString(16).padStart(6, '0');
+            // Update live banner
+            liveName.textContent = data.name + ' • Hệ Hành ' + data.info.element;
+            pulseDot.style.background = '#' + data.color.toString(16).padStart(6, '0');
+            pulseDot.style.boxShadow = '0 0 16px #' + data.color.toString(16).padStart(6, '0');
+          }
 
-          // Highlight organ with pulse
+          // Highlight with pulse
           hit.scale.set(1.4, 1.4, 1.4);
           setTimeout(() => hit.scale.set(1, 1, 1), 300);
         }
@@ -996,23 +1076,27 @@
 
       // Controls
       document.getElementById('btnLayerAll').addEventListener('click', (e) => {
-        setLayerMode(e.target, true, true);
+        setLayerMode(e.target, true, true, true);
         document.getElementById('viewModeLabel').textContent = 'XUYÊN THẤU TOÀN PHẦN';
       });
       document.getElementById('btnLayerOrgans').addEventListener('click', (e) => {
-        setLayerMode(e.target, true, false);
+        setLayerMode(e.target, true, false, false);
         document.getElementById('viewModeLabel').textContent = 'TẬP TRUNG NGŨ TẠNG';
       });
       document.getElementById('btnLayerMeridians').addEventListener('click', (e) => {
-        setLayerMode(e.target, false, true);
+        setLayerMode(e.target, false, true, false);
         document.getElementById('viewModeLabel').textContent = 'ĐƯỜNG KINH LẠC 12 KINH';
+      });
+      document.getElementById('btnLayerBotanicals').addEventListener('click', (e) => {
+        setLayerMode(e.target, true, false, true);
+        document.getElementById('viewModeLabel').textContent = 'THẢO MỘC VÀ KHÍ HUYẾT GIAO THOA';
       });
       document.getElementById('btnResetView').addEventListener('click', () => {
         targetRotationY = 0;
         bodyGroup.rotation.y = 0;
       });
 
-      function setLayerMode(btn, showOrgans, showMeridians) {
+      function setLayerMode(btn, showOrgans, showMeridians, showBotanicals = true) {
         document.querySelectorAll('.hud-controls .hud-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         organObjects.forEach(o => {
@@ -1021,6 +1105,8 @@
         });
         meridianTube.visible = showMeridians;
         spinePointsMesh.visible = showMeridians;
+        acupointMeshes.forEach(m => { m.visible = showMeridians || showOrgans; });
+        botanicalsGroup.visible = showBotanicals;
       }
 
       // 7. Animation Loop (60 FPS)
@@ -1037,6 +1123,23 @@
         if (!isDragging) {
           targetRotationY += 0.0015;
         }
+
+        // Floating Botanical Petals Animation
+        petals.forEach(p => {
+          p.userData.angle += p.userData.orbitSpeed;
+          p.position.x = Math.cos(p.userData.angle) * p.userData.radius;
+          p.position.z = Math.sin(p.userData.angle) * p.userData.radius;
+          p.position.y += p.userData.speedY;
+          p.rotation.x += p.userData.rotSpeed;
+          p.rotation.y += p.userData.rotSpeed * 1.5;
+          if (p.position.y > 3.5) {
+            p.position.y = -3.5;
+          }
+        });
+
+        // Acupoints subtle pulsation
+        const ptPulse = 1.0 + Math.sin(elapsedTime * 3.0) * 0.15;
+        acupointMeshes.forEach(m => m.scale.set(ptPulse, ptPulse, ptPulse));
 
         // Heart pulse effect
         const heartPulse = 1.0 + Math.sin(elapsedTime * 4.5) * 0.08;

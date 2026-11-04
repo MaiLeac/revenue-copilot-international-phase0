@@ -33,6 +33,7 @@ from app.mt5.market_data import MT5MarketDataReader
 from app.mt5.execution import DemoExecutionAdapter, OrderResult
 from app.risk.kill_switch import KillSwitch
 from app.risk.manager import RiskManager
+from app.risk.news_filter import NewsBlackoutFilter
 from app.strategies.trend_pullback import TrendFollowingPullbackStrategy
 
 STATE_FILE = AGENT_ROOT / "run_state.json"
@@ -90,6 +91,7 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
     config = load_config(AGENT_ROOT / config_path)
     kill_switch = KillSwitch(enabled=config.safety.kill_switch, state_file=KILL_SWITCH_FILE)
     risk_mgr = RiskManager(config=config, kill_switch=kill_switch, state_file=RISK_STATE_FILE)
+    news_filter = NewsBlackoutFilter(config=config.news_filter)
     conn = MT5ConnectionManager(config=config)
 
     account_meta = conn.connect()
@@ -226,7 +228,7 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                 try:
                     spec = reader.read_symbol_spec(base_sym)
                     tick = reader.read_tick(base_sym)
-                    h4_candles = reader.read_candles(base_sym, "H4", count=60)
+                    h4_candles = reader.read_candles(base_sym, "H4", count=250)
                     h1_candles = reader.read_candles(base_sym, "H1", count=60)
 
                     # Quality gate check on H1 candles
@@ -245,6 +247,14 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                     # Evaluate 4-tier H4/H1 trend pullback strategy
                     signal = strategy.evaluate(base_sym, h4_candles, h1_candles)
                     if signal.direction in ("BUY", "SELL"):
+                        # P0 Safety: Enforce News Blackout Filter before order execution
+                        is_blackout, blackout_reason = news_filter.is_blackout(base_sym, now_utc)
+                        if is_blackout:
+                            logger.warning(
+                                f"Trade signal on {base_sym} suppressed by News Blackout Filter: {blackout_reason}"
+                            )
+                            continue
+
                         logger.info(f"Signal detected for {spec.broker_symbol}: {signal.direction} @ {signal.entry_price} ({signal.reason})")
                         # Place order
                         order_res: OrderResult = adapter.place_order(signal, spec)

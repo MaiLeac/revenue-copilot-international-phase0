@@ -4,11 +4,14 @@ execution_mode: demo_auto
 
 symbols:
   allowed:
-    - XAGUSD
     - EURUSD
+    - GBPUSD
     - XAUUSD
+    - XAGUSD
   enabled:
     - EURUSD
+    - GBPUSD
+    - XAUUSD
 
 timeframes:
   - H1
@@ -21,14 +24,15 @@ data_quality:
   max_tick_age_seconds: 60
   min_candle_count: 50
   max_spread_points:
+    EURUSD: 25
+    GBPUSD: 35
     XAUUSD: 500
     XAGUSD: 400
-    EURUSD: 25
     default: 100
 
 risk:
   risk_per_trade_pct: 0.25
-  max_total_open_risk_pct: 0.50
+  max_total_open_risk_pct: 0.75
   max_daily_loss_pct: 1.0
   max_drawdown_pct: 5.0
   max_positions_per_symbol: 1
@@ -44,3 +48,9 @@ session:
   enabled: true
   start_hour_utc: 7
   end_hour_utc: 16
+
+news_filter:
+  enabled: true
+  blackout_minutes_before: 30
+  blackout_minutes_after: 30
+  min_impact: HIGH

@@ -39,7 +39,7 @@ class MockMT5Backend:
         self.trade_mode = trade_mode
         self.server = server
         self.shutdown_called = False
-        self.symbol_names = symbols if symbols is not None else ["XAUUSDm", "XAGUSDm", "EURUSDm"]
+        self.symbol_names = symbols if symbols is not None else ["XAUUSDm", "XAGUSDm", "EURUSDm", "GBPUSDm"]
         self.now_ts = int(datetime.now(timezone.utc).timestamp())
 
     def initialize(self, **kwargs: Any) -> bool:
@@ -79,7 +79,7 @@ class MockMT5Backend:
     def symbol_info(self, symbol: str) -> SimpleNamespace | None:
         if symbol not in self.symbol_names:
             return None
-        is_fx = symbol.startswith("EURUSD")
+        is_fx = symbol.startswith("EURUSD") or symbol.startswith("GBPUSD")
         return SimpleNamespace(
             name=symbol,
             description=f"Mock {symbol}",
@@ -110,6 +110,14 @@ class MockMT5Backend:
                 bid=1.08500,
                 ask=1.08512,
                 last=1.08505,
+                volume=10.0,
+            )
+        if symbol.startswith("GBPUSD"):
+            return SimpleNamespace(
+                time=self.now_ts - 5,
+                bid=1.29500,
+                ask=1.29515,
+                last=1.29505,
                 volume=10.0,
             )
         return SimpleNamespace(
@@ -188,7 +196,7 @@ def test_symbol_discovery_and_invalid_symbol_error() -> None:
         reader.read_symbol_spec("XAGUSD")
 
     with pytest.raises(SymbolValidationError, match="not in the configured allowlist"):
-        reader.read_symbol_spec("GBPUSD")
+        reader.read_symbol_spec("USDJPY")
 
 
 def test_missing_candles_from_mt5_raises_error() -> None:
@@ -211,6 +219,6 @@ def test_full_diagnostic_runner_passes_with_mock_demo_terminal() -> None:
         mt5_backend=mock_mt5,
     )
     assert summary["account"]["is_verified_demo"] is True
-    assert set(summary["symbols"].keys()) == {"XAGUSD", "EURUSD", "XAUUSD"}
-    assert len(summary["quality_reports"]) == 6  # 3 symbols * 2 timeframes (M15, H1)
+    assert set(summary["symbols"].keys()) == {"XAGUSD", "EURUSD", "XAUUSD", "GBPUSD"}
+    assert len(summary["quality_reports"]) == 8  # 4 symbols * 2 timeframes (H1, H4)
     assert summary["kill_switch_tripped"] is False

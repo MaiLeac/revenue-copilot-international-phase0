@@ -1,0 +1,91 @@
+{
+  "starting_capital": 100000.0,
+  "final_equity": 95023.61,
+  "net_profit": -4976.39,
+  "return_pct": -4.98,
+  "total_trades": 98,
+  "wins": 28,
+  "losses": 70,
+  "win_rate": 28.57,
+  "profit_factor": 0.73,
+  "max_drawdown_pct": 6.78,
+  "max_drawdown_cash": 6881.91,
+  "expectancy_r": -0.21,
+  "stats_by_symbol": {
+    "EURUSD": {
+      "trades": 36,
+      "wins": 12,
+      "win_rate": 33.3,
+      "pnl": -596.05
+    },
+    "GBPUSD": {
+      "trades": 28,
+      "wins": 3,
+      "win_rate": 10.7,
+      "pnl": -5147.51
+    },
+    "XAUUSD": {
+      "trades": 34,
+      "wins": 13,
+      "win_rate": 38.2,
+      "pnl": 767.17
+    }
+  },
+  "monthly_stats": {
+    "2025-12": {
+      "trades": 15,
+      "wins": 6,
+      "pnl": 327.62653000010874
+    },
+    "2026-01": {
+      "trades": 12,
+      "wins": 5,
+      "pnl": 569.2529300000172
+    },
+    "2026-02": {
+      "trades": 6,
+      "wins": 1,
+      "pnl": -808.9835000000377
+    },
+    "2026-03": {
+      "trades": 6,
+      "wins": 1,
+      "pnl": -812.3447200000111
+    },
+    "2026-04": {
+      "trades": 3,
+      "wins": 0,
+      "pnl": -801.7859999999644
+    },
+    "2026-05": {
+      "trades": 7,
+      "wins": 0,
+      "pnl": -1783.5048800000325
+    },
+    "2026-06": {
+      "trades": 12,
+      "wins": 4,
+      "pnl": -38.01491000001093
+    },
+    "2026-07": {
+      "trades": 3,
+      "wins": 0,
+      "pnl": -761.6200000000292
+    },
+    "2026-08": {
+      "trades": 15,
+      "wins": 6,
+      "pnl": 252.7763800001456
+    },
+    "2026-09": {
+      "trades": 6,
+      "wins": 1,
+      "pnl": -793.6853000000048
+    },
+    "2026-10": {
+      "trades": 13,
+      "wins": 4,
+      "pnl": -326.1105100000086
+    }
+  }
+}

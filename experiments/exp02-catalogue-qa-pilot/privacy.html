@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chính Sách Bảo Mật & Cam Kết Không Lưu Trữ (Privacy & Zero Retention) • CatalogueQA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07090e;
+    --card: rgba(15, 23, 42, 0.75);
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --primary: #10b981;
+    --accent: #06b6d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.7;
+    padding: 40px 20px;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+  .nav { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+  .brand { font-size: 1.2rem; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .brand span { color: var(--primary); }
+  .btn-back { color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    backdrop-filter: blur(16px);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.12);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 2rem; margin-bottom: 12px; color: #fff; }
+  .updated { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 28px; }
+  h2 { font-size: 1.25rem; margin: 28px 0 12px; color: var(--primary); }
+  p, ul { color: var(--text-muted); margin-bottom: 16px; font-size: 0.95rem; }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 8px; }
+  .highlight-box {
+    background: rgba(16, 185, 129, 0.05);
+    border-left: 4px solid var(--primary);
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 0 12px 12px 0;
+  }
+  .footer { margin-top: 40px; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="nav">
+    <a href="index.html" class="brand">Catalogue<span>QA</span> Enterprise</a>
+    <a href="index.html" class="btn-back">← Quay lại Ứng Dụng</a>
+  </div>
+
+  <div class="card">
+    <div class="badge">🔒 Zero Data Retention Architecture</div>
+    <h1>Chính Sách Bảo Mật & Quyền Riêng Tư</h1>
+    <div class="updated">Cập nhật lần cuối: 04 Tháng 11, 2026 • Chứng chỉ Bảo mật Cục bộ ISO/IEC 27001-Aligned</div>
+
+    <div class="highlight-box">
+      <strong style="color: #fff;">Cam Kết Cốt Lõi:</strong> CatalogueQA được thiết kế theo nguyên lý <em>Local-First / Zero-Knowledge</em>. Khi bạn kéo thả tệp CSV bảng giá hay danh mục sản phẩm vào ứng dụng, <strong>dữ liệu không bao giờ rời khỏi trình duyệt của bạn</strong>.
+    </div>
+
+    <h2>1. Không Thu Thập Dữ Liệu Tệp Cục Bộ (Zero Ingestion)</h2>
+    <p>Không giống như các công cụ chuyển đổi tệp trực tuyến thông thường lưu trữ dữ liệu lên đám mây, CatalogueQA vận hành thông qua công nghệ <code>FileReader API</code> và <code>Web Workers</code> ngay trên bộ nhớ RAM của thiết bị người dùng. Chúng tôi cam kết:</p>
+    <ul>
+      <li>Không có tệp CSV nào được tải lên máy chủ trung gian.</li>
+      <li>Không trích xuất giá nhập, danh sách nhà cung cấp hay chiến lược định giá của người bán.</li>
+      <li>Không sử dụng bất kỳ danh mục sản phẩm nào của khách hàng để huấn luyện mô hình trí tuệ nhân tạo (LLM).</li>
+    </ul>
+
+    <h2>2. Dữ Liệu Phi Cá Nhân & Thống Kê Ẩn Danh</h2>
+    <p>Chúng tôi chỉ ghi nhận các thông số kỹ thuật ẩn danh nhằm mục đích cải thiện hiệu năng (nếu người dùng cho phép): phiên bản trình duyệt, loại mã lỗi định dạng gặp phải (ví dụ: lỗi encoding VNI hay UTF-8 BOM), và thời gian xử lý trung bình. Các dữ liệu này hoàn toàn tách biệt với nội dung tệp thương mại.</p>
+
+    <h2>3. Xóa Dữ Liệu Tức Thì (Instant Memory Flush)</h2>
+    <p>Khi bạn nhấn nút <em>"Xóa dữ liệu / Đóng phiên"</em> hoặc đóng tab trình duyệt, toàn bộ dữ liệu bảng tính trong bộ nhớ tạm sẽ bị hủy bỏ hoàn toàn mà không để lại bất kỳ dấu vết cache nào trên máy chủ.</p>
+
+    <h2>4. Quyền Yêu Cầu Hỗ Trợ & Bảo Vệ Người Tiêu Dùng</h2>
+    <p>Nếu bạn có bất kỳ câu hỏi nào liên quan đến kiến trúc bảo mật, vui lòng liên hệ trực tiếp với bộ phận kỹ thuật thông qua cổng vận hành hệ thống.</p>
+  </div>
+
+  <div class="footer">
+    © 2026 CatalogueQA Systems. Bảo lưu mọi quyền.
+  </div>
+</div>
+</body>
+</html>

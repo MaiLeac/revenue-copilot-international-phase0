@@ -1,7 +1,7 @@
 # MONEY HQ SUPERAGENT — ATTENTION PANEL
 
 - **Policy Version:** `2026-11-01.v1` | **Accept Mode:** `observe` | **Budget Cap:** `0 VND` (`0 VND` spend enforced)
-- **Updated At (UTC):** `2026-11-01T15:45:38+00:00`
+- **Updated At (UTC):** `2026-11-03T09:00:55+00:00`
 
 ---
 

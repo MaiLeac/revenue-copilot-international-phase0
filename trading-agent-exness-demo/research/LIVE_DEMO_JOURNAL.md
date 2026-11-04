@@ -62,3 +62,10 @@
 - **Mode:** demo_auto
 - **Enabled Symbols:** EURUSD
 
+
+### [2026-11-04 00:39:29 UTC] Daemon Started
+- **Account:** #464160066 (Exness-MT5Trial17)
+- **Balance:** $100000.00 USD
+- **Mode:** demo_auto
+- **Enabled Symbols:** EURUSD
+

@@ -76,6 +76,14 @@ class SessionConfig:
 
 
 @dataclass(frozen=True)
+class NewsFilterConfig:
+    enabled: bool = True
+    blackout_minutes_before: int = 30
+    blackout_minutes_after: int = 30
+    min_impact: str = "HIGH"
+
+
+@dataclass(frozen=True)
 class AppConfig:
     platform: str
     account_mode: str
@@ -87,6 +95,7 @@ class AppConfig:
     safety: SafetyConfig
     mt5_env: MT5EnvConfig
     session: SessionConfig = field(default_factory=SessionConfig)
+    news_filter: NewsFilterConfig = field(default_factory=NewsFilterConfig)
 
 
 def load_env_config(env_override: dict[str, str] | None = None) -> MT5EnvConfig:
@@ -255,6 +264,17 @@ def validate_raw_config(raw: dict[str, Any], env_config: MT5EnvConfig | None = N
     if not (0 <= session_cfg.start_hour_utc < session_cfg.end_hour_utc <= 24):
         raise ConfigValidationError("session start_hour_utc must be < end_hour_utc and between 0-24.")
 
+    # News filter configuration
+    news_raw = raw.get("news_filter", {})
+    news_cfg = NewsFilterConfig(
+        enabled=bool(news_raw.get("enabled", True)),
+        blackout_minutes_before=int(news_raw.get("blackout_minutes_before", 30)),
+        blackout_minutes_after=int(news_raw.get("blackout_minutes_after", 30)),
+        min_impact=str(news_raw.get("min_impact", "HIGH")).upper(),
+    )
+    if news_cfg.blackout_minutes_before < 0 or news_cfg.blackout_minutes_after < 0:
+        raise ConfigValidationError("News blackout window minutes must be non-negative.")
+
     resolved_env = env_config if env_config is not None else load_env_config()
 
     return AppConfig(
@@ -268,6 +288,7 @@ def validate_raw_config(raw: dict[str, Any], env_config: MT5EnvConfig | None = N
         safety=safety,
         mt5_env=resolved_env,
         session=session_cfg,
+        news_filter=news_cfg,
     )
 
 

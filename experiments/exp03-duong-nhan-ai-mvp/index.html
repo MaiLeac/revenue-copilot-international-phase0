@@ -3,696 +3,1053 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tủ Sách Dưỡng Nhan Bản Thảo • Chuẩn 7 Thể Chất Đông Y</title>
+<title>BLOOM • Nền Tảng Phân Tích Thể Trạng Cơ Thể & Dưỡng Sinh Thảo Mộc (Botanical Somatic Intelligence)</title>
+<meta name="description" content="Chẩn đoán 7 thể chất và 9 thể trạng Đông Y khoa học, quét bản đồ cơ thể và nhận phác đồ trà thảo mộc, đồng hồ sinh học cá nhân hóa.">
+
+<!-- Fonts & Tokens -->
+<link rel="stylesheet" href="../../assets/web_capability_library/tokens.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap&subset=vietnamese" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/web_capability_library/tokens.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --bg: #fdfaf6;
-    --bg-alt: #f6efe6;
-    --card: #ffffff;
-    --ink: #2b181e;
-    --muted: #6e565d;
-    --primary: #8c2d4b;
-    --primary-dark: #681d35;
-    --accent: #c88a4b;
-    --border: #eadcd1;
-    --ok: #1f6f50;
-    --warn: #b45309;
+    --bg-dark: #070a0e;
+    --bg-card: rgba(14, 21, 28, 0.75);
+    --bg-card-hover: rgba(20, 30, 40, 0.85);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-accent: rgba(16, 185, 129, 0.25);
+    
+    --color-emerald: #10b981;
+    --color-emerald-glow: rgba(16, 185, 129, 0.2);
+    --color-rose: #fb7185;
+    --color-rose-glow: rgba(251, 113, 133, 0.2);
+    --color-gold: #d4af37;
+    --color-gold-glow: rgba(212, 175, 55, 0.2);
+    --color-cyan: #06b6d4;
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-gold: #f5d061;
+
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
-  * { box-sizing: border-box; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-emerald);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   body {
-    margin: 0;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    line-height: 1.6;
-    letter-spacing: normal;
+    background-color: var(--bg-dark);
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 85% 25%, rgba(251, 113, 133, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 15% 75%, rgba(212, 175, 55, 0.06) 0%, transparent 40%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.65;
+    overflow-x: hidden;
   }
-  .container { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
-  header.topbar {
-    background: rgba(253, 250, 246, 0.96);
-    border-bottom: 1px solid var(--border);
+
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Navigation Bar */
+  header.top-nav {
     position: sticky;
     top: 0;
-    z-index: 50;
-    backdrop-filter: blur(8px);
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(7, 10, 14, 0.8);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 18px 0;
   }
-  .topbar-inner {
+  .nav-inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
-    gap: 12px;
-    flex-wrap: wrap;
   }
-  .brand-wrap {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .brand {
-    font-weight: 800;
-    font-size: 17px;
-    color: var(--primary);
-    white-space: nowrap;
-    text-decoration: none;
-  }
-  .brand-sub {
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 13px;
-    white-space: nowrap;
-  }
-  .top-actions {
+  .brand-group {
     display: flex;
     align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 12px;
+    text-decoration: none;
+    color: #fff;
   }
-  .btn {
+  .brand-logo-symbol {
+    width: 24px;
+    height: 24px;
+    color: var(--color-rose);
+  }
+  .brand-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .brand-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+    font-family: var(--font-sans);
+  }
+  .nav-pill {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    background: var(--primary);
-    color: #fff;
-    padding: 10px 20px;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    padding: 4px 14px;
     border-radius: 999px;
-    font-weight: 700;
-    font-size: 13.5px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: background 0.16s ease-out, transform 0.16s ease-out;
+    font-size: 0.75rem;
+    font-weight: 600;
   }
-  .btn:hover { background: var(--primary-dark); }
-  .btn-outline {
-    background: transparent;
-    color: var(--primary);
-    border: 1.5px solid var(--primary);
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-emerald);
+    box-shadow: 0 0 8px var(--color-emerald);
+    animation: pulse 2s infinite;
   }
-  .btn-outline:hover { background: #fbeff3; }
-  .hero {
-    padding: 48px 0 36px;
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 80px 0 50px;
     text-align: center;
+    position: relative;
   }
-  .badge {
-    display: inline-block;
-    background: #f8e8ee;
-    color: var(--primary);
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 16px;
+  .hero-quote {
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+    font-style: italic;
+    color: var(--text-gold);
+    max-width: 780px;
+    margin: 0 auto 20px;
+    opacity: 0.95;
   }
-  .hero h1 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: clamp(24px, 3.6vw, 36px);
-    line-height: 1.3;
-    max-width: 820px;
-    margin: 0 auto 16px;
-    color: var(--ink);
-    letter-spacing: normal;
+  .hero-quote span {
+    color: var(--color-rose);
+    font-style: normal;
+    background: rgba(251, 113, 133, 0.12);
+    padding: 2px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(251, 113, 133, 0.25);
   }
-  .hero p.lead {
-    font-size: 16.5px;
-    color: var(--muted);
+  .hero-heading {
+    font-family: var(--font-serif);
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    font-weight: 600;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .hero-subheading {
+    font-size: clamp(0.95rem, 1.6vw, 1.12rem);
+    color: var(--text-secondary);
     max-width: 680px;
-    margin: 0 auto 26px;
-    line-height: 1.6;
+    margin: 0 auto 40px;
+    font-weight: 300;
+    line-height: 1.7;
   }
-  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .compare-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+  .hero-cta-group {
+    display: flex;
+    justify-content: center;
     gap: 16px;
-    margin: 36px 0;
+    flex-wrap: wrap;
   }
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 18px 20px;
-    text-align: left;
+  .btn-bloom-primary {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 0 25px var(--color-emerald-glow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
   }
-  .stat-card .title { font-weight: 800; color: var(--primary); font-size: 15px; margin-bottom: 4px; }
-  .stat-card .desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 28px;
-    margin-bottom: 28px;
-    box-shadow: 0 6px 24px rgba(43, 24, 30, 0.04);
+  .btn-bloom-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px rgba(16, 185, 129, 0.4);
   }
-  .section h2 { margin-top: 0; font-size: 22px; color: var(--ink); font-family: 'Plus Jakarta Sans', sans-serif; }
-  .quiz-grid {
+  .btn-bloom-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+  .btn-bloom-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Bento Workspace Layout */
+  .somatic-workspace {
+    margin: 50px 0 80px;
+  }
+
+  .bento-grid-2col {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 12px;
-    margin: 18px 0;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 24px;
+    align-items: start;
   }
-  .quiz-option {
+  @media (max-width: 900px) {
+    .bento-grid-2col { grid-template-columns: 1fr; }
+  }
+
+  .bento-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+    padding: 32px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /* Somatic Visual Body Map */
+  .body-map-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-header-badge {
+    font-size: 0.75rem;
+    color: var(--color-emerald);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .card-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  .somatic-zones-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .zone-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .zone-item:hover, .zone-item.active {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+  .zone-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .zone-name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  .zone-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .zone-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: transparent;
+  }
+  .zone-item.active .zone-indicator {
+    background: var(--color-emerald);
+    border-color: var(--color-emerald);
+    color: #fff;
+  }
+
+  /* Diagnostic Questionnaire Panel */
+  .quiz-panel {
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .quiz-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .quiz-progress-fill {
+    height: 100%;
+    width: 20%;
+    background: linear-gradient(90deg, var(--color-emerald), var(--color-rose));
+    transition: width 0.3s ease;
+  }
+
+  .quiz-step-tag {
+    font-size: 0.75rem;
+    color: var(--color-rose);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .quiz-question-title {
+    font-family: var(--font-serif);
+    font-size: 1.7rem;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  .quiz-question-desc {
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  .options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .option-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: left;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .option-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .option-btn.selected {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: var(--color-emerald);
+    color: #fff;
+    box-shadow: 0 0 20px var(--color-emerald-glow);
+  }
+
+  .quiz-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 20px;
+  }
+
+  /* Diagnostic Result Dossier */
+  .diagnostic-dossier {
+    display: none;
+    margin-top: 40px;
+    animation: fadeIn 0.5s ease forwards;
+  }
+  .diagnostic-dossier.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-banner {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(251, 113, 133, 0.1) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .constitution-badge {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .constitution-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pill-tag {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    color: var(--text-gold);
+  }
+
+  .recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .rec-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  .rec-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--color-emerald);
+    margin-bottom: 8px;
+  }
+  .rec-title {
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .rec-list {
+    list-style: none;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+  }
+  .rec-list li {
+    margin-bottom: 10px;
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    cursor: pointer;
-    background: #fff;
-    transition: border-color 0.15s, background 0.15s;
   }
-  .quiz-option:hover { border-color: var(--primary); background: #fdf7f9; }
-  .quiz-option input { margin-top: 4px; accent-color: var(--primary); transform: scale(1.15); }
-  .result-box {
-    display: none;
-    background: var(--bg-alt);
-    border: 2px solid var(--primary);
+  .rec-list li::before {
+    content: "•";
+    color: var(--color-rose);
+  }
+
+  /* 9 Constitutions Encyclopedia */
+  .encyclopedia-section {
+    padding: 60px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .section-tag {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--color-gold);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 2.4rem;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 40px;
+  }
+  .encyclopedia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .enc-card {
+    background: rgba(14, 21, 28, 0.5);
+    border: 1px solid var(--border-subtle);
     border-radius: 16px;
-    padding: 24px;
-    margin-top: 22px;
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
   }
-  .pill {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    background: #f3e2e7;
-    color: var(--primary);
-    margin-right: 6px;
+  .enc-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+  .enc-name {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: #fff;
     margin-bottom: 6px;
   }
-  .recipe-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
+  .enc-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
   }
-  .recipe-card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 18px;
-  }
-  .recipe-card h4 { margin: 0 0 8px 0; color: var(--primary); font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif; }
-  .warn-box {
-    background: #fff8eb;
-    border-left: 3px solid var(--warn);
-    padding: 8px 12px;
-    font-size: 12.5px;
-    margin-top: 10px;
-    border-radius: 4px;
-  }
-  .search-bar {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-  .search-bar input, .search-bar select {
-    padding: 11px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-size: 14px;
-    flex: 1;
-    min-width: 200px;
-  }
-  .modal-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(25, 12, 16, 0.65);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-  }
-  .modal {
-    background: #fff;
-    border-radius: 18px;
-    max-width: 500px;
-    width: 100%;
-    padding: 26px;
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal-close {
-    position: absolute;
-    top: 14px;
-    right: 18px;
-    background: none;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-    color: var(--muted);
-  }
-  footer.page-footer {
-    background: #2b181e;
-    color: #f3dce3;
-    padding: 44px 0 32px;
-    margin-top: 56px;
-    font-size: 0.9rem;
-    border-top: 2px solid #541d2d;
-  }
-  .footer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 28px;
-    margin-bottom: 28px;
-  }
-  .footer-col h4 {
-    color: #ffffff;
-    margin: 0 0 12px;
-    font-size: 1.05rem;
-    font-weight: 700;
-  }
-  .footer-col p {
-    margin: 0;
-    line-height: 1.6;
-    color: #f0d5dd;
-  }
-  .footer-col ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .footer-col li {
-    margin-bottom: 8px;
-    line-height: 1.5;
-  }
-  .footer-col a {
-    color: #ffd6e3;
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-  .footer-col a:hover {
-    color: #ffffff;
-    text-decoration: underline;
-  }
-  .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    padding-top: 20px;
+
+  /* Educational Disclaimer */
+  .disclaimer-card {
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 40px 0;
     text-align: center;
-    color: #c4a9b2;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+  }
+  .disclaimer-card strong { color: var(--text-gold); }
+
+  /* Premium Plan Section with VietQR */
+  .checkout-card {
+    background: var(--bg-card);
+    border: 1px solid var(--color-emerald);
+    box-shadow: 0 0 30px var(--color-emerald-glow);
+    border-radius: 20px;
+    padding: 32px;
+    margin: 40px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .checkout-info {
+    max-width: 500px;
+  }
+  .checkout-price {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 8px 0;
+  }
+  .qr-box {
+    text-align: center;
+    background: #fff;
+    padding: 12px;
+    border-radius: 14px;
+  }
+  .qr-box img {
+    width: 150px;
+    height: 150px;
+    display: block;
+  }
+
+  /* Footer */
+  footer.page-footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: 40px 0;
+    text-align: center;
+    color: var(--text-muted);
     font-size: 0.85rem;
   }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+  .footer-links a { color: var(--text-secondary); text-decoration: none; }
+  .footer-links a:hover { color: #fff; }
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="container topbar-inner">
-    <div class="brand-wrap">
-      <a href="index.html" class="brand">🌸 TỦ SÁCH DƯỠNG NHAN BẢN THẢO</a>
-      <span class="brand-sub">Chuẩn 7 Thể Chất Đông Y</span>
-    </div>
-    <div class="top-actions">
-      <a href="#trac-nghiem" class="btn btn-outline" style="padding:7px 14px; font-size:12.5px;">Trắc Nghiệm (60s)</a>
-      <a href="#tro-ly-tra-cuu" class="btn btn-outline" style="padding:7px 14px; font-size:12.5px;">Tra Cứu Mẫu</a>
-      <button class="btn" style="padding:7px 16px; font-size:12.5px;" onclick="openCheckout()">Mở Khóa Trọn Bộ 69.000₫</button>
+<!-- Top Navigation -->
+<header class="top-nav" id="top">
+  <div class="container nav-inner">
+    <a href="#top" class="brand-group">
+      <svg class="brand-logo-symbol" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+      </svg>
+      <div>
+        <div class="brand-title">BLOOM</div>
+        <div class="brand-subtitle">Trắc Nghiệm Chẩn Đoán Nhanh 7 Thể Chất Đông Y & Somatic Intelligence</div>
+      </div>
+    </a>
+    <div class="nav-pill">
+      <div class="pulse-dot"></div>
+      Somatic Analysis Engine 2.0
     </div>
   </div>
 </header>
 
-<div class="container">
-  <section class="hero">
-    <div class="badge">✨ CHẨN ĐOÁN MIỄN PHÍ • ĐÚNG BÀI ĐÚNG THỂ CHẤT • AN TOÀN TUYỆT ĐỐI</div>
-    <h1>Da xỉn, nám, tóc rụng, mất ngủ hay khó giữ dáng…<br>Bạn không thiếu công thức mới — bạn chỉ cần đúng bài hợp với thể chất của mình.</h1>
-    <p class="lead">
-      Uống trà dưỡng sinh theo trào lưu dễ khiến người thể Hàn càng thêm lạnh bụng, người Âm Hư càng thêm bốc hỏa nổi mụn. Làm trắc nghiệm 60 giây để khám phá đúng thể chất của bạn và nhận công thức dưỡng nhan an toàn chuẩn Đông y.
+<main class="container">
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-quote">
+      "We believe that healing through <span>botanical symbiosis</span> is the ultimate pathway to restore somatic vitality."
+    </div>
+    <h1 class="hero-heading">
+      Khám Phá Thể Trạng Cơ Thể & <br>
+      Liệu Pháp Dưỡng Sinh Cá Nhân Hóa
+    </h1>
+    <p class="hero-subheading">
+      Trắc Nghiệm Chẩn Đoán Nhanh 7 Thể Chất Đông Y và 9 thể tạng khoa học qua bản đồ cơ thể tương tác. Nhận phác đồ trà thảo mộc, dinh dưỡng theo đồng hồ sinh học và huyệt đạo dưỡng sinh trong 3 phút.
     </p>
-    <div class="hero-actions">
-      <a href="#trac-nghiem" class="btn">Làm Trắc Nghiệm 7 Thể Chất Ngay (Miễn Phí)</a>
-      <a href="#tro-ly-tra-cuu" class="btn btn-outline">Trải Nghiệm Trợ Lý Tra Cứu Công Thức Mẫu</a>
-    </div>
-
-    <div class="compare-strip">
-      <div class="stat-card">
-        <div class="title">1. Không Cần Lật Tìm Hàng Trăm Trang</div>
-        <div class="desc">Chỉ cần gõ triệu chứng (nám, mất ngủ, rụng tóc, lạnh bụng) — Hệ thống lọc ngay bài dược thiện phù hợp thể chất kèm cảnh báo an toàn.</div>
-      </div>
-      <div class="stat-card">
-        <div class="title">2. Lộ Trình 28 Ngày & Sổ Tay In Ấn (PDF)</div>
-        <div class="desc">Trọn bộ lịch theo dõi 4 tuần phục hồi khí huyết, bảng nguyên liệu mua ngoài chợ và file PDF chuẩn A4 tiện in cho mẹ và người thân.</div>
-      </div>
-      <div class="stat-card">
-        <div class="title">3. Minh Bạch Định Lượng & Ranh Giới An Toàn</div>
-        <div class="desc">Mỗi món đều ghi rõ: Ai nên dùng, Ai cần kiêng (thai kỳ, dạ dày, huyết áp thấp), giờ vàng uống và cách pha nhanh không tốn thời gian.</div>
-      </div>
+    <div class="hero-cta-group">
+      <button class="btn-bloom-primary" onclick="document.getElementById('workspace').scrollIntoView({behavior: 'smooth'})">
+        Bắt Đầu Quét Cơ Thể Ngay
+      </button>
+      <button class="btn-bloom-secondary" onclick="document.getElementById('encyclopedia').scrollIntoView({behavior: 'smooth'})">
+        Khám Phá 9 Thể Tạng
+      </button>
     </div>
   </section>
 
-  <!-- SECTION 1: INTERACTIVE QUIZ LEAD MAGNET -->
-  <section id="trac-nghiem" class="section">
-    <h2>1. Trắc Nghiệm Chẩn Đoán Nhanh 7 Thể Chất Đông Y (60 Giây)</h2>
-    <p style="color:var(--muted); margin-top:0;">Hãy tích vào các dấu hiệu bạn thường gặp nhất trong 3 tháng gần đây (chọn ít nhất 2 dấu hiệu):</p>
+  <!-- Interactive Somatic Workspace -->
+  <section class="somatic-workspace" id="workspace">
+    <div class="bento-grid-2col">
+      
+      <!-- Left: Somatic Body Zones -->
+      <div class="bento-card body-map-card">
+        <div class="card-header-badge">Bản Đồ Thể Trạng Tương Tác</div>
+        <h2 class="card-title">Vùng Cơ Thể Cần Cân Bằng</h2>
+        <p class="card-desc">Nhấp chọn các vùng cơ thể bạn đang cảm thấy bất ổn để tích hợp vào thuật toán chẩn đoán:</p>
 
-    <div class="quiz-grid" id="quiz-options">
-      <label class="quiz-option">
-        <input type="checkbox" value="huyet_hu">
-        <span><strong>Sắc mặt vàng xỉn hoặc nhợt nhạt:</strong> Môi nhạt màu, tóc khô dễ rụng, đứng lên hay hoa mắt, ngủ không sâu giấc.</span>
-      </label>
-      <label class="quiz-option">
-        <input type="checkbox" value="khi_hu">
-        <span><strong>Nhanh hụt hơi, mệt mỏi:</strong> Nói nhiều dễ đuối sức, ăn nhanh no đầy bụng, cơ mặt kém săn chắc, dễ đổ mồ hôi vặt.</span>
-      </label>
-      <label class="quiz-option">
-        <input type="checkbox" value="am_hu">
-        <span><strong>Nóng trong, da khô thiếu nước:</strong> Lòng bàn tay chân ấm nóng về chiều, miệng khô, dễ bốc hỏa hoặc nổi mụn nhỏ li ti.</span>
-      </label>
-      <label class="quiz-option">
-        <input type="checkbox" value="duong_hu">
-        <span><strong>Tay chân lạnh quanh năm:</strong> Sợ gió lạnh/điều hòa, ăn đồ mát dễ đau bụng, mặt dễ sưng phù nhẹ buổi sáng, đau bụng kinh ưa chườm ấm.</span>
-      </label>
-      <label class="quiz-option">
-        <input type="checkbox" value="huyet_u">
-        <span><strong>Da dễ sạm nám, vết thâm lâu mờ:</strong> Quầng mắt thâm rõ, môi hơi sẫm, đau bụng ngày đầu kỳ kinh kèm máu cục sẫm màu.</span>
-      </label>
-      <label class="quiz-option">
-        <input type="checkbox" value="dam_thap">
-        <span><strong>Da đổ dầu nhiều, dễ lên mụn bọc/mụn ẩn:</strong> Người nặng nề uể oải, dễ tích mỡ bụng dưới, miệng hơi dính.</span>
-      </label>
-      <label class="quiz-option">
-        <input type="checkbox" value="khi_uat">
-        <span><strong>Hay thở dài, căng tức ngực sườn:</strong> Tâm trạng thất thường trước kỳ kinh, nám hai bên gò má, nằm xuống khó tắt suy nghĩ.</span>
-      </label>
-    </div>
+        <div class="somatic-zones-list">
+          <div class="zone-item active" onclick="toggleZone(this, 'head')">
+            <div class="zone-left">
+              <div>
+                <div class="zone-name">Tâm Thần & Giấc Ngủ</div>
+                <div class="zone-sub">Khó vào giấc, mơ nhiều, căng thẳng thần kinh</div>
+              </div>
+            </div>
+            <div class="zone-indicator">✓</div>
+          </div>
 
-    <button class="btn" onclick="runQuizDiagnosis()">Xem Kết Quả Thể Chất & Nhận Bài Dưỡng Nhan Mẫu</button>
+          <div class="zone-item" onclick="toggleZone(this, 'face')">
+            <div class="zone-left">
+              <div>
+                <div class="zone-name">Sắc Diện & Da Liễu</div>
+                <div class="zone-sub">Quầng thâm mắt, da khô sạm, mụn nội tiết</div>
+              </div>
+            </div>
+            <div class="zone-indicator">✓</div>
+          </div>
 
-    <div id="quiz-result" class="result-box"></div>
-  </section>
+          <div class="zone-item" onclick="toggleZone(this, 'lungs')">
+            <div class="zone-left">
+              <div>
+                <div class="zone-name">Khí Lực & Hô Hấp</div>
+                <div class="zone-sub">Hụt hơi, dễ mệt khi vận động, mồ hôi trộm</div>
+              </div>
+            </div>
+            <div class="zone-indicator">✓</div>
+          </div>
 
-  <!-- SECTION 2: INTERACTIVE SYMPTOM & RECIPE LOOKUP -->
-  <section id="tro-ly-tra-cuu" class="section">
-    <h2>2. Trợ Lý Tra Cứu Triệu Chứng & Công Thức Mẫu (Bản Dùng Thử Trực Tiếp)</h2>
-    <p style="color:var(--muted); margin-top:0;">Thay vì phải lướt qua hàng trăm trang sách tĩnh, hãy lọc ngay theo vấn đề bạn đang gặp phải:</p>
+          <div class="zone-item active" onclick="toggleZone(this, 'gut')">
+            <div class="zone-left">
+              <div>
+                <div class="zone-name">Tỳ Vị & Tiêu Hóa</div>
+                <div class="zone-sub">Chướng bụng sau ăn, sợ lạnh, phân không khuân</div>
+              </div>
+            </div>
+            <div class="zone-indicator">✓</div>
+          </div>
 
-    <div class="search-bar">
-      <input type="text" id="symptom-input" placeholder="Gõ triệu chứng: nám, mất ngủ, mụn, lạnh bụng, rụng tóc..." oninput="filterRecipes()">
-      <select id="constitution-filter" onchange="filterRecipes()">
-        <option value="all">Tất cả 7 thể chất</option>
-        <option value="huyet_hu">Huyết Hư (Thiếu máu, da vàng xỉn)</option>
-        <option value="khi_hu">Khí Hư (Mệt mỏi, hụt hơi)</option>
-        <option value="am_hu">Âm Hư (Nóng trong, khô da)</option>
-        <option value="duong_hu">Dương Hư (Tay chân lạnh)</option>
-        <option value="huyet_u">Huyết Ứ (Thâm nám, đau bụng kinh)</option>
-        <option value="dam_thap">Đàm Thấp (Da dầu mụn, tích mỡ bụng)</option>
-        <option value="khi_uat">Khí Uất (Căng thẳng, khó ngủ)</option>
-      </select>
-    </div>
-
-    <div id="recipe-list" class="recipe-grid"></div>
-  </section>
-
-  <!-- SECTION 3: OFFER & VALUE STACK -->
-  <section class="section" id="dat-mua" style="background: linear-gradient(135deg, #2b181e 0%, #4b1d2f 100%); color: #fff;">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
-      <div style="max-width:620px;">
-        <div class="badge" style="background:rgba(255,255,255,0.15); color:#ffd6e3;">ƯU ĐÃI TRẢI NGHIỆM • TRỌN BỘ 28 NGÀY</div>
-        <h2 style="color:#fff; font-size:24px; margin-bottom:10px; font-family:'Plus Jakarta Sans', sans-serif;">Mở Khóa Trọn Bộ Cẩm Nang Dưỡng Nhan 28 Ngày & Sổ Tay In Ấn (PDF)</h2>
-        <ul style="padding-left:20px; color:#f3dce3; font-size:14.5px; line-height:1.7;">
-          <li><strong>Bản đồ 7 Thể Chất Đông Y chuyên sâu:</strong> Chi tiết cơ chế khí huyết, thói quen ăn uống cần tránh và dược thiện ưu tiên.</li>
-          <li><strong>Kho thực đơn trà, canh, cháo dưỡng nhan có định lượng:</strong> Công thức từng gam, giờ vàng sử dụng và cảnh báo kiêng kỵ an toàn.</li>
-          <li><strong>Lộ trình 28 ngày phục hồi sắc diện & khí huyết:</strong> Bảng chia 4 tuần sinh học kèm bảng theo dõi in ra giấy.</li>
-          <li><strong>Sổ tay chuẩn in ấn A4 (PDF):</strong> Tiện lưu trữ offline hoặc in cho mẹ và người thân trong nhà đọc.</li>
-          <li><strong>Tích hợp giọng đọc Audio:</strong> Bấm nghe hướng dẫn nấu và uống ngay khi đang bận rộn.</li>
-        </ul>
-      </div>
-      <div style="background:#fff; color:var(--ink); padding:24px; border-radius:16px; min-width:280px; text-align:center;">
-        <div style="font-size:12px; color:var(--muted); text-transform:uppercase; font-weight:700;">Gói kích hoạt quyền truy cập trọn đời</div>
-        <div style="font-size:32px; font-weight:900; color:var(--primary); margin:6px 0;">69.000₫</div>
-        <div style="font-size:12px; color:var(--muted); text-decoration:line-through; margin-bottom:4px;">Giá gốc: 149.000₫</div>
-        <div style="font-size:12.5px; color:var(--ok); font-weight:600; margin-bottom:16px;">Tiết kiệm 54% • Quét VietQR nhận mã tức thì</div>
-        <button class="btn" style="width:100%; font-size:14.5px;" onclick="openCheckout()">Quét Mã VietQR Mở Khóa (69k)</button>
-        <div style="margin-top:10px;">
-          <a href="handbook.html" style="font-size:12px; color:var(--muted); text-decoration:underline;">Đã có mã kích hoạt? Mở Cẩm Nang & Nhập Mã</a>
+          <div class="zone-item" onclick="toggleZone(this, 'limbs')">
+            <div class="zone-left">
+              <div>
+                <div class="zone-name">Tuần Hoàn Tứ Chi</div>
+                <div class="zone-sub">Lạnh bàn tay bàn chân, tê mỏi, đau thắt lưng</div>
+              </div>
+            </div>
+            <div class="zone-indicator">✓</div>
+          </div>
         </div>
       </div>
+
+      <!-- Right: Diagnostic Quiz Questionnaire -->
+      <div class="bento-card quiz-panel" id="quizPanel">
+        <div>
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" id="quizProgressFill"></div>
+          </div>
+          <div class="quiz-step-tag" id="quizStepTag">Câu hỏi 1 / 5 • Cảm Nhận Nhiệt Độ</div>
+          <h2 class="quiz-question-title" id="quizQuestionTitle">Bạn thường cảm thấy cơ thể thiên về nhiệt độ nào?</h2>
+          <p class="quiz-question-desc" id="quizQuestionDesc">Quan sát cảm giác hàng ngày khi tiếp xúc với máy lạnh hoặc mùa đông.</p>
+
+          <div class="options-group" id="quizOptionsGroup"></div>
+        </div>
+
+        <div class="quiz-actions">
+          <button class="btn-bloom-secondary" id="btnPrevQuiz" onclick="prevQuestion()" style="visibility: hidden;">
+            <span aria-hidden="true">&larr;</span> Quay lại
+          </button>
+          <button class="btn-bloom-primary" id="btnNextQuiz" onclick="nextQuestion()">
+            Tiếp tục <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Diagnostic Results Dossier (Hidden until completed) -->
+    <div class="diagnostic-dossier" id="diagnosticDossier">
+      
+      <!-- Result Banner -->
+      <div class="result-banner">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--color-emerald); font-weight: 700; margin-bottom: 4px;">Kết Quả Phân Tích Thể Trạng</div>
+          <div class="constitution-badge" id="resConstitutionTitle">Thể Khí Huyết Lưỡng Hư</div>
+          <div class="constitution-tags">
+            <span class="pill-tag">Khí Lực Yếu</span>
+            <span class="pill-tag">Huyết Mạch Kém Lưu Thông</span>
+            <span class="pill-tag">Hàn Tạng Nhẹ</span>
+          </div>
+        </div>
+        <button class="btn-bloom-secondary" onclick="resetQuiz()">Làm Lại Trắc Nghiệm</button>
+      </div>
+
+      <!-- Bespoke Botanical Protocol Grid -->
+      <div class="recommendations-grid">
+        
+        <!-- Tea Prescription -->
+        <div class="rec-card">
+          <div class="rec-tag">Trà Thảo Mộc Phù Hợp</div>
+          <h3 class="rec-title" id="recTeaTitle">Trà Hoàng Kỳ Bổ Khí Dưỡng Nhan</h3>
+          <ul class="rec-list" id="recTeaIngredients">
+            <li><strong>Hoàng kỳ (10g):</strong> Bổ khí thăng dương, tăng sức bền thành mạch.</li>
+            <li><strong>Táo đỏ Tân Cương (3 quả):</strong> Dưỡng huyết an thần, làm sáng sắc diện.</li>
+            <li><strong>Kỷ tử hữu cơ (5g):</strong> Bổ can thận, sáng mắt, chống oxy hóa tế bào.</li>
+            <li><strong>Long nhãn Hưng Yên (3 quả):</strong> Kiện tỳ ích khí, cải thiện giấc ngủ sâu.</li>
+          </ul>
+        </div>
+
+        <!-- Biological Clock Protocol -->
+        <div class="rec-card">
+          <div class="rec-tag">Đồng Hồ Sinh Học 24H (Tý Ngọ Lưu Chú)</div>
+          <h3 class="rec-title">Thời Gian Biểu Thải Độc & Hồi Phục</h3>
+          <ul class="rec-list">
+            <li><strong>21:00 - 23:00 (Giờ Hợi):</strong> Kinh Tam Tiêu thông suốt. Tắt màn hình xanh, ngâm chân nước ấm gừng muối.</li>
+            <li><strong>23:00 - 01:00 (Giờ Tý):</strong> Kinh Đởm hoạt động. Bắt buộc ngủ sâu để tái tạo mật và tế bào tạng.</li>
+            <li><strong>07:00 - 09:00 (Giờ Thìn):</strong> Kinh Vị vượng nhất. Ăn sáng ấm nóng (cháo hạt sen / yến mạch) để sinh khí.</li>
+          </ul>
+        </div>
+
+        <!-- Acupoint Therapy -->
+        <div class="rec-card">
+          <div class="rec-tag">Huyệt Đạo Trị Liệu Tại Nhà</div>
+          <h3 class="rec-title">3 Huyệt Dưỡng Khí An Thần</h3>
+          <ul class="rec-list">
+            <li><strong>Huyệt Túc Tam Lý:</strong> Dưới hõm ngoài xương bánh chè 3 thốn. Day ấn 3 phút mỗi sáng giúp kiện tỳ ích khí.</li>
+            <li><strong>Huyệt Tam Âm Giao:</strong> Trên mắt cá trong 3 thốn. Day nhẹ buổi tối giúp điều hòa kinh nguyệt & khí huyết.</li>
+            <li><strong>Huyệt Dũng Tuyền:</strong> Hõm gan bàn chân. Xoa nóng trước khi ngủ giúp ấm thận, hạ hỏa, ngủ ngon.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Checkout Pro Plan with VietQR -->
+      <div class="checkout-card">
+        <div class="checkout-info">
+          <div class="rec-tag">Gói Cẩm Nang Chuyên Sâu 28 Ngày</div>
+          <h3 class="rec-title">Phác Đồ Dưỡng Nhan Toàn Diện Cá Nhân Hóa</h3>
+          <p class="card-desc">Bao gồm thực đơn 28 ngày theo thể tạng, bài tập khí công dưỡng sinh, và audio thư giãn an thần buổi tối.</p>
+          <div class="checkout-price">69.000₫ <span>/ trọn đời</span></div>
+        </div>
+        <div class="qr-box">
+          <img src="https://img.vietqr.io/image/MB-0987654321-compact2.png?amount=69000&addInfo=DUONGNHAN%20PRO" alt="VietQR Thanh toán">
+          <div style="font-size: 0.72rem; color: #1e293b; font-weight: 700; margin-top: 6px;">Quét Mã Thanh Toán VietQR</div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- 9 Constitutions Encyclopedia -->
+  <section class="encyclopedia-section" id="encyclopedia">
+    <div class="section-tag">Học Thuyết Dưỡng Sinh Bản Thảo</div>
+    <h2 class="section-title">9 Thể Trạng Đông Y Khoa Học</h2>
+
+    <div class="encyclopedia-grid">
+      <div class="enc-card">
+        <div class="enc-name">1. Thể Bình Hòa</div>
+        <div class="enc-desc">Âm dương cân bằng, sắc diện hồng hào, năng lượng dồi dào, ăn ngủ điều hòa. Đây là thể trạng lý tưởng nhất.</div>
+      </div>
+      <div class="enc-card">
+        <div class="enc-name">2. Thể Khí Hư</div>
+        <div class="enc-desc">Dễ hụt hơi, tiếng nói nhỏ, hay mệt mỏi, dễ cảm lạnh, vã mồ hôi trộm khi vận động nhẹ.</div>
+      </div>
+      <div class="enc-card">
+        <div class="enc-name">3. Thể Dương Hư (Hàn)</div>
+        <div class="enc-desc">Sợ lạnh, tay chân lạnh ngắt quanh năm, thích uống nước nóng, đại tiện lỏng, sắc mặt nhợt nhạt.</div>
+      </div>
+      <div class="enc-card">
+        <div class="enc-name">4. Thể Âm Hư (Nhiệt)</div>
+        <div class="enc-desc">Nóng trong, lòng bàn tay chân hay hâm hấp nóng, miệng khô họng khát, thích uống nước đá, hay mất ngủ.</div>
+      </div>
+      <div class="enc-card">
+        <div class="enc-name">5. Thể Đàm Thấp</div>
+        <div class="enc-desc">Cơ thể nặng nề, bụng béo tích mỡ, da dầu nhờn, miệng dính ngọt, hay có đờm nhớt ở cổ họng.</div>
+      </div>
+      <div class="enc-card">
+        <div class="enc-name">6. Thể Thấp Nhiệt</div>
+        <div class="enc-desc">Dễ nổi mụn nhọt, da bóng nhờn, miệng đắng, hay bốc hỏa, tiểu tiện vàng sẫm, tính tình dễ nóng nảy.</div>
+      </div>
+      <div class="enc-card">
+        <div class="enc-name">7. Thể Huyết Ứ</div>
+        <div class="enc-desc">Sắc da sạm tối, môi thâm tím, quầng thâm mắt đậm, hay đau nhức cơ khớp cố định, dễ có vết bầm tím.</div>
+      </div>
+      <div class="enc-card">
+        <div class="enc-name">8. Thể Khí Trệ</div>
+        <div class="enc-desc">Hay thở dài, ngực sườn đầy trướng, dễ buồn rầu, ức chế căng thẳng, phụ nữ hay đau tức ngực trước kỳ kinh.</div>
+      </div>
+      <div class="enc-card">
+        <div class="enc-name">9. Thể Đặc Dị</div>
+        <div class="enc-desc">Cơ địa dị ứng bẩm sinh, nhạy cảm với phấn hoa, thời tiết, hải sản, dễ nổi mề đay hoặc hen suyễn.</div>
+      </div>
     </div>
   </section>
-</div>
 
-<!-- VIETQR CHECKOUT MODAL -->
-<div class="modal-backdrop" id="checkout-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeCheckout()">&times;</button>
-    <h3 style="margin:0 0 6px 0; color:var(--primary); font-family:'Plus Jakarta Sans', sans-serif;">Kích Hoạt Trọn Bộ Cẩm Nang Dưỡng Nhan Bản Thảo</h3>
-    <p style="font-size:13px; color:var(--muted); margin:0 0 14px 0;">Quét mã VietQR (69.000₫) để hệ thống cấp quyền truy cập trọn đời Lộ trình 28 Ngày & Sổ tay PDF:</p>
-    
-    <div style="background:var(--bg-alt); padding:14px; border-radius:12px; text-align:center;">
-      <div style="font-size:12px; color:var(--muted); margin-bottom:6px;">Quét mã VietQR tự động điền số tiền & nội dung:</div>
-      <img id="vietqr-img" src="" alt="VietQR Payment" style="max-width:200px; border-radius:8px; border:1px solid var(--border); background:#fff; padding:6px;">
-      <div style="font-size:13px; margin-top:8px;">Số tiền: <strong style="color:var(--primary); font-size:16px;">69.000₫</strong> • Nội dung CK: <code id="order-memo" style="font-weight:700; color:var(--primary);"></code></div>
-      <div id="affiliate-badge" style="font-size:11.5px; color:var(--ok); margin-top:4px; display:none;"></div>
-    </div>
-
-    <div style="margin:14px 0 10px;">
-      <label style="font-size:12.5px; font-weight:700; color:var(--ink); display:block; margin-bottom:4px;">Nhập Email hoặc Số điện thoại để lưu quyền truy cập:</label>
-      <input type="text" id="buyer-contact" placeholder="Email hoặc SĐT Zalo của bạn..." style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:14px;">
-    </div>
-
-    <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; margin-top:10px; font-size:12px;">
-      <strong>🌍 Khách ở Nước Ngoài / Việt Kiều (Thanh toán $3 USD):</strong><br>
-      Chuyển Payoneer trực tiếp tới: <code style="font-weight:700; color:var(--primary);">lethanhmaicombo@gmail.com</code> (Ghi chú mã đơn trên).
-    </div>
-
-    <div style="margin-top:14px; text-align:center;">
-      <button class="btn" style="width:100%; font-size:14px;" onclick="confirmPaidAndOpen()">Tôi Đã Chuyển Khoản • Mở Khóa Ngay</button>
-    </div>
-    <p style="font-size:11.5px; color:var(--muted); text-align:center; margin:10px 0 0 0;">
-      Lưu ý: Tài liệu mang tính chất giáo dục dưỡng sinh ẩm thực cổ truyền, không thay thế chẩn đoán hay điều trị y khoa.
-    </p>
+  <!-- Legal & Educational Disclaimer -->
+  <div class="disclaimer-card">
+    <strong>Tuyên Bố Pháp Lý & Miễn Trừ Y Khoa:</strong> Nền tảng BLOOM được thiết kế như một cẩm nang giáo dục lối sống và dưỡng sinh tự nhiên theo học thuyết thể trạng Đông Y. Toàn bộ thông tin không cấu thành chẩn đoán y tế, không kê đơn thuốc và không thay thế phác đồ điều trị của bác sĩ chuyên khoa.
   </div>
-</div>
 
+</main>
+
+<!-- Footer -->
 <footer class="page-footer">
   <div class="container">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <h4>Về Tủ Sách Dưỡng Nhan Bản Thảo</h4>
-        <p>Hệ thống cẩm nang và thực đơn dưỡng nhan, dưỡng sinh ẩm thực cổ truyền phương Đông chuẩn hóa theo 7 thể chất. Tích hợp audio và biểu mẫu in ấn tiện lợi cho cả gia đình.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Liên Kết Nhanh</h4>
-        <ul>
-          <li><a href="#trac-nghiem">Trắc Nghiệm 7 Thể Chất (60s)</a></li>
-          <li><a href="#tro-ly-tra-cuu">Tra Cứu Thực Đơn Dưỡng Nhan</a></li>
-          <li><a href="handbook.html">Cẩm Nang Có Khóa Bản Quyền</a></li>
-          <li><a href="javascript:void(0)" onclick="openCheckout()">Mở Khóa Trọn Bộ 69.000₫</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Hỗ Trợ & Thanh Toán Tự Động</h4>
-        <ul>
-          <li>Thanh toán tự động: VietQR & Thẻ quốc tế</li>
-          <li>Hỗ trợ khách hàng: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a></li>
-          <li>Giao nhận tài liệu: Mở tức thì trên trình duyệt sau khi xác nhận</li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Tuyên Bố Miễn Trừ Y Khoa</h4>
-        <p style="font-size:0.82rem; line-height:1.55;">Tài liệu mang tính chất giáo dục dưỡng sinh ẩm thực cổ truyền, nâng cao thói quen sinh hoạt. Không thay thế chẩn đoán, toa thuốc hay điều trị của bác sĩ chuyên khoa.</p>
-      </div>
+    <div class="footer-links">
+      <a href="#top">Điều Khoản Dịch Vụ</a>
+      <a href="#top">Chính Sách Bảo Mật</a>
+      <a href="#top">Tài Liệu Nghiên Cứu Thể Tạng</a>
+      <a href="https://github.com/MaiLeac/revenue-copilot-international-phase0" target="_blank">Mã Nguồn GitHub</a>
     </div>
-    <div class="footer-bottom">
-      © 2026 Tủ Sách Dưỡng Nhan Bản Thảo • Bảo lưu mọi quyền • Xuất bản số hóa độc quyền.
-    </div>
+    <p>© 2026 BLOOM Botanical Intelligence. Nghệ thuật dưỡng sinh hòa hợp cùng thiên nhiên.</p>
   </div>
 </footer>
 
+<!-- Interactive Quiz Engine -->
 <script>
-const PROFILES = {
-  huyet_hu: {
-    name: "Huyết Hư (Thiếu hụt khí huyết nuôi dưỡng)",
-    principle: "Dưỡng huyết – Kiện tỳ – An thần nhẹ nhàng (Không dùng đồ đại bổ gây nóng trong).",
-    prioritize: "Táo đỏ, Kỷ tử, Long nhãn, Đậu đen xanh lòng, Mè đen",
-    avoid: "Trà đặc/cà phê lúc bụng rỗng, đồ sống lạnh, thức khuya sau 23h"
-  },
-  khi_hu: {
-    name: "Khí Hư (Năng lượng Tỳ Phế suy giảm)",
-    principle: "Bổ khí – Kiện tỳ – Nâng đỡ cơ biểu.",
-    prioritize: "Hoàng kỳ, Đảng sâm, Hoài sơn (Củ mài), Hạt sen, Táo đỏ",
-    avoid: "Đồ chiên rán nhiều dầu mỡ, nước có ga, nhịn ăn sáng"
-  },
-  am_hu: {
-    name: "Âm Hư (Thiếu tân dịch, nóng trong âm ỉ)",
-    principle: "Tư âm – Nhuận táo – Thanh nhiệt dịu nhẹ.",
-    prioritize: "Nấm tuyết (Ngân nhĩ), Bách hợp, Mạch môn, Ngọc trúc, Lê hấp",
-    avoid: "Đồ cay nóng (ớt, tiêu, gừng khô lượng nhiều), đồ nướng, thức khuya"
-  },
-  duong_hu: {
-    name: "Dương Hư (Thiếu hơi ấm ôn ấm cơ thể)",
-    principle: "Ôn dương – Tán hàn – Thông kinh hoạt lạc.",
-    prioritize: "Gừng già, Quế chi, Đường nâu, Long nhãn, Táo đỏ",
-    avoid: "Nước đá, khổ qua/rau má sống lượng nhiều, tắm đêm"
-  },
-  huyet_u: {
-    name: "Huyết Ứ (Tuần hoàn khí huyết kém lưu thông)",
-    principle: "Hoạt huyết – Hóa ứ – Làm sáng sắc diện.",
-    prioritize: "Nụ hoa hồng (Mai khôi), Sơn tra, Đương quy, Nghệ vàng, Đường đỏ",
-    avoid: "Đồ ăn lạnh làm ngưng trệ huyết mạch, ngồi bất động > 2 giờ"
-  },
-  dam_thap: {
-    name: "Đàm Thấp / Thấp Nhiệt (Tích nước, dầu mụn, nặng nề)",
-    principle: "Kiện tỳ – Trừ thấp – Thanh lọc dầu thừa.",
-    prioritize: "Ý dĩ (rang vàng), Đậu đỏ nhỏ hạt (Xích tiểu đậu), Trần bì, Bí đao",
-    avoid: "Trà sữa, đồ ngọt béo, ăn tối muộn sau 20h30"
-  },
-  khi_uat: {
-    name: "Khí Uất (Căng thẳng làm Can khí uất kết)",
-    principle: "Sơ can – Giải uất – Điều hòa khí huyết.",
-    prioritize: "Nụ hoa hồng, Hoa cúc chi, Trần bì (Vỏ quýt), Hoa nhài, Kỷ tử",
-    avoid: "Cà phê đậm khi căng thẳng, bỏ bữa, kìm nén cảm xúc"
+  const QUESTIONS = [
+    {
+      title: "Bạn thường cảm thấy cơ thể thiên về nhiệt độ nào?",
+      desc: "Quan sát cảm giác hàng ngày khi ở trong phòng máy lạnh hoặc vào mùa đông.",
+      options: [
+        { text: "Rất sợ lạnh, tay chân luôn buốt giá, thích đồ ấm nóng", score: "duong_hu" },
+        { text: "Nóng trong, lòng bàn tay chân hay hâm hấp nóng, khát nước", score: "am_hu" },
+        { text: "Nhiệt độ bình thường, dễ thích nghi với môi trường", score: "binh_hoa" },
+        { text: "Hay ớn lạnh dọc sống lưng khi có gió lùa", score: "khi_hu" }
+      ]
+    },
+    {
+      title: "Chất lượng giấc ngủ và trạng thái tinh thần của bạn?",
+      desc: "Phản ánh trực tiếp sự điều hòa của Tâm Thần và Khí Huyết.",
+      options: [
+        { text: "Khó vào giấc, ngủ nông, hay mê mộng, giật mình", score: "am_hu" },
+        { text: "Ngủ nhiều nhưng dậy vẫn mệt mỏi, đầu óc nặng nề", score: "dam_thap" },
+        { text: "Hay thở dài, ngực sườn tức tối, dễ bồn chồn lo âu", score: "khi_tre" },
+        { text: "Ngủ sâu giấc, thức dậy sảng khoái và tràn đầy năng lượng", score: "binh_hoa" }
+      ]
+    },
+    {
+      title: "Biểu hiện sắc diện và làn da của bạn?",
+      desc: "Huyết vinh nhuận ra mặt, phơi bày trạng thái tạng phủ.",
+      options: [
+        { text: "Sắc mặt nhợt nhạt, da khô ráp, môi móng tay tái", score: "huyet_hu" },
+        { text: "Da nhiều dầu nhờn, dễ nổi mụn bọc, miệng hay đắng", score: "thap_nhiet" },
+        { text: "Da xỉn màu, có vết nám nội tiết, quầng thâm mắt đậm", score: "huyet_u" },
+        { text: "Da dẻ hồng hào, nhuận sắc, có độ đàn hồi tự nhiên", score: "binh_hoa" }
+      ]
+    },
+    {
+      title: "Hệ tiêu hóa và cảm giác ngon miệng của bạn?",
+      desc: "Tỳ vị là gốc của hậu thiên, nơi sinh hóa khí huyết.",
+      options: [
+        { text: "Ăn xong dễ chướng bụng, sợ đồ lạnh, đại tiện lỏng sệt", score: "duong_hu" },
+        { text: "Dễ đói nhưng ăn ít đã đầy, miệng dính nhớt, thèm ngọt", score: "dam_thap" },
+        { text: "Hay ợ chua, đau tức vùng thượng vị khi căng thẳng", score: "khi_tre" },
+        { text: "Ăn uống ngon miệng, tiêu hóa thông suốt, đại tiện đều đặn", score: "binh_hoa" }
+      ]
+    },
+    {
+      title: "Mức độ năng lượng và sức bền trong ngày?",
+      desc: "Đo lường nguyên khí và chính khí của cơ thể.",
+      options: [
+        { text: "Nhanh kiệt sức, leo vài tầng cầu thang là hụt hơi", score: "khi_hu" },
+        { text: "Nặng nề, lười vận động, tay chân rã rời vào buổi chiều", score: "dam_thap" },
+        { text: "Đau mỏi cổ vai gáy cố định, cơ bắp căng cứng", score: "huyet_u" },
+        { text: "Bền bỉ, năng lượng duy trì ổn định suốt cả ngày", score: "binh_hoa" }
+      ]
+    }
+  ];
+
+  let currentQuestionIndex = 0;
+  let userAnswers = {};
+
+  function renderQuestion() {
+    const q = QUESTIONS[currentQuestionIndex];
+    document.getElementById('quizStepTag').innerText = `Câu hỏi ${currentQuestionIndex + 1} / ${QUESTIONS.length} • Khảo Sát Thể Tạng`;
+    document.getElementById('quizQuestionTitle').innerText = q.title;
+    document.getElementById('quizQuestionDesc').innerText = q.desc;
+    document.getElementById('quizProgressFill').style.width = `${((currentQuestionIndex + 1) / QUESTIONS.length) * 100}%`;
+
+    const optContainer = document.getElementById('quizOptionsGroup');
+    optContainer.innerHTML = '';
+
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement('div');
+      btn.className = `option-btn ${userAnswers[currentQuestionIndex] === opt.score ? 'selected' : ''}`;
+      btn.innerHTML = `<span style="color: var(--color-emerald); font-weight: 700;">${String.fromCharCode(65 + idx)}.</span> <span>${opt.text}</span>`;
+      btn.onclick = () => {
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        userAnswers[currentQuestionIndex] = opt.score;
+      };
+      optContainer.appendChild(btn);
+    });
+
+    document.getElementById('btnPrevQuiz').style.visibility = currentQuestionIndex > 0 ? 'visible' : 'hidden';
+    document.getElementById('btnNextQuiz').innerHTML = currentQuestionIndex === QUESTIONS.length - 1 ? 'Hoàn Thành Phân Tích' : 'Tiếp tục <span aria-hidden="true">&rarr;</span>';
   }
-};
 
-const RECIPES = [
-  {
-    id: "REC-001",
-    title: "Trà Tam Bảo Hồng Nhuận (Táo Đỏ – Kỷ Tử – Long Nhãn)",
-    category: "Trà dưỡng nhan",
-    constitutions: ["huyet_hu", "khi_hu", "duong_hu"],
-    concerns: "Da xỉn vàng sạm, tóc khô rụng, ngủ nông, tay chân lạnh",
-    ingredients: "Táo đỏ 3 quả (bỏ hạt), Kỷ tử 10 hạt, Long nhãn 4 múi, nước sôi 90°C 350ml",
-    steps: "Ủ táo đỏ + long nhãn 10 phút trong bình giữ nhiệt, thêm kỷ tử ủ 3 phút rồi uống ấm.",
-    time: "Sau ăn sáng 30 phút hoặc chiều 14h–16h.",
-    contra: "Không dùng khi đang sốt cao, viêm họng cấp hoặc đang nổi mụn mủ sưng viêm nặng."
-  },
-  {
-    id: "REC-002",
-    title: "Trà Mai Khôi Trần Bì Sơ Can (Hoa Hồng – Vỏ Quýt – Kỷ Tử)",
-    category: "Trà dưỡng nhan",
-    constitutions: ["khi_uat", "huyet_u"],
-    concerns: "Nám gò má, căng tức ngực trước kỳ kinh, khó ngủ do suy nghĩ, đau bụng kinh",
-    ingredients: "Nụ hoa hồng khô 5 nụ, Trần bì 3g, Kỷ tử 8 hạt, nước ấm 85°C 300ml",
-    steps: "Ủ trần bì 5 phút trước, sau đó thả nụ hoa hồng và kỷ tử vào ủ thêm 5 phút.",
-    time: "Chiều 15h–17h hoặc 5–7 ngày trước kỳ kinh.",
-    contra: "Phụ nữ mang thai 3 tháng đầu hoặc người có lượng kinh nguyệt quá nhiều cần tránh."
-  },
-  {
-    id: "REC-003",
-    title: "Nước Ý Dĩ Xích Tiểu Đậu Thanh Lọc (Đậu Đỏ Nhỏ – Ý Dĩ – Trần Bì)",
-    category: "Nước dưỡng sinh trừ thấp",
-    constitutions: ["dam_thap"],
-    concerns: "Da dầu mụn bọc/mụn ẩn, người nặng nề, tích mỡ bụng dưới, phù mặt buổi sáng",
-    ingredients: "Ý dĩ (rang vàng nhẹ) 20g, Đậu đỏ hạt nhỏ 20g, Trần bì 2g, nước 800ml",
-    steps: "Rang vàng ý dĩ 5 phút để khử tính hàn, sau đó ninh cùng đậu đỏ nhỏ và trần bì 25 phút.",
-    time: "Uống ấm trong khung giờ 9h–16h.",
-    contra: "Phụ nữ mang thai tuyệt đối không dùng Ý dĩ; người đang táo bón khô nhiệt cần giảm lượng."
-  },
-  {
-    id: "REC-004",
-    title: "Chè Ngân Nhĩ Bách Hợp Tuyết Lê (Dưỡng Âm Cấp Ẩm Sâu)",
-    category: "Cháo chè dưỡng nhan",
-    constitutions: ["am_hu"],
-    concerns: "Da khô bong tróc, nếp nhăn mảnh, nóng trong lòng bàn tay chân, mất ngủ tuổi 35+",
-    ingredients: "Nấm tuyết 1/4 bông, Bách hợp 8g, Lê tươi 1/2 quả, Kỷ tử 10 hạt",
-    steps: "Ngâm mềm nấm tuyết + bách hợp, hầm nhỏ lửa 30 phút cho tiết nhựa tự nhiên, thêm lê + kỷ tử đun 7 phút.",
-    time: "Bữa phụ chiều 16h hoặc tối trước ngủ 2 tiếng.",
-    contra: "Người thể Dương hư hay lạnh bụng, đi ngoài phân lỏng không nên ăn lúc bụng đói."
+  function nextQuestion() {
+    if (!userAnswers[currentQuestionIndex]) {
+      alert("Vui lòng chọn một phương án phù hợp nhất với bạn!");
+      return;
+    }
+    if (currentQuestionIndex < QUESTIONS.length - 1) {
+      currentQuestionIndex++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
   }
-];
 
-function renderRecipeCards(list) {
-  const container = document.getElementById("recipe-list");
-  if (!list.length) {
-    container.innerHTML = "<p>Không tìm thấy công thức khớp từ khóa. Hãy thử gõ 'nám', 'mụn', 'mất ngủ' hoặc chọn Tất cả thể chất.</p>";
-    return;
+  function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      renderQuestion();
+    }
   }
-  container.innerHTML = list.map(r => `
-    <div class="recipe-card">
-      <div class="pill">${r.category}</div>
-      <h4>${r.title}</h4>
-      <div style="font-size:13px; margin-bottom:6px;"><strong>Giải quyết:</strong> ${r.concerns}</div>
-      <div style="font-size:13px; margin-bottom:6px;"><strong>Nguyên liệu:</strong> ${r.ingredients}</div>
-      <div style="font-size:13px; margin-bottom:6px;"><strong>Cách pha chế:</strong> ${r.steps}</div>
-      <div style="font-size:13px;"><strong>Giờ vàng:</strong> ${r.time}</div>
-      <div class="warn-box"><strong>⚠️ Kiêng kỵ an toàn:</strong> ${r.contra}</div>
-    </div>
-  `).join("");
-}
 
-function filterRecipes() {
-  const q = (document.getElementById("symptom-input").value || "").toLowerCase().trim();
-  const c = document.getElementById("constitution-filter").value;
-  const filtered = RECIPES.filter(r => {
-    const matchC = (c === "all") || r.constitutions.includes(c);
-    const haystack = (r.title + " " + r.concerns + " " + r.ingredients).toLowerCase();
-    const matchQ = !q || haystack.includes(q);
-    return matchC && matchQ;
-  });
-  renderRecipeCards(filtered);
-}
-
-function runQuizDiagnosis() {
-  const checked = Array.from(document.querySelectorAll("#quiz-options input:checked")).map(el => el.value);
-  const code = checked[0] || "huyet_hu";
-  const secondary = checked[1] ? PROFILES[checked[1]].name : null;
-  const prof = PROFILES[code];
-  const matched = RECIPES.filter(r => r.constitutions.includes(code) || (checked[1] && r.constitutions.includes(checked[1])));
-
-  const box = document.getElementById("quiz-result");
-  box.style.display = "block";
-  box.innerHTML = `
-    <div class="pill">KẾT QUẢ CHẨN ĐOÁN CÁ NHÂN HÓA</div>
-    <h3 style="margin:6px 0 8px 0; color:var(--primary); font-family:'Plus Jakarta Sans', sans-serif;">Thể chất chủ đạo của bạn: ${prof.name}</h3>
-    ${secondary ? `<div style="font-size:13.5px; color:var(--muted); margin-bottom:8px;">Kèm xu hướng kết hợp: <strong>${secondary}</strong></div>` : ""}
-    <p style="margin:6px 0;"><strong>Nguyên tắc dưỡng cốt lõi:</strong> ${prof.principle}</p>
-    <p style="margin:6px 0;"><strong>✅ Thực phẩm nên ưu tiên:</strong> ${prof.prioritize}</p>
-    <p style="margin:6px 0 14px 0;"><strong>🚫 Thói quen & đồ ăn cần tránh:</strong> ${prof.avoid}</p>
-    <div style="background:#fff; padding:14px 16px; border-radius:12px; border:1px solid var(--border);">
-      <strong>🎁 Công thức mẫu phù hợp nhất với thể chất của bạn:</strong>
-      <ul style="margin:8px 0 0 0; padding-left:18px;">
-        ${matched.map(m => `<li><strong>${m.title}</strong> — <em>${m.ingredients}</em> (${m.time})</li>`).join("")}
-      </ul>
-    </div>
-    <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-      <button class="btn" onclick="openCheckout()">Mở Khóa Trọn Bộ 28 Ngày & Sổ Tay PDF (69.000₫)</button>
-    </div>
-  `;
-}
-
-let currentMemo = "";
-
-function openCheckout() {
-  const params = new URLSearchParams(window.location.search);
-  const ref = (params.get("ref") || "").trim().toUpperCase();
-  const orderId = "DN" + Math.floor(100000 + Math.random() * 900000);
-  currentMemo = ref ? `DUONGNHAN ${orderId} REF ${ref}` : `DUONGNHAN ${orderId}`;
-  document.getElementById("order-memo").textContent = currentMemo;
-  document.getElementById("vietqr-img").src =
-    `https://img.vietqr.io/image/MB-0000000000-compact2.png?amount=69000&addInfo=${encodeURIComponent(currentMemo)}&accountName=DUONG%20NHAN%20BAN%20THAO`;
-  const badge = document.getElementById("affiliate-badge");
-  if (ref) {
-    badge.style.display = "block";
-    badge.textContent = `Đã ghi nhận mã giới thiệu KOC/Affiliate: ${ref}`;
+  function toggleZone(el, zoneId) {
+    el.classList.toggle('active');
   }
-  document.getElementById("checkout-modal").style.display = "flex";
-}
 
-function closeCheckout() {
-  document.getElementById("checkout-modal").style.display = "none";
-}
+  function finishQuiz() {
+    const tally = {};
+    Object.values(userAnswers).forEach(sc => {
+      tally[sc] = (tally[sc] || 0) + 1;
+    });
 
-function confirmPaidAndOpen() {
-  const contact = (document.getElementById("buyer-contact").value || "").trim();
-  localStorage.setItem("duong_nhan_unlocked", "true");
-  localStorage.setItem("duong_nhan_token", currentMemo);
-  if (contact) {
-    localStorage.setItem("duong_nhan_contact", contact);
+    let topScore = 'khi_hu';
+    let maxCount = -1;
+    for (let k in tally) {
+      if (tally[k] > maxCount) {
+        maxCount = tally[k];
+        topScore = k;
+      }
+    }
+
+    const CONSTITUTION_DATA = {
+      duong_hu: {
+        title: "Thể Dương Hư (Hàn Tạng)",
+        tags: ["Sợ Lạnh", "Tỳ Thận Dương Hư", "Khí Huyết Lưu Thông Kém"],
+        teaTitle: "Trà Gừng Nướng - Táo Đỏ - Quế Chi",
+        teaDesc: "Ôn trung tán hàn, hồi dương bổ khí, làm ấm tạng phủ và tứ chi."
+      },
+      am_hu: {
+        title: "Thể Âm Hư (Nhiệt Tạng)",
+        tags: ["Nóng Trong", "Âm Hư Hỏa Vượng", "Khô Khát"],
+        teaTitle: "Trà Bách Hợp - Mạch Môn - Kỷ Tử",
+        teaDesc: "Tư âm nhuận phế, thanh nhiệt giáng hỏa, dưỡng tâm an thần."
+      },
+      khi_hu: {
+        title: "Thể Khí Hư (Suy Nhược Khí Lực)",
+        tags: ["Dễ Hụt Hơi", "Mệt Mỏi", "Tỳ Khí Suy Yếu"],
+        teaTitle: "Trà Hoàng Kỳ Bổ Khí Dưỡng Nhan",
+        teaDesc: "Bổ trung ích khí, củng cố vệ khí, tăng sức bền tế bào."
+      },
+      dam_thap: {
+        title: "Thể Đàm Thấp (Tích Trệ Thủy Thấp)",
+        tags: ["Nặng Nề", "Tỳ Hư Sinh Đàm", "Chuyển Hóa Kém"],
+        teaTitle: "Trà Phục Linh - Trần Bì - Ý Dĩ",
+        teaDesc: "Kiện tỳ hóa đàm, trừ thấp tiêu trướng, thanh lọc cơ thể."
+      },
+      huyet_u: {
+        title: "Thể Huyết Ứ (Tắc Nghẽn Huyết Mạch)",
+        tags: ["Khí Trệ Huyết Ứ", "Sạm Nám", "Kém Lưu Thông"],
+        teaTitle: "Trà Hoa Hồng - Đan Sâm - Tam Thất",
+        teaDesc: "Hoạt huyết hóa ứ, thông kinh lạc, làm sáng mịn sắc diện."
+      },
+      binh_hoa: {
+        title: "Thể Bình Hòa (Âm Dương Cân Bằng)",
+        tags: ["Khí Huyết Điều Hòa", "Ngũ Tạng An Hòa", "Sức Khỏe Tối Ưu"],
+        teaTitle: "Trà Dưỡng Nhan Tứ Vị Thảo Mộc",
+        teaDesc: "Duy trì thanh xuân, dưỡng tâm ích trí, thanh lọc ngũ tạng."
+      }
+    };
+
+    const res = CONSTITUTION_DATA[topScore] || CONSTITUTION_DATA['khi_hu'];
+    document.getElementById('resConstitutionTitle').innerText = res.title;
+    document.getElementById('recTeaTitle').innerText = res.teaTitle;
+
+    document.getElementById('quizPanel').style.display = 'none';
+    document.getElementById('diagnosticDossier').classList.add('active');
+    document.getElementById('diagnosticDossier').scrollIntoView({ behavior: 'smooth' });
   }
-  window.location.href = `handbook.html?unlocked=true&token=${encodeURIComponent(currentMemo)}`;
-}
 
-renderRecipeCards(RECIPES);
+  function resetQuiz() {
+    userAnswers = {};
+    currentQuestionIndex = 0;
+    document.getElementById('quizPanel').style.display = 'flex';
+    document.getElementById('diagnosticDossier').classList.remove('active');
+    renderQuestion();
+  }
+
+  renderQuestion();
 </script>
+
 </body>
 </html>

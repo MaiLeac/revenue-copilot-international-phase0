@@ -3,50 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BẢN THẢO THẤU THỂ • Quét Thể Trạng 3D Xuyên Thấu Kinh Lạc & Dưỡng Sinh Đông Y Cá Nhân Hóa</title>
-<meta name="description" content="Nền tảng tương tác 3D nhìn xuyên thấu kinh lạc ngũ tạng, chẩn đoán 9 thể chất Đông Y khoa học, giải mã đồng hồ sinh học 24h và nhận phác đồ thảo mộc cá nhân hóa.">
+<title>BẢN THẢO THẤU THỂ • Dưỡng Nhan Thảo Mộc & Quét Thể Trạng 3D Độc Bản</title>
+<meta name="description" content="Thương hiệu trà thảo mộc dưỡng nhan ngũ tạng cá nhân hóa theo 7 thể chất Đông Y. Mua trà tặng trọn bộ Cẩm Nang Dưỡng Nhan 28 Ngày và quét thể trạng 3D xuyên thấu.">
 
-<!-- Fonts & Tokens -->
+<!-- Fonts & Tokens: Playfair Display + Plus Jakarta Sans with full Vietnamese diacritics support -->
 <link rel="stylesheet" href="../../assets/web_capability_library/tokens.css">
-<link rel="stylesheet" href="../../assets/getlayers_library/getlayers.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap&subset=vietnamese" rel="stylesheet">
 
-<!-- Three.js for 3D Translucent Holographic Body & Meridians -->
+<!-- Three.js for 3D Translucent Botanical Mannequin & Blooming Flowers -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
   :root {
-    /* Imperial Jade & Ethereal Botanical Palette - Không đen xì, sang trọng thanh nhã */
-    --jade-deep: #03140e;
-    --jade-forest: #06281c;
-    --jade-surface: rgba(8, 38, 28, 0.75);
-    --jade-surface-card: rgba(10, 48, 36, 0.85);
-    --jade-border: rgba(52, 211, 153, 0.22);
-    --jade-border-glow: rgba(52, 211, 153, 0.5);
+    /* Luminous Botanical Luxury Palette - Sáng sủa, thanh tao, hoa lá tươi mới */
+    --bg-page: #fbfaf6;
+    --bg-page-soft: #f4f8f4;
+    --bg-card: #ffffff;
+    --bg-card-glass: rgba(255, 255, 255, 0.92);
+    --border-soft: rgba(16, 185, 129, 0.16);
+    --border-glow: rgba(16, 185, 129, 0.35);
     
-    --glow-emerald: #10b981;
-    --glow-mint: #34d399;
-    --glow-amber: #f59e0b;
-    --glow-ruby: #fb7185;
-    --glow-cyan: #38bdf8;
-    --glow-pearl: #f1f5f9;
+    --text-heading: #063524;
+    --text-body: #234737;
+    --text-muted: #5e7a6e;
+    
+    --brand-emerald: #059669;
+    --brand-emerald-dark: #064e3b;
+    --brand-mint: #10b981;
+    --brand-rose: #f43f5e;
+    --brand-rose-soft: #fecdd3;
+    --brand-peach: #fb7185;
+    --brand-amber: #d97706;
+    --brand-gold: #fbbf24;
+    --brand-gold-soft: #fef3c7;
 
-    --text-pure: #ffffff;
-    --text-pearl: #e2e8f0;
-    --text-jade-dim: #94a3b8;
-    --text-amber: #fde68a;
-
-    --font-heading: 'Cinzel', 'Playfair Display', Georgia, serif;
-    --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+
+    --shadow-soft: 0 10px 30px -10px rgba(6, 78, 59, 0.08);
+    --shadow-hover: 0 20px 45px -12px rgba(6, 78, 59, 0.15);
+    --shadow-float: 0 25px 60px -15px rgba(6, 78, 59, 0.18);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :focus-visible {
-    outline: 2px solid var(--glow-mint);
+    outline: 2px solid var(--brand-emerald);
     outline-offset: 3px;
   }
 
@@ -60,139 +65,277 @@
   }
 
   body {
-    background-color: var(--jade-deep);
+    background-color: var(--bg-page);
     background-image: 
-      radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.2) 0%, transparent 60%),
-      radial-gradient(circle at 10% 40%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
-      radial-gradient(circle at 90% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
-      linear-gradient(180deg, #020c08 0%, #051a13 50%, #020b07 100%);
+      radial-gradient(circle at 15% 10%, rgba(254, 205, 211, 0.35) 0%, transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(254, 243, 199, 0.25) 0%, transparent 60%),
+      linear-gradient(180deg, #fdfcf9 0%, #f4f8f4 60%, #ecf4ef 100%);
     background-attachment: fixed;
-    color: var(--text-pure);
+    color: var(--text-body);
     font-family: var(--font-body);
-    line-height: 1.6;
+    line-height: 1.65;
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Falling Botanical Petals Canvas (Background ambient) */
+  #petalCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* Navigation Bar */
+  .top-announcement {
+    background: linear-gradient(90deg, #064e3b 0%, #047857 50%, #064e3b 100%);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px 16px;
+    letter-spacing: 0.03em;
+    position: relative;
+    z-index: 100;
+  }
+  .top-announcement span {
+    color: #fde68a;
+    font-weight: 700;
+  }
+
   .nav-bar {
     position: sticky;
     top: 0;
-    z-index: 100;
-    background: rgba(3, 20, 14, 0.85);
+    z-index: 90;
+    background: rgba(255, 255, 255, 0.9);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--jade-border);
-    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-soft);
+    padding: 14px 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 20px rgba(6, 78, 59, 0.04);
   }
   .brand-logo {
     display: flex;
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: var(--text-pure);
+    color: var(--text-heading);
   }
   .brand-symbol {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: radial-gradient(circle, #34d399 0%, #064e3b 100%);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 16px rgba(52, 211, 153, 0.6);
+    background: linear-gradient(135deg, #fecdd3 0%, #a7f3d0 100%);
+    border: 1.5px solid #059669;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
-    color: #022c22;
+    font-size: 1.25rem;
+    color: #064e3b;
     font-weight: 800;
   }
   .brand-title {
     font-family: var(--font-heading);
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #ffffff;
+    letter-spacing: 0.04em;
+    color: var(--text-heading);
+    line-height: 1.2;
   }
-  .nav-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
+  .brand-tagline {
+    font-size: 0.76rem;
+    color: var(--brand-emerald);
+    letter-spacing: 0.04em;
+    font-weight: 700;
   }
 
-  /* Hero Section: 3D Holographic Body Stage */
-  .hero-stage {
+  .nav-actions {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .cart-trigger-btn {
     position: relative;
+    background: #ffffff;
+    border: 1.5px solid var(--border-soft);
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .cart-trigger-btn:hover {
+    border-color: var(--brand-emerald);
+    background: #f0fdf4;
+    transform: translateY(-1px);
+  }
+  .cart-badge {
+    background: var(--brand-rose);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+
+  /* Main Container */
+  main {
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Hero Section: Botanical Bloom & 3D Stage */
+  .hero-stage {
     max-width: 1320px;
     margin: 0 auto;
     padding: 40px 24px 60px;
     display: grid;
-    grid-template-columns: 1fr 1.15fr;
+    grid-template-columns: 1.1fr 1fr;
     gap: 40px;
     align-items: center;
     min-height: 85vh;
   }
-
-  @media (max-width: 960px) {
+  @media (max-width: 992px) {
     .hero-stage {
       grid-template-columns: 1fr;
       padding-top: 20px;
     }
   }
 
-  .hero-copy {
-    z-index: 10;
-  }
   .hero-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 14px;
+    padding: 6px 16px;
     border-radius: 999px;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(52, 211, 153, 0.35);
-    color: #34d399;
-    font-size: 0.8rem;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: var(--brand-emerald-dark);
+    font-size: 0.82rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
     margin-bottom: 20px;
   }
   .hero-heading {
     font-family: var(--font-heading);
-    font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+    font-size: clamp(2.4rem, 4.5vw, 4rem);
     font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: 0.02em;
-    color: #ffffff;
-    margin-bottom: 20px;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    line-height: 1.18;
+    color: var(--text-heading);
+    margin-bottom: 22px;
   }
-  .hero-heading span.highlight {
-    background: linear-gradient(135deg, #a7f3d0 0%, #34d399 50%, #fde68a 100%);
+  .hero-heading span.bloom-text {
+    background: linear-gradient(135deg, #059669 0%, #10b981 40%, #f43f5e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    font-style: italic;
   }
   .hero-desc {
-    font-size: 1.05rem;
-    color: var(--text-pearl);
-    line-height: 1.7;
+    font-size: 1.1rem;
+    color: var(--text-body);
+    line-height: 1.75;
     margin-bottom: 32px;
-    max-width: 540px;
+    max-width: 580px;
   }
 
-  /* 3D Viewport Container */
+  .hero-cta-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 36px;
+  }
+  .btn-primary-bloom {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 28px;
+    border-radius: 14px;
+    border: none;
+    box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.4);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-primary-bloom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px -5px rgba(5, 150, 105, 0.55);
+  }
+  .btn-outline-bloom {
+    background: #ffffff;
+    color: var(--text-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 26px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border-soft);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  }
+  .btn-outline-bloom:hover {
+    border-color: var(--brand-emerald);
+    background: #f0fdf4;
+  }
+
+  /* Botanical Ingredients Highlight Row */
+  .botanical-strip {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-top: 24px;
+    border-top: 1px solid rgba(16, 185, 129, 0.15);
+  }
+  .herb-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+  .herb-pill span.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* 3D Botanical Stage Card */
   .viewport-3d-card {
     position: relative;
     width: 100%;
     height: 640px;
-    background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, rgba(4, 26, 18, 0.85) 75%), var(--jade-surface);
-    border: 1px solid var(--jade-border);
-    border-radius: 24px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 30px 60px -20px rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(20px);
+    background: radial-gradient(circle at 50% 50%, rgba(254, 205, 211, 0.2) 0%, rgba(240, 253, 244, 0.9) 70%), #ffffff;
+    border: 1.5px solid var(--border-glow);
+    border-radius: 32px;
+    box-shadow: var(--shadow-float);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -209,7 +352,7 @@
   /* 3D HUD Overlay Controls */
   .hud-top-bar {
     position: absolute;
-    top: 16px;
+    top: 18px;
     left: 20px;
     right: 20px;
     display: flex;
@@ -219,13 +362,15 @@
     z-index: 20;
   }
   .hud-tag {
-    background: rgba(3, 20, 14, 0.85);
-    border: 1px solid var(--jade-border);
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--border-soft);
     padding: 6px 14px;
     border-radius: 12px;
     font-size: 0.78rem;
     font-family: var(--font-mono);
-    color: var(--glow-mint);
+    color: var(--brand-emerald-dark);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     pointer-events: auto;
   }
   .hud-controls {
@@ -234,20 +379,21 @@
     pointer-events: auto;
   }
   .hud-btn {
-    background: rgba(6, 40, 28, 0.85);
-    border: 1px solid var(--jade-border);
-    color: var(--text-pure);
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--border-soft);
+    color: var(--text-heading);
     padding: 6px 14px;
     border-radius: 10px;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
   }
   .hud-btn:hover, .hud-btn.active {
-    background: rgba(16, 185, 129, 0.3);
-    border-color: var(--glow-mint);
+    background: var(--brand-emerald);
     color: #ffffff;
+    border-color: var(--brand-emerald);
   }
 
   /* Scan Status Bar */
@@ -256,15 +402,15 @@
     bottom: 20px;
     left: 20px;
     right: 20px;
-    background: rgba(2, 18, 12, 0.92);
-    border: 1px solid var(--jade-border-glow);
-    border-radius: 16px;
-    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    padding: 16px 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 20;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    box-shadow: 0 10px 30px rgba(6, 78, 59, 0.08);
   }
   .organ-live-indicator {
     display: flex;
@@ -272,46 +418,29 @@
     gap: 12px;
   }
   .organ-dot {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: #34d399;
-    box-shadow: 0 0 12px #34d399;
+    background: #10b981;
+    box-shadow: 0 0 12px #10b981;
     animation: pulseGlow 1.8s infinite;
   }
   @keyframes pulseGlow {
     0%, 100% { transform: scale(1); opacity: 0.8; }
     50% { transform: scale(1.3); opacity: 1; }
   }
-  .scan-btn-main {
-    background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-    color: #022016;
-    font-weight: 800;
-    font-size: 0.88rem;
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.4);
-    box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .scan-btn-main:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 0 28px rgba(52, 211, 153, 0.65);
-  }
 
-  /* Selected Organ Inspector Modal/Card */
+  /* Organ Detail Popup */
   .organ-detail-popup {
     position: absolute;
     top: 70px;
     right: 20px;
-    width: 320px;
-    background: rgba(4, 26, 18, 0.95);
-    border: 1px solid var(--jade-border-glow);
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-    backdrop-filter: blur(24px);
+    width: 330px;
+    background: #ffffff;
+    border: 1.5px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 20px 50px rgba(6, 78, 59, 0.16);
     z-index: 30;
     display: none;
     animation: fadeIn 0.25s ease-out;
@@ -322,9 +451,9 @@
   }
   .organ-detail-popup h4 {
     font-family: var(--font-heading);
-    font-size: 1.2rem;
-    color: #ffffff;
-    margin-bottom: 6px;
+    font-size: 1.25rem;
+    color: var(--text-heading);
+    margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -332,208 +461,558 @@
   .organ-close-btn {
     background: none;
     border: none;
-    color: var(--text-jade-dim);
-    font-size: 1.2rem;
+    color: var(--text-muted);
+    font-size: 1.4rem;
     cursor: pointer;
+    line-height: 1;
   }
-  .organ-close-btn:hover { color: #ffffff; }
+  .organ-close-btn:hover { color: var(--brand-rose); }
 
-  /* 9 Body Constitution Interactive Matrix */
+  /* Sections */
   .section-container {
-    max-width: 1240px;
-    margin: 60px auto 100px;
+    max-width: 1280px;
+    margin: 80px auto;
     padding: 0 24px;
   }
   .section-header {
     text-align: center;
-    max-width: 760px;
-    margin: 0 auto 48px;
+    max-width: 800px;
+    margin: 0 auto 50px;
   }
   .section-title {
     font-family: var(--font-heading);
-    font-size: 2.4rem;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-heading);
     margin-bottom: 14px;
   }
   .section-subtitle {
-    color: var(--text-pearl);
-    font-size: 1.05rem;
+    color: var(--text-body);
+    font-size: 1.1rem;
+    line-height: 1.7;
   }
 
+  /* 9 Thể Tạng Matrix (Sáng sủa, thanh nhã) */
   .matrix-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 26px;
   }
   .matrix-card {
-    background: var(--jade-surface-card);
-    border: 1px solid var(--jade-border);
-    border-radius: 20px;
-    padding: 28px;
-    transition: transform 0.25s ease, border-color 0.25s ease;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-soft);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .matrix-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--jade-border-glow);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--brand-mint);
   }
   .matrix-card-title {
     font-family: var(--font-heading);
-    font-size: 1.3rem;
-    color: #ffffff;
-    margin: 12px 0 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-size: 1.35rem;
+    color: var(--text-heading);
+    margin: 14px 0 10px;
   }
   .matrix-card-desc {
-    color: var(--text-pearl);
-    font-size: 0.92rem;
-    line-height: 1.6;
-    margin-bottom: 16px;
+    color: var(--text-body);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin-bottom: 20px;
   }
   .remedy-box {
-    background: rgba(3, 20, 14, 0.7);
-    border: 1px solid rgba(52, 211, 153, 0.18);
-    border-radius: 12px;
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    color: var(--text-amber);
+    background: #f0fdf4;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    color: var(--brand-emerald-dark);
   }
 
-  /* Diagnostic Questionnaire Drawer */
+  /* Diagnostic Questionnaire Zone */
   .quiz-section {
-    background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15) 0%, rgba(3, 20, 14, 0.95) 70%);
-    border: 1px solid var(--jade-border-glow);
-    border-radius: 28px;
+    background: #ffffff;
+    border: 1.5px solid var(--border-glow);
+    border-radius: 32px;
     padding: 48px;
     margin-bottom: 80px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-  }
-  .quiz-question-card {
-    margin-bottom: 28px;
-  }
-  .quiz-q-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 16px;
+    box-shadow: var(--shadow-float);
   }
   .quiz-options {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
   }
   .quiz-opt-btn {
-    background: rgba(6, 38, 28, 0.7);
-    border: 1px solid var(--jade-border);
-    color: var(--text-pearl);
-    padding: 14px 20px;
-    border-radius: 14px;
-    font-size: 0.92rem;
+    background: var(--bg-page);
+    border: 1.5px solid var(--border-soft);
+    color: var(--text-heading);
+    padding: 16px 20px;
+    border-radius: 16px;
+    font-size: 0.95rem;
     font-weight: 600;
     text-align: left;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
   }
   .quiz-opt-btn:hover {
-    background: rgba(16, 185, 129, 0.25);
-    border-color: var(--glow-mint);
-    color: #ffffff;
+    background: #f0fdf4;
+    border-color: var(--brand-mint);
   }
   .quiz-opt-btn.selected {
-    background: rgba(16, 185, 129, 0.4);
-    border-color: #34d399;
-    color: #ffffff;
-    box-shadow: 0 0 16px rgba(52, 211, 153, 0.35);
+    background: #dcfce7;
+    border-color: var(--brand-emerald);
+    color: var(--brand-emerald-dark);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
   }
 
-  /* Pricing & VietQR Activation Box */
-  .pricing-shelf {
-    background: var(--jade-surface-card);
-    border: 1px solid var(--jade-border-glow);
-    border-radius: 24px;
-    padding: 40px;
+  /* E-COMMERCE PRODUCTS SHELF (BÁN TRÀ TẶNG SÁCH) */
+  .products-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 32px;
+    margin-bottom: 60px;
+  }
+  .product-card {
+    background: #ffffff;
+    border: 1.5px solid var(--border-soft);
+    border-radius: 28px;
+    padding: 36px 30px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .product-card.featured {
+    border-color: var(--brand-emerald);
+    box-shadow: 0 20px 45px -10px rgba(5, 150, 105, 0.2);
+    background: linear-gradient(180deg, #ffffff 0%, #f7fdf9 100%);
+  }
+  .product-badge-featured {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 5px 18px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+  }
+  .product-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin: 10px 0 12px;
+    line-height: 1.3;
+  }
+  .product-price-box {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .price-main {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--brand-emerald-dark);
+    font-family: var(--font-body);
+  }
+  .price-original {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+  .product-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: var(--text-body);
+    margin-bottom: 28px;
+  }
+  .product-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .check-icon {
+    color: var(--brand-emerald);
+    font-weight: 800;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .gift-highlight {
+    background: #fff1f2;
+    border: 1px dashed var(--brand-peach);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    color: #9f1239;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  /* SLIDE-OVER CART DRAWER */
+  .cart-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(4, 38, 26, 0.4);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .cart-drawer-backdrop.active {
+    display: block;
+    opacity: 1;
+  }
+  .cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 460px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: -15px 0 40px rgba(0,0,0,0.15);
+    z-index: 210;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cart-drawer.open {
+    transform: translateX(0);
+  }
+  .cart-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
   }
-  @media (max-width: 860px) {
-    .pricing-shelf { grid-template-columns: 1fr; }
+  .cart-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-heading);
   }
-  .qr-frame {
+  .cart-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .cart-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+  }
+  .cart-item {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    align-items: center;
+  }
+  .cart-item-info {
+    flex: 1;
+  }
+  .cart-item-title {
+    font-weight: 700;
+    color: var(--text-heading);
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+  .cart-item-price {
+    color: var(--brand-emerald-dark);
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+  .cart-stepper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 2px 6px;
+  }
+  .step-btn {
+    background: none;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 2px 6px;
+    color: var(--text-heading);
+  }
+  .cart-footer {
+    padding: 24px 28px;
+    border-top: 1px solid var(--border-soft);
+    background: #fafaf8;
+  }
+  .cart-subtotal-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-heading);
+    margin-bottom: 18px;
+  }
+
+  /* CHECKOUT MODAL (Modern E-commerce) */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(4, 38, 26, 0.6);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .checkout-card {
     background: #ffffff;
-    padding: 16px;
-    border-radius: 16px;
+    border-radius: 28px;
+    max-width: 680px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 36px 40px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .checkout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 16px;
+  }
+  .checkout-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-heading);
+  }
+  .form-group {
+    margin-bottom: 18px;
+  }
+  .form-label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-soft);
+    font-size: 0.95rem;
+    font-family: var(--font-body);
+    color: var(--text-heading);
+    outline: none;
+  }
+  .form-input:focus {
+    border-color: var(--brand-emerald);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  }
+
+  /* Payment Method Tabs */
+  .payment-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .pay-tab-btn {
+    background: #ffffff;
+    border: 1.5px solid var(--border-soft);
+    padding: 12px 10px;
+    border-radius: 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  }
+  .pay-tab-btn.active {
+    border-color: var(--brand-emerald);
+    background: #f0fdf4;
+    color: var(--brand-emerald-dark);
+  }
+
+  /* VietQR Presentation Box */
+  .qr-box {
+    background: #ffffff;
+    border: 1.5px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .qr-image-frame {
     display: inline-block;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid var(--border-soft);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    margin-bottom: 16px;
+  }
+  .bank-detail-table {
+    width: 100%;
+    margin-top: 14px;
+    font-size: 0.88rem;
+    border-collapse: collapse;
+  }
+  .bank-detail-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    text-align: left;
+  }
+  .bank-detail-table td:first-child {
+    color: var(--text-muted);
+    width: 38%;
+  }
+  .bank-detail-table td:last-child {
+    font-weight: 700;
+    color: var(--text-heading);
+  }
+  .copy-chip {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 6px;
   }
 
   footer {
-    border-top: 1px solid var(--jade-border);
-    padding: 40px 24px;
+    border-top: 1px solid var(--border-soft);
+    padding: 50px 24px;
+    background: #ffffff;
     text-align: center;
-    color: var(--text-jade-dim);
-    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-size: 0.92rem;
   }
-  footer a { color: var(--glow-mint); text-decoration: none; }
+  footer a { color: var(--brand-emerald); text-decoration: none; font-weight: 600; }
 </style>
 </head>
 <body>
 
+  <!-- Background Ambient Floating Petals Canvas -->
+  <canvas id="petalCanvas"></canvas>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-announcement">
+    &#10047; Ưu Đãi Khởi Sắc: <span>Đặt Mua Set Trà Dưỡng Nhan Ngũ Tạng</span> — TẶNG 100% Cẩm Nang Dưỡng Nhan 28 Ngày (Trị Giá 299.000₫)
+  </div>
+
   <!-- Navigation Bar -->
   <header class="nav-bar">
     <a href="#top" class="brand-logo">
-      <div class="brand-symbol">&#9884;</div>
+      <div class="brand-symbol">&#10048;</div>
       <div>
         <div class="brand-title">BẢN THẢO THẤU THỂ</div>
-        <div style="font-size: 0.72rem; color: #34d399; letter-spacing: 0.05em;">3D MERIDIAN SOMATICS</div>
+        <div class="brand-tagline">Botanical Somatics &amp; Dưỡng Nhan Hoàng Gia</div>
       </div>
     </a>
     <div class="nav-actions">
-      <button class="hud-btn" id="btnSoundToggle" type="button">Âm Thanh Thiền: Tắt</button>
-      <a class="scan-btn-main" href="#quiz-zone">Chẩn Đoán 9 Thể Tạng <span aria-hidden="true">&rarr;</span></a>
+      <a class="btn-outline-bloom" href="#quiz-zone" style="padding: 8px 16px; font-size: 0.85rem;">Trắc Nghiệm 7 Thể Chất</a>
+      <a class="btn-outline-bloom" href="#products-zone" style="padding: 8px 16px; font-size: 0.85rem;">Bộ Sưu Tập Trà</a>
+      <button class="cart-trigger-btn" id="btnOpenCart" type="button">
+        <span>&#128722; Giỏ Hàng</span>
+        <span class="cart-badge" id="cartBadgeCount">1</span>
+      </button>
     </div>
   </header>
 
   <main>
-    <!-- Hero 3D Stage -->
+    <!-- Hero 3D Botanical Stage -->
     <section class="hero-stage" id="top">
       <div class="hero-copy">
         <div class="hero-badge">
-          <span>&#10022;</span> KHOA HỌC THỂ TẠNG &amp; THẢO MỘC ĐÔNG Y HOÀNG GIA
+          &#10047; CỘNG SINH THẢO MỘC &bull; BOTANICAL SYMBIOSIS
         </div>
         <h1 class="hero-heading">
-          Khám Phá <span class="highlight">Xuyên Thấu Cơ Thể</span> &amp; Tạng Phủ 3D
+          Dưỡng Nhan <span class="bloom-text">Thảo Mộc Ngũ Tạng</span> &amp; Thể Trạng 3D
         </h1>
         <p class="hero-desc">
-          Công nghệ đồ họa 3D mô phỏng 12 đường kinh lạc và nhịp sinh học ngũ tạng. 
-          Rê chuột xoay 360 độ hoặc kích hoạt quét vi điểm để giải mã tắc nghẽn năng lượng, tìm ra thể chất gốc và nhận phác đồ trà thảo mộc điều hòa.
+          Mỗi cơ thể là một đóa hoa độc bản. Khi ngũ tạng (Tâm, Can, Tỳ, Phế, Thận) điều hòa và kinh lạc hanh thông, thần thái tự khắc nhuận sắc rạng ngời. Khám phá cơ chế xuyên thấu cơ thể và nhận phác đồ trà thảo mộc trúng đích.
         </p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-          <button class="scan-btn-main" id="btnTriggerScan" type="button">Quét Thấu Quang 3D Toàn Thân</button>
-          <a class="hud-btn" href="#matrix-zone" style="text-decoration: none; display: flex; align-items: center;">Tra Cứu 9 Thể Tạng</a>
+
+        <div class="hero-cta-group">
+          <a class="btn-primary-bloom" href="#products-zone">
+            Đặt Set Trà &bull; Nhận Cẩm Nang 28 Ngày &rarr;
+          </a>
+          <button class="btn-outline-bloom" id="btnScanHero" type="button">
+            &#10022; Quét Xuyên Thấu Tạng Phủ 3D
+          </button>
+        </div>
+
+        <!-- Botanical Ingredients Strip -->
+        <div class="botanical-strip">
+          <div class="herb-pill"><span class="dot" style="background:#fb7185;"></span> Trà Tâm Sen (Tâm Hỏa)</div>
+          <div class="herb-pill"><span class="dot" style="background:#fde68a;"></span> Cúc La Mã &amp; Kỷ Tử (Can Mộc)</div>
+          <div class="herb-pill"><span class="dot" style="background:#f59e0b;"></span> Hoàng Kỳ &amp; Trần Bì (Tỳ Thổ)</div>
+          <div class="herb-pill"><span class="dot" style="background:#e2e8f0;"></span> Bách Hợp &amp; Sa Sâm (Phế Kim)</div>
+          <div class="herb-pill"><span class="dot" style="background:#38bdf8;"></span> Thục Địa &amp; Đỗ Trọng (Thận Thủy)</div>
         </div>
       </div>
 
-      <!-- 3D Interactive Mannequin Canvas Container -->
+      <!-- 3D Luminous Translucent Botanical Stage -->
       <div class="viewport-3d-card">
         <div class="hud-top-bar">
           <div class="hud-tag">
-            CHẾ ĐỘ: <span id="viewModeLabel" style="color:#ffffff;">XUYÊN THẤU KINH LẠC (X-RAY)</span>
+            CHẾ ĐỘ: <span id="viewModeLabel" style="color:#064e3b;">CỘNG SINH HOA LÁ &amp; NGŨ TẠNG</span>
           </div>
           <div class="hud-controls">
-            <button class="hud-btn active" id="btnLayerAll" type="button">Tất Cả</button>
+            <button class="hud-btn active" id="btnLayerBotanical" type="button">Hoa Lá</button>
             <button class="hud-btn" id="btnLayerOrgans" type="button">Ngũ Tạng</button>
             <button class="hud-btn" id="btnLayerMeridians" type="button">Kinh Lạc</button>
-            <button class="hud-btn" id="btnLayerBotanicals" type="button">Thảo Mộc Bay</button>
             <button class="hud-btn" id="btnResetView" type="button">Góc Chuẩn</button>
           </div>
         </div>
 
-        <!-- Three.js Canvas Element -->
+        <!-- Three.js Canvas -->
         <canvas id="canvas3d"></canvas>
 
         <!-- Live Scan Banner -->
@@ -541,164 +1020,426 @@
           <div class="organ-live-indicator">
             <div class="organ-dot" id="organPulseDot"></div>
             <div>
-              <div style="font-size: 0.8rem; color: #94a3b8; font-family: var(--font-mono);">TRẠNG THÁI KHÍ HUYẾT</div>
-              <div style="font-weight: 700; color: #ffffff;" id="organLiveName">5 Tạng Phủ Cân Bằng • Kinh Lạc Lưu Thông</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono); font-weight:700;">TRẠNG THÁI KHÍ HUYẾT</div>
+              <div style="font-weight: 800; color: var(--text-heading);" id="organLiveName">5 Tạng Phủ Nở Hoa &bull; Kinh Lạc Hanh Thông</div>
             </div>
           </div>
-          <div style="font-size: 0.8rem; color: #fde68a; font-family: var(--font-mono);" id="organScanStats">
-            RÊ CHUỘT XOAY 360&deg; / CLICK VÀO TẠNG
+          <div style="font-size: 0.8rem; color: var(--brand-emerald-dark); font-family: var(--font-mono); font-weight: 700;" id="organScanStats">
+            RÊ CHUỘT XOAY 360&deg; &bull; CLICK VÀO HOA / TẠNG
           </div>
         </div>
 
         <!-- Organ Detail Popup -->
         <div class="organ-detail-popup" id="organPopup">
           <h4>
-            <span id="popupOrganTitle">Tâm (Tim - Hỏa)</span>
+            <span id="popupOrganTitle">Tâm (Tim - Hoa Mẫu Đơn)</span>
             <button class="organ-close-btn" id="popupCloseBtn" type="button">&times;</button>
           </h4>
-          <p style="font-size: 0.85rem; color: #e2e8f0; margin-bottom: 12px;" id="popupOrganDesc">
-            Chủ thần minh, chủ huyết mạch. Khi khí huyết hao tổn dễ sinh hồi hộp, mất ngủ, tim đập nhanh.
+          <p style="font-size: 0.88rem; color: var(--text-body); margin-bottom: 12px;" id="popupOrganDesc">
+            Chủ thần minh, chủ huyết mạch. Khi khí huyết hao tổn dễ sinh mất ngủ, bốc hỏa, tim đập nhanh.
           </p>
           <div class="remedy-box" id="popupOrganRemedy">
-            <strong>Trà Thảo Mộc Đối Trị:</strong> Trà Tâm Sen, Long Nhãn, Táo Nhân (Uống 20h - 21h).
+            <strong>Trà Thảo Mộc Đối Trị:</strong> Trà Tâm Sen, Long Nhãn, Táo Nhân (Uống 19h - 21h dưỡng tâm).
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 9 Thể Tạng Đông Y Matrix -->
-    <section class="section-container" id="matrix-zone">
+    <!-- SECTION: E-COMMERCE PRODUCTS (BÁN TRÀ TẶNG SÁCH) -->
+    <section class="section-container" id="products-zone">
       <div class="section-header">
-        <h2 class="section-title">9 Thể Tạng Đông Y Khoa Học</h2>
+        <div class="hero-badge">&#10047; BỘ SƯU TẬP TRÀ DƯỠNG NHAN &bull; MUA TRÀ TẶNG SÁCH</div>
+        <h2 class="section-title">Chọn Liệu Trình Trà Dưỡng Nhan Của Bạn</h2>
         <p class="section-subtitle">
-          Mỗi cơ thể sinh ra và biến đổi theo một thể chất độc bản. Hiểu đúng thể trạng để dưỡng sinh trúng đích, không bồi bổ sai lầm.
+          Toàn bộ công thức trà được phối ngũ từ thảo mộc thượng hạng chuẩn Đông Y, chia sẵn túi lọc tiện lợi. Đặt trà hôm nay nhận trọn bộ cẩm nang và hướng dẫn độc quyền.
         </p>
       </div>
 
-      <div class="matrix-grid">
-        <div class="matrix-card">
-          <div class="hero-badge" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24;">KHÍ HƯ THỂ</div>
-          <h3 class="matrix-card-title">&#10022; Thể Khí Hư (Thiếu Hụt Năng Lượng)</h3>
-          <p class="matrix-card-desc">Hay hụt hơi, đoản khí, nói nhỏ, lười vận động, dễ đổ mồ hôi trộm khi làm việc nhẹ, sắc mặt trắng nhợt.</p>
-          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Hoàng Kỳ, Đảng Sâm, Bạch Truật, Đại Táo. Tránh ăn đồ sống lạnh.</div>
+      <div class="products-grid">
+        <!-- Package 1: Combo Khởi Sắc 14 Ngày -->
+        <div class="product-card">
+          <div>
+            <div class="herb-pill" style="margin-bottom: 12px; display: inline-flex;">BÁN CHẠY NHẤT &bull; DÙNG THỬ 14 NGÀY</div>
+            <h3 class="product-title">Combo Khởi Sắc Dưỡng Nhan (14 Ngày)</h3>
+            <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 18px;">
+              Hộp 14 gói trà thảo mộc túi lọc tam giác cao cấp, phối chế riêng theo thể trạng (Khí hư, Dương hư, Âm hư hoặc Đàm thấp).
+            </p>
+            <div class="product-price-box">
+              <span class="price-main">199.000₫</span>
+              <span class="price-original">399.000₫</span>
+            </div>
+
+            <div class="gift-highlight">
+              &#127873; <strong>TẶNG MIỄN PHÍ:</strong> Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (182 trang PDF in ấn) + Audio Dẫn Thiền 15 Phút.
+            </div>
+
+            <ul class="product-features">
+              <li><span class="check-icon">&#10003;</span> 14 Túi lọc trà thảo mộc nguyên bản không hóa chất</li>
+              <li><span class="check-icon">&#10003;</span> Tặng trọn bộ Ebook Cẩm Nang 28 Ngày tải ngay lập tức</li>
+              <li><span class="check-icon">&#10003;</span> Mã mở khóa quét 3D toàn thân không giới hạn</li>
+              <li><span class="check-icon">&#10003;</span> Miễn phí giao hàng khi đặt 2 hộp</li>
+            </ul>
+          </div>
+
+          <button class="btn-primary-bloom btn-add-to-cart" data-id="combo-14" data-name="Combo Khởi Sắc Dưỡng Nhan (14 Ngày)" data-price="199000" type="button" style="width: 100%; justify-content: center;">
+            Thêm Vào Giỏ Hàng &bull; 199.000₫
+          </button>
         </div>
 
-        <div class="matrix-card">
-          <div class="hero-badge" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">DƯƠNG HƯ THỂ</div>
-          <h3 class="matrix-card-title">&#10022; Thể Dương Hư (Sợ Lạnh Chân Tay Lạnh)</h3>
-          <p class="matrix-card-desc">Lưng gối lạnh mỏi, bàn tay bàn chân buốt quanh năm, sợ gió lạnh, thích uống nước ấm, tiêu hóa kém khi trời lạnh.</p>
-          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Quế Nhục, Can Khương, Kỷ Tử, Đương Quy. Ngâm chân nước gừng ấm 21h.</div>
+        <!-- Package 2: Liệu Trình Hoàng Gia 30 Ngày (FEATURED) -->
+        <div class="product-card featured">
+          <div class="product-badge-featured">&#10047; ĐƯỢC BÁC SĨ ĐÔNG Y KHUYÊN DÙNG</div>
+          <div>
+            <div class="herb-pill" style="margin-bottom: 12px; display: inline-flex; background: #ecfdf5; border-color: var(--brand-emerald);">LIỆU TRÌNH CHUYÊN SÂU 30 NGÀY</div>
+            <h3 class="product-title">Liệu Trình Trà Hoàng Gia Ngũ Tạng (30 Ngày)</h3>
+            <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 18px;">
+              2 Hộp trà đại bổ ngũ tạng 30 ngày (30 túi lọc tam giác), giúp tái tạo làn da, cải thiện sâu giấc ngủ, điều hòa kinh nguyệt và tiêu mỡ ứ trệ.
+            </p>
+            <div class="product-price-box">
+              <span class="price-main">389.000₫</span>
+              <span class="price-original">650.000₫</span>
+            </div>
+
+            <div class="gift-highlight" style="background: #ecfdf5; border-color: #10b981; color: #065f46;">
+              &#127873; <strong>QUÀ TẶNG KÉP:</strong> Tặng Bình Thủy Tinh Giữ Nhiệt 2 Lớp (Trị giá 150k) + Ebook Cẩm Nang 28 Ngày + Sơ Đồ 108 Huyệt Vị.
+            </div>
+
+            <ul class="product-features">
+              <li><span class="check-icon">&#10003;</span> 2 Hộp trà ngũ tạng (30 ngày dùng liên tục)</li>
+              <li><span class="check-icon">&#10003;</span> Tặng bình giữ nhiệt thủy tinh cao cấp</li>
+              <li><span class="check-icon">&#10003;</span> Toàn bộ Ebook &amp; Bản đồ 108 huyệt vị bấm tại nhà</li>
+              <li><span class="check-icon">&#10003;</span> Tư vấn 1-1 qua Zalo theo dõi tiến trình 4 tuần</li>
+              <li><span class="check-icon">&#10003;</span> Miễn phí vận chuyển toàn quốc (Freeship)</li>
+            </ul>
+          </div>
+
+          <button class="btn-primary-bloom btn-add-to-cart" data-id="combo-30" data-name="Liệu Trình Trà Hoàng Gia Ngũ Tạng (30 Ngày)" data-price="389000" type="button" style="width: 100%; justify-content: center;">
+            Chọn Liệu Trình 30 Ngày &bull; 389.000₫
+          </button>
         </div>
 
-        <div class="matrix-card">
-          <div class="hero-badge" style="background: rgba(251, 113, 133, 0.15); border-color: rgba(251, 113, 133, 0.4); color: #fb7185;">ÂM HƯ THỂ</div>
-          <h3 class="matrix-card-title">&#10022; Thể Âm Hư (Nóng Trong Khô Khát)</h3>
-          <p class="matrix-card-desc">Lòng bàn tay bàn chân nóng rát về đêm, miệng khô họng rát, da khô nứt nẻ, gò má ửng đỏ, hay mất ngủ bốc hỏa.</p>
-          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Bách Hợp, Mạch Môn, Ngọc Trúc, Kỷ Tử, Yến Mạch. Tránh thức ăn cay nóng chiên rán.</div>
-        </div>
+        <!-- Package 3: Ebook Kỹ Thuật Số (Chỉ Sách) -->
+        <div class="product-card">
+          <div>
+            <div class="herb-pill" style="margin-bottom: 12px; display: inline-flex;">BẢN DIGITAL TẢI NGAY</div>
+            <h3 class="product-title">Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (Digital)</h3>
+            <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 18px;">
+              Dành cho bạn muốn tự mua thảo mộc và nấu tại nhà: 182 trang sách điện tử PDF A4 in ấn chuẩn cùng 187 công thức chè, canh, trà dưỡng nhan.
+            </p>
+            <div class="product-price-box">
+              <span class="price-main">69.000₫</span>
+              <span class="price-original">299.000₫</span>
+            </div>
 
-        <div class="matrix-card">
-          <div class="hero-badge" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399;">ĐÀM THẤP THỂ</div>
-          <h3 class="matrix-card-title">&#10022; Thể Đàm Thấp (Tích Mỡ Ứ Trệ Nước)</h3>
-          <p class="matrix-card-desc">Bụng dưới mềm to, người nặng nề uể oải, mặt nhiều dầu nhờn, miệng dính nhớt, rêu lưỡi trắng dày.</p>
-          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Trần Bì, Phục Linh, Ý Dĩ, Sơn Tra. Vận động ra mồ hôi mỗi ngày 30 phút.</div>
-        </div>
+            <div class="gift-highlight" style="background: #f8fafc; border-color: #cbd5e1; color: #334155;">
+              &#9889; <strong>KÍCH HOẠT TỨC THÌ:</strong> Tải file PDF ngay sau khi quét mã thành công trong 5 giây.
+            </div>
 
-        <div class="matrix-card">
-          <div class="hero-badge" style="background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.4); color: #f43f5e;">HUYẾT Ứ THỂ</div>
-          <h3 class="matrix-card-title">&#10022; Thể Huyết Ứ (Tắc Nghẽn Tuần Hoàn)</h3>
-          <p class="matrix-card-desc">Sắc mặt xỉn tối, dễ xuất hiện vết bầm tím, môi thâm, quầng mắt đen sâu, phụ nữ kinh nguyệt đóng cục tím đen.</p>
-          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Tam Thất Bắc, Đan Sâm, Hồng Hoa, Đương Quy. Massage khai thông kinh lạc.</div>
-        </div>
+            <ul class="product-features">
+              <li><span class="check-icon">&#10003;</span> File PDF 182 trang chuẩn in màu A4 rõ nét</li>
+              <li><span class="check-icon">&#10003;</span> 187 Công thức tra cứu theo 9 triệu chứng phụ nữ</li>
+              <li><span class="check-icon">&#10003;</span> Hướng dẫn âm thanh phát giọng đọc tự động</li>
+              <li><span class="check-icon">&#10003;</span> Không cần chờ giao hàng, đọc trên mọi thiết bị</li>
+            </ul>
+          </div>
 
-        <div class="matrix-card">
-          <div class="hero-badge" style="background: rgba(52, 211, 153, 0.25); border-color: #34d399; color: #a7f3d0;">BÌNH HÒA THỂ</div>
-          <h3 class="matrix-card-title">&#10022; Thể Bình Hòa (Chuẩn Mực Lý Tưởng)</h3>
-          <p class="matrix-card-desc">Sắc diện hồng hào sáng bóng, thể lực dồi dào, ăn ngủ ngon giấc, tinh thần an nhiên minh mẫn, ngũ tạng điều hòa.</p>
-          <div class="remedy-box"><strong>Phác đồ thảo mộc:</strong> Trà Dưỡng Sinh Tứ Quý: Hoa Cúc, Kỷ Tử, La Hán Quả. Duy trì lối sống thuận tự nhiên.</div>
+          <button class="btn-outline-bloom btn-add-to-cart" data-id="ebook-digital" data-name="Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (Digital)" data-price="69000" type="button" style="width: 100%; justify-content: center;">
+            Mua Bản Ebook &bull; 69.000₫
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- Interactive Diagnostic Zone -->
+    <!-- SECTION: 7 THỂ CHẤT ĐÔNG Y & QUIZ -->
     <section class="section-container" id="quiz-zone">
       <div class="quiz-section">
         <div class="section-header" style="margin-bottom: 32px;">
-          <h2 class="section-title">Trắc Nghiệm Quét Thể Trạng Tương Tác</h2>
-          <p class="section-subtitle">Trắc Nghiệm Chẩn Đoán Nhanh 7 Thể Chất Đông Y &amp; 9 Thể Tạng Khoa Học. Trả lời 3 câu hỏi chính xác để hệ thống tính điểm ngũ tạng và phản chiếu trực tiếp lên mô hình 3D.</p>
-        </div>
-
-        <div class="quiz-question-card">
-          <div class="quiz-q-title">1. Biểu hiện thể lực và hơi thở hàng ngày của bạn:</div>
-          <div class="quiz-options">
-            <button class="quiz-opt-btn" data-type="khi-hu" data-organ="phe" type="button">Hay hụt hơi, nói nhỏ, làm việc nhẹ đã đổ mồ hôi</button>
-            <button class="quiz-opt-btn" data-type="duong-hu" data-organ="than" type="button">Tay chân buốt lạnh, sợ gió sợ nước lạnh</button>
-            <button class="quiz-opt-btn" data-type="dam-thap" data-organ="ty" type="button">Người nặng nề, bụng to mềm, uể oải sau ăn</button>
-            <button class="quiz-opt-btn" data-type="binh-hoa" data-organ="tam" type="button">Thể lực khỏe khoắn, thở sâu, dồi dào năng lượng</button>
-          </div>
-        </div>
-
-        <div class="quiz-question-card">
-          <div class="quiz-q-title">2. Tình trạng giấc ngủ và thần thái sắc diện:</div>
-          <div class="quiz-options">
-            <button class="quiz-opt-btn" data-type="am-hu" data-organ="tam" type="button">Hay mất ngủ, bốc hỏa, bàn tay bàn chân nóng rát</button>
-            <button class="quiz-opt-btn" data-type="huyet-u" data-organ="can" type="button">Sắc da sạm xỉn, quầng thâm mắt sâu, môi tím</button>
-            <button class="quiz-opt-btn" data-type="khi-tre" data-organ="can" type="button">Dễ cáu gắt, hay thở dài sườn ngực tức ách</button>
-            <button class="quiz-opt-btn" data-type="binh-hoa" data-organ="tam" type="button">Ngủ sâu giấc 7-8 tiếng, da dẻ hồng hào nhuận sắc</button>
-          </div>
-        </div>
-
-        <div id="quizResultBox" style="margin-top: 32px; display: none; background: rgba(3, 20, 14, 0.9); border: 1px solid #34d399; border-radius: 18px; padding: 24px; text-align: center;">
-          <h3 style="font-family: var(--font-heading); font-size: 1.6rem; color: #34d399; margin-bottom: 10px;" id="resultTitle">KẾT QUẢ CHẨN ĐOÁN THỂ TẠNG</h3>
-          <p style="font-size: 1.05rem; color: #ffffff; max-width: 600px; margin: 0 auto 20px;" id="resultDesc"></p>
-          <a class="scan-btn-main" href="#pricing-zone">Mở Khóa Toàn Bộ Cẩm Nang &amp; Phác Đồ 28 Ngày</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Pricing & Unlock Section -->
-    <section class="section-container" id="pricing-zone">
-      <div class="pricing-shelf">
-        <div>
-          <div class="hero-badge">TRỌN BỘ CẨM NANG HOÀNG GIA</div>
-          <h2 style="font-family: var(--font-heading); font-size: 2rem; color: #ffffff; margin-bottom: 16px;">
-            Sở Hữu Phác Đồ Dưỡng Sinh &amp; Trà Thảo Mộc 28 Ngày
-          </h2>
-          <p style="color: var(--text-pearl); margin-bottom: 24px;">
-            Bao gồm file Cẩm nang PDF chuẩn in ấn A4, sơ đồ 108 huyệt vị dưỡng nhan độc quyền, bản audio dẫn thiền thở theo Tý Ngọ Lưu Chú và tư vấn theo dõi 1-1.
+          <h2 class="section-title">Trắc Nghiệm Chẩn Đoán Nhanh 7 Thể Chất Đông Y</h2>
+          <p class="section-subtitle">
+            Trả lời nhanh 2 câu hỏi để phân loại thể trạng thực tế. Hệ thống sẽ đề xuất phác đồ trà thảo mộc phù hợp nhất cho bạn.
           </p>
-          <div style="font-size: 1.8rem; font-weight: 800; color: #fde68a; margin-bottom: 8px;">
-            69.000₫ <span style="font-size: 0.95rem; font-weight: 400; color: #94a3b8; text-decoration: line-through;">299.000₫</span>
-          </div>
-          <div style="font-size: 0.9rem; color: #34d399; margin-bottom: 24px;">Khách quốc tế: $12 USD qua Payoneer (lethanhmaicombo@gmail.com)</div>
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; color: #cbd5e1;">
-            <li>&#10003; Quét thể trạng 3D không giới hạn lần</li>
-            <li>&#10003; 14 Công thức trà tạng phủ chuyên sâu</li>
-            <li>&#10003; Hỗ trợ hoàn tiền 100% trong 7 ngày nếu không hài lòng</li>
-          </ul>
         </div>
 
-        <div style="text-align: center;">
-          <div class="qr-frame">
-            <!-- VietQR dynamic display -->
-            <img src="https://img.vietqr.io/image/970422-0985250444-compact2.png?amount=69000&addInfo=DUONGNHAN%203D&accountName=LE%20THANH%20MAI" alt="VietQR Thanh Toán Dưỡng Nhan" width="220" height="220" style="display:block; border-radius: 8px;">
+        <div class="quiz-question-card" style="margin-bottom: 24px;">
+          <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-heading); margin-bottom: 14px;">
+            1. Bạn thường có biểu hiện thể lực và hô hấp như thế nào?
           </div>
-          <div style="margin-top: 14px; font-size: 0.88rem; color: #34d399; font-weight: 700;">
-            QUÉT VIETQR KÍCH HOẠT TỰ ĐỘNG 24/7
+          <div class="quiz-options">
+            <button class="quiz-opt-btn" data-type="khi-hu" data-organ="phe" type="button">Hay hụt hơi, đoản khí, nói nhỏ, lười vận động (Thể Khí Hư)</button>
+            <button class="quiz-opt-btn" data-type="duong-hu" data-organ="than" type="button">Sợ lạnh, tay chân lạnh buốt quanh năm, lưng gối mỏi (Thể Dương Hư)</button>
+            <button class="quiz-opt-btn" data-type="am-hu" data-organ="tam" type="button">Nóng trong, bốc hỏa, lòng bàn chân bàn tay rát về đêm (Thể Âm Hư)</button>
+            <button class="quiz-opt-btn" data-type="dam-thap" data-organ="ty" type="button">Bụng dưới mềm to, người nặng nề uể oải, mặt nhiều dầu (Thể Đàm Thấp)</button>
           </div>
-          <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">Nội dung CK: <code>DUONGNHAN 3D</code></div>
+        </div>
+
+        <div class="quiz-question-card">
+          <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-heading); margin-bottom: 14px;">
+            2. Thần thái sắc diện và giấc ngủ của bạn phản ánh điều gì?
+          </div>
+          <div class="quiz-options">
+            <button class="quiz-opt-btn" data-type="huyet-u" data-organ="can" type="button">Sắc da sạm nám, môi thâm, quầng thâm mắt sâu, kinh nguyệt đóng cục (Thể Huyết Ứ)</button>
+            <button class="quiz-opt-btn" data-type="khi-tre" data-organ="can" type="button">Dễ cáu gắt, hay thở dài sườn ngực tức ách, tâm trạng thất thường (Thể Khí Trệ)</button>
+            <button class="quiz-opt-btn" data-type="binh-hoa" data-organ="tam" type="button">Sắc diện hồng hào sáng bóng, ngủ sâu giấc 7-8 tiếng (Thể Bình Hòa)</button>
+          </div>
+        </div>
+
+        <div id="quizResultBox" style="margin-top: 32px; display: none; background: #ecfdf5; border: 1.5px solid var(--brand-emerald); border-radius: 20px; padding: 28px; text-align: center;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.6rem; color: var(--brand-emerald-dark); margin-bottom: 10px;" id="resultTitle">KẾT QUẢ CHẨN ĐOÁN THỂ TẠNG</h3>
+          <p style="font-size: 1.05rem; color: var(--text-body); max-width: 650px; margin: 0 auto 20px;" id="resultDesc"></p>
+          <a class="btn-primary-bloom" href="#products-zone">Chọn Mua Hộp Trà Đối Trị Ngay &rarr;</a>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- SLIDE-OVER CART DRAWER -->
+  <div class="cart-drawer-backdrop" id="cartBackdrop"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <div class="cart-title">Giỏ Hàng Của Bạn (<span id="cartDrawerCount">1</span>)</div>
+      <button class="cart-close-btn" id="btnCloseCart" type="button">&times;</button>
+    </div>
+
+    <div class="cart-body" id="cartItemsList">
+      <!-- Dynamic Cart Items Rendered Here -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span>Tổng Thanh Toán:</span>
+        <span id="cartSubtotalText">199.000₫</span>
+      </div>
+      <button class="btn-primary-bloom" id="btnCheckoutModal" type="button" style="width: 100%; justify-content: center; font-size: 1.05rem;">
+        Tiến Hành Đặt Hàng &rarr;
+      </button>
+      <div style="font-size: 0.8rem; text-align: center; color: var(--text-muted); margin-top: 10px;">
+        &#128274; Bảo mật thông tin 100% &bull; Miễn phí đổi trả trong 7 ngày
+      </div>
+    </div>
+  </aside>
+
+  <!-- MODERN CHECKOUT MODAL -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="checkout-card">
+      <div class="checkout-header">
+        <h3 class="checkout-title">Thông Tin Giao Hàng &amp; Thanh Toán</h3>
+        <button class="organ-close-btn" id="btnCloseCheckout" type="button">&times;</button>
+      </div>
+
+      <!-- Shipping Form -->
+      <form id="checkoutForm" onsubmit="return false;">
+        <div class="form-group">
+          <label class="form-label">Họ và tên người nhận *</label>
+          <input class="form-input" id="custName" type="text" placeholder="Ví dụ: Nguyễn Thị Mai" required value="Lê Thị Thanh Mai">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Số điện thoại *</label>
+            <input class="form-input" id="custPhone" type="tel" placeholder="0985 xxx xxx" required value="0985250444">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email (để nhận Ebook ngay) *</label>
+            <input class="form-input" id="custEmail" type="email" placeholder="email@gmail.com" required value="lethanhmaicombo@gmail.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Địa chỉ nhận hàng (cho sản phẩm trà/quà tặng)</label>
+          <input class="form-input" id="custAddress" type="text" placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">
+        </div>
+
+        <!-- Monthly Subscription Checkbox -->
+        <div style="background: #f0fdf4; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
+          <input type="checkbox" id="chkSubscription" style="width: 18px; height: 18px; accent-color: #059669;">
+          <label for="chkSubscription" style="font-size: 0.88rem; color: #064e3b; font-weight: 600; cursor: pointer;">
+            Đăng ký giao trà định kỳ hàng tháng (Tiết kiệm thêm 10% + Miễn phí vận chuyển trọn đời)
+          </label>
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <label class="form-label" style="margin-bottom: 8px;">Phương thức thanh toán</label>
+        <div class="payment-tabs">
+          <button class="pay-tab-btn active" id="tabVietQR" type="button">&#9889; Chuyển Khoản / VietQR</button>
+          <button class="pay-tab-btn" id="tabCard" type="button">&#128179; Thẻ Visa / Payoneer</button>
+          <button class="pay-tab-btn" id="tabMomo" type="button">&#128241; Ví MoMo</button>
+        </div>
+
+        <!-- Tab 1: VietQR Napas 24/7 (Techcombank 1022 7786 86 - LE THI THANH MAI) -->
+        <div class="qr-box" id="payBoxVietQR">
+          <div style="font-size: 0.95rem; font-weight: 700; color: var(--brand-emerald-dark); margin-bottom: 12px;">
+            QUÉT VIETQR CHUYỂN KHOẢN TỰ ĐỘNG 24/7
+          </div>
+
+          <div class="qr-image-frame">
+            <!-- Dynamic VietQR image rendered with Techcombank 1022 7786 86 -->
+            <img id="vietqrImg" src="https://img.vietqr.io/image/TCB-1022778686-compact2.png?amount=199000&addInfo=DUONGNHAN%208942&accountName=LE%20THI%20THANH%20MAI" alt="VietQR Thanh Toán Dưỡng Nhan" width="220" height="220" style="display: block; border-radius: 8px;">
+          </div>
+
+          <table class="bank-detail-table">
+            <tr>
+              <td>Ngân hàng:</td>
+              <td><strong>TECHCOMBANK (TCB)</strong></td>
+            </tr>
+            <tr>
+              <td>Số tài khoản:</td>
+              <td>
+                <span id="valSTK">1022 7786 86</span>
+                <button class="copy-chip" onclick="copyText('1022778686', this)">Sao chép</button>
+              </td>
+            </tr>
+            <tr>
+              <td>Chủ tài khoản:</td>
+              <td><strong>LE THI THANH MAI</strong></td>
+            </tr>
+            <tr>
+              <td>Số tiền thanh toán:</td>
+              <td>
+                <span id="valAmountText" style="color: #059669;">199.000₫</span>
+                <button class="copy-chip" onclick="copyText(currentCartTotal, this)">Sao chép</button>
+              </td>
+            </tr>
+            <tr>
+              <td>Nội dung chuyển khoản:</td>
+              <td>
+                <span id="valMemo" style="color: #d97706; font-family: var(--font-mono);">DUONGNHAN 8942</span>
+                <button class="copy-chip" onclick="copyText(document.getElementById('valMemo').textContent, this)">Sao chép</button>
+              </td>
+            </tr>
+          </table>
+
+          <div style="margin-top: 18px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a class="btn-primary-bloom" id="btnDeepLinkBank" href="https://img.vietqr.io/image/TCB-1022778686-compact2.png" target="_blank" rel="noopener" style="font-size: 0.88rem; padding: 10px 20px;">
+              &#128242; Mở App Ngân Hàng Trên Điện Thoại
+            </a>
+            <button class="btn-outline-bloom" id="btnConfirmPaid" type="button" style="font-size: 0.88rem; padding: 10px 20px;">
+              &#10003; Tôi Đã Chuyển Khoản Thành Công
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: International Card / Payoneer -->
+        <div class="qr-box" id="payBoxCard" style="display: none;">
+          <div style="font-size: 1rem; font-weight: 700; color: var(--text-heading); margin-bottom: 8px;">
+            Thanh Toán Bằng Thẻ Quốc Tế (Visa / Mastercard)
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-body); margin-bottom: 16px;">
+            Dành cho khách hàng tại nước ngoài (US, Canada, Châu Âu, Nhật Bản...). Thanh toán an toàn qua cổng Payoneer Global.
+          </p>
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px; margin-bottom: 16px; font-size: 0.88rem;">
+            <div>Số tiền quy đổi: <strong>$12 - $19 USD</strong> (tùy gói sản phẩm)</div>
+            <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px;">Phí giao dịch thẻ quốc tế: ~3% do Payoneer xử lý.</div>
+          </div>
+          <a class="btn-primary-bloom" href="https://myaccount.payoneer.com/" target="_blank" rel="noopener" style="display: inline-flex; justify-content: center;">
+            Thanh Toán Thẻ Qua Payoneer Link &rarr;
+          </a>
+        </div>
+
+        <!-- Tab 3: MoMo -->
+        <div class="qr-box" id="payBoxMomo" style="display: none;">
+          <div style="font-size: 1rem; font-weight: 700; color: #a21caf; margin-bottom: 8px;">
+            Thanh Toán Qua Ví MoMo
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-body); margin-bottom: 14px;">
+            Chuyển tiền qua số MoMo hoặc quét mã QR MoMo thuận tiện.
+          </p>
+          <div style="font-size: 1.1rem; font-weight: 800; color: #86198f; margin-bottom: 6px;">0985 250 444</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">Chủ ví: LÊ THỊ THANH MAI</div>
+          <button class="btn-primary-bloom" onclick="copyText('0985250444', this)" type="button" style="background: #a21caf;">
+            Sao Chép Số Ví MoMo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <footer>
-    <div>&copy; 2026 Bản Thảo Thấu Thể • Nền tảng Dưỡng Sinh Somatic 3D • Liên hệ: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a></div>
+    <div style="max-width: 900px; margin: 0 auto;">
+      <div style="font-family: var(--font-heading); font-size: 1.4rem; color: var(--text-heading); font-weight: 700; margin-bottom: 8px;">
+        BẢN THẢO THẤU THỂ &bull; DƯỠNG NHAN HOÀNG GIA
+      </div>
+      <p style="margin-bottom: 16px; font-size: 0.88rem;">
+        Hệ sinh thái sản phẩm sức khỏe, thảo mộc dưỡng sinh và cẩm nang cá nhân hóa độc bản. 
+        Mọi công thức trà thảo mộc được tham khảo từ dược điển Đông Y truyền thống.
+      </p>
+      <div>
+        Hotline / Zalo: <strong>0985 250 444</strong> &bull; Email: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a>
+      </div>
+      <div style="margin-top: 14px; font-size: 0.8rem; color: #94a3b8;">
+        &copy; 2026 Bản Thảo Thấu Thể. Tích hợp thanh toán an toàn qua Napas 24/7 VietQR Techcombank &amp; Payoneer Global.
+      </div>
+    </div>
   </footer>
 
-  <!-- 3D Three.js Interactive Engine Script -->
+  <!-- Canvas Floating Ambient Petals Background Animation -->
   <script>
-    (function init3DTranslucentBody() {
+    (function initFloatingPetals2D() {
+      const canvas = document.getElementById('petalCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+
+      const petalColors = [
+        'rgba(254, 205, 211, 0.65)', // Peach blossom
+        'rgba(251, 113, 133, 0.45)', // Rose petal
+        'rgba(167, 243, 208, 0.55)', // Young green tea leaf
+        'rgba(254, 243, 199, 0.6)'   // Golden chrysanthemum
+      ];
+
+      const petals = [];
+      const numPetals = 45;
+
+      for (let i = 0; i < numPetals; i++) {
+        petals.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: 6 + Math.random() * 8,
+          d: Math.random() * numPetals,
+          color: petalColors[i % petalColors.length],
+          tilt: Math.random() * 10,
+          tiltAngle: 0,
+          tiltAngleIncremental: 0.02 + Math.random() * 0.03
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < numPetals; i++) {
+          const p = petals[i];
+          ctx.beginPath();
+          ctx.lineWidth = p.r / 2;
+          ctx.strokeStyle = p.color;
+          ctx.moveTo(p.x + p.tilt + p.r / 4, p.y);
+          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4);
+          ctx.stroke();
+
+          // Movement
+          p.tiltAngle += p.tiltAngleIncremental;
+          p.y += (Math.cos(p.d) + 1 + p.r / 4) * 0.5;
+          p.x += Math.sin(p.tiltAngle) * 0.8;
+          p.tilt = Math.sin(p.tiltAngle) * 12;
+
+          // Wrap around
+          if (p.x > w + 20 || p.x < -20 || p.y > h) {
+            p.x = Math.random() * w;
+            p.y = -20;
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+
+  <!-- 3D Botanical Torso & Blooming Flowers Engine (Three.js) -->
+  <script>
+    (function init3DBotanicalScene() {
       const canvas = document.getElementById('canvas3d');
       if (!canvas || typeof THREE === 'undefined') return;
 
@@ -708,206 +1449,188 @@
       // 1. Scene & Camera
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-      camera.position.set(0, 0, 7.5);
+      camera.position.set(0, 0, 7.2);
 
-      // 2. Renderer with transparent background
+      // 2. Renderer
       const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      // 3. Lighting - Jade & Amber bioluminescent lights
-      const ambientLight = new THREE.AmbientLight(0x064e3b, 1.2);
+      // 3. Bright Luminous Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
       scene.add(ambientLight);
 
-      const topLight = new THREE.DirectionalLight(0x34d399, 1.8);
-      topLight.position.set(2, 6, 4);
-      scene.add(topLight);
+      const keyLight = new THREE.DirectionalLight(0x10b981, 1.2);
+      keyLight.position.set(3, 5, 4);
+      scene.add(keyLight);
 
-      const rimLight = new THREE.PointLight(0x38bdf8, 2.5, 20);
-      rimLight.position.set(-4, -2, -3);
-      scene.add(rimLight);
+      const roseGlow = new THREE.PointLight(0xfb7185, 2.0, 15);
+      roseGlow.position.set(-3, 2, 2);
+      scene.add(roseGlow);
 
-      const amberGlow = new THREE.PointLight(0xf59e0b, 1.5, 15);
-      amberGlow.position.set(0, 0, 2);
-      scene.add(amberGlow);
+      const goldSun = new THREE.PointLight(0xf59e0b, 1.6, 12);
+      goldSun.position.set(0, -2, 3);
+      scene.add(goldSun);
 
-      // 4. Group for the complete holographic body
+      // 4. Group for the complete model
       const bodyGroup = new THREE.Group();
       scene.add(bodyGroup);
 
-      // --- 4.1 Stylized Translucent Human Form (X-Ray Hologram) ---
-      const glassMat = new THREE.MeshPhongMaterial({
-        color: 0x10b981,
-        emissive: 0x032b1d,
-        specular: 0x34d399,
+      // --- 4.1 Elegant Luminous Glass Torso Silhouette ---
+      const pearlGlassMat = new THREE.MeshPhongMaterial({
+        color: 0xecfdf5,
+        emissive: 0x10b981,
+        emissiveIntensity: 0.15,
+        specular: 0xffffff,
         shininess: 90,
         transparent: true,
-        opacity: 0.22,
-        depthWrite: false,
+        opacity: 0.35,
+        side: THREE.DoubleSide
       });
 
-      const wireframeMat = new THREE.MeshBasicMaterial({
-        color: 0x34d399,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.15,
-      });
+      // Smooth contoured torso
+      const torsoCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 2.4, 0),
+        new THREE.Vector3(0, 1.6, 0),
+        new THREE.Vector3(0, 0.6, 0),
+        new THREE.Vector3(0, -0.4, 0),
+        new THREE.Vector3(0, -1.8, 0)
+      ]);
+      const torsoGeom = new THREE.CylinderGeometry(0.72, 0.52, 2.8, 32, 16, true);
+      const torsoMesh = new THREE.Mesh(torsoGeom, pearlGlassMat);
+      torsoMesh.position.y = 0.4;
+      bodyGroup.add(torsoMesh);
 
-      // Head
-      const headGeom = new THREE.SphereGeometry(0.55, 24, 24);
-      headGeom.scale(1, 1.2, 1);
-      const headMesh = new THREE.Mesh(headGeom, glassMat);
+      // Head (Smooth Glass Sphere)
+      const headGeom = new THREE.SphereGeometry(0.55, 32, 32);
+      headGeom.scale(1, 1.25, 0.95);
+      const headMesh = new THREE.Mesh(headGeom, pearlGlassMat);
       headMesh.position.y = 2.4;
       bodyGroup.add(headMesh);
-      const headWire = new THREE.Mesh(headGeom, wireframeMat);
-      headWire.position.y = 2.4;
-      bodyGroup.add(headWire);
 
-      // Torso / Chest (Lồng ngực thấu quang)
-      const torsoGeom = new THREE.CylinderGeometry(0.7, 0.5, 2.2, 24, 8, true);
-      const torsoMesh = new THREE.Mesh(torsoGeom, glassMat);
-      torsoMesh.position.y = 0.8;
-      bodyGroup.add(torsoMesh);
-      const torsoWire = new THREE.Mesh(torsoGeom, wireframeMat);
-      torsoWire.position.y = 0.8;
-      bodyGroup.add(torsoWire);
-
-      // Pelvis / Đan Điền
-      const pelvisGeom = new THREE.CylinderGeometry(0.5, 0.45, 0.8, 24);
-      const pelvisMesh = new THREE.Mesh(pelvisGeom, glassMat);
-      pelvisMesh.position.y = -0.6;
-      bodyGroup.add(pelvisMesh);
-
-      // Legs
-      function createLimb(x, y, len) {
-        const geom = new THREE.CylinderGeometry(0.2, 0.14, len, 16);
-        const mesh = new THREE.Mesh(geom, glassMat);
-        mesh.position.set(x, y, 0);
-        bodyGroup.add(mesh);
-        const wire = new THREE.Mesh(geom, wireframeMat);
-        wire.position.set(x, y, 0);
-        bodyGroup.add(wire);
+      // Shoulders & Arms Soft Contours
+      function createArm(x) {
+        const armGeom = new THREE.CylinderGeometry(0.18, 0.12, 2.4, 24);
+        const armMesh = new THREE.Mesh(armGeom, pearlGlassMat);
+        armMesh.position.set(x, 0.5, 0);
+        armMesh.rotation.z = x > 0 ? -0.15 : 0.15;
+        bodyGroup.add(armMesh);
       }
-      createLimb(-0.35, -2.1, 2.2); // Left Leg
-      createLimb(0.35, -2.1, 2.2);  // Right Leg
-      createLimb(-1.0, 0.8, 1.8);   // Left Arm
-      createLimb(1.0, 0.8, 1.8);    // Right Arm
+      createArm(-0.95);
+      createArm(0.95);
 
-      // --- 4.2 Luminous Central Meridian Spine (Nhâm Mạch / Đốc Mạch) ---
-      const spinePoints = [];
-      for (let i = 0; i < 40; i++) {
-        const y = -3.2 + (i / 40) * 6.2;
-        spinePoints.push(new THREE.Vector3(0, y, 0));
+      // --- 4.2 Central Luminous Spine & Meridian Vines ---
+      const meridianPoints = [];
+      for (let i = 0; i < 45; i++) {
+        const y = -2.8 + (i / 45) * 5.6;
+        meridianPoints.push(new THREE.Vector3(Math.sin(y * 2) * 0.08, y, 0.15));
       }
-      const spineGeom = new THREE.BufferGeometry().setFromPoints(spinePoints);
-      const spineMat = new THREE.PointsMaterial({
-        color: 0xfde68a,
-        size: 0.08,
+      const meridianGeom = new THREE.BufferGeometry().setFromPoints(meridianPoints);
+      const meridianMat = new THREE.PointsMaterial({
+        color: 0xd97706,
+        size: 0.09,
         transparent: true,
-        opacity: 0.85,
-        blending: THREE.AdditiveBlending,
+        opacity: 0.9
       });
-      const spinePointsMesh = new THREE.Points(spineGeom, spineMat);
-      bodyGroup.add(spinePointsMesh);
+      const meridianMesh = new THREE.Points(meridianGeom, meridianMat);
+      bodyGroup.add(meridianMesh);
 
-      // Meridian glowing contour curve
-      const meridianCurve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0, 3.1, 0),     // Bách Hội (đỉnh đầu)
-        new THREE.Vector3(0, 2.4, 0.4),   // Ấn Đường / Mặt
-        new THREE.Vector3(0, 1.5, 0.6),   // Đản Trung (ngực)
-        new THREE.Vector3(0, 0.4, 0.5),   // Trung Quản (thượng vị)
-        new THREE.Vector3(0, -0.4, 0.45), // Khí Hải / Đan Điền
-        new THREE.Vector3(0, -1.0, 0.2),  // Hội Âm
-      ]);
-      const meridianTubeGeom = new THREE.TubeGeometry(meridianCurve, 64, 0.035, 8, false);
-      const meridianTubeMat = new THREE.MeshBasicMaterial({
-        color: 0x34d399,
-        transparent: true,
-        opacity: 0.9,
-      });
-      const meridianTube = new THREE.Mesh(meridianTubeGeom, meridianTubeMat);
-      bodyGroup.add(meridianTube);
-
-      // --- 4.3 Five Internal Organs (Ngũ Tạng Phát Sáng) ---
+      // --- 4.3 Blooming 3D Flowers at the 5 Internal Organs ---
       const organObjects = [];
 
-      function createOrgan(id, name, color, position, size, info) {
-        const geom = new THREE.SphereGeometry(size, 20, 20);
-        const mat = new THREE.MeshPhongMaterial({
+      function createBloomingFlower(id, name, color, position, scale, info) {
+        const flowerGroup = new THREE.Group();
+        flowerGroup.position.set(position.x, position.y, position.z);
+
+        // Core Glowing Seed / Organ
+        const coreGeom = new THREE.SphereGeometry(0.18, 20, 20);
+        const coreMat = new THREE.MeshPhongMaterial({
           color: color,
           emissive: color,
-          emissiveIntensity: 0.8,
-          transparent: true,
-          opacity: 0.85,
-          shininess: 100,
+          emissiveIntensity: 0.9,
+          shininess: 100
         });
-        const mesh = new THREE.Mesh(geom, mat);
-        mesh.position.set(position.x, position.y, position.z);
-        mesh.userData = { id, name, color, info, baseScale: size };
-        bodyGroup.add(mesh);
+        const coreMesh = new THREE.Mesh(coreGeom, coreMat);
+        flowerGroup.add(coreMesh);
 
-        // Ambient halo
-        const haloGeom = new THREE.SphereGeometry(size * 1.5, 16, 16);
-        const haloMat = new THREE.MeshBasicMaterial({
+        // Blooming Petals surrounding the core
+        const petalShape = new THREE.Shape();
+        petalShape.moveTo(0, 0);
+        petalShape.quadraticCurveTo(0.1, 0.2, 0, 0.38);
+        petalShape.quadraticCurveTo(-0.1, 0.2, 0, 0);
+        const petalGeom = new THREE.ShapeGeometry(petalShape);
+        const petalMat = new THREE.MeshPhongMaterial({
           color: color,
+          emissive: color,
+          emissiveIntensity: 0.4,
+          side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.25,
-          wireframe: true,
+          opacity: 0.8
         });
-        const haloMesh = new THREE.Mesh(haloGeom, haloMat);
-        haloMesh.position.copy(mesh.position);
-        bodyGroup.add(haloMesh);
 
-        organObjects.push({ mesh, haloMesh });
-        return mesh;
+        const numPetals = 8;
+        for (let i = 0; i < numPetals; i++) {
+          const petal = new THREE.Mesh(petalGeom, petalMat);
+          const angle = (i / numPetals) * Math.PI * 2;
+          petal.rotation.z = angle;
+          petal.rotation.x = 0.35;
+          petal.scale.set(0.85, 0.85, 0.85);
+          flowerGroup.add(petal);
+        }
+
+        flowerGroup.scale.set(scale, scale, scale);
+        flowerGroup.userData = { id, name, color, info, baseScale: scale };
+        bodyGroup.add(flowerGroup);
+
+        organObjects.push({ group: flowerGroup, core: coreMesh });
+        return flowerGroup;
       }
 
-      // Ngũ Tạng: Tâm, Can, Tỳ, Phế, Thận
-      const organHeart = createOrgan('tam', 'Tâm (Tim - Hỏa)', 0xfb7185, { x: -0.12, y: 1.25, z: 0.2 }, 0.22, {
+      // Ngũ Tạng Nở Hoa:
+      const flowerHeart = createBloomingFlower('tam', 'Tâm (Tim - Hoa Mẫu Đơn Đỏ)', 0xf43f5e, { x: -0.15, y: 1.15, z: 0.2 }, 1.1, {
         element: 'Hỏa',
-        desc: 'Chủ thần minh, chủ huyết mạch. Rối loạn gây hồi hộp, mất ngủ, tim đập nhanh, hay quên.',
-        remedy: 'Trà Tâm Sen, Long Nhãn, Táo Nhân. Uống giờ Tuất (19h-21h) dưỡng tâm an thần.',
+        desc: 'Chủ thần minh, chủ huyết mạch. Tâm khí vượng giúp sắc mặt hồng hào nhuận sắc, ngủ ngon an giấc.',
+        remedy: 'Trà Tâm Sen, Long Nhãn, Táo Nhân (Uống 19h-21h dưỡng tâm).'
       });
 
-      const organLungs = createOrgan('phe', 'Phế (Phổi - Kim)', 0xf1f5f9, { x: 0.2, y: 1.35, z: 0.15 }, 0.24, {
+      const flowerLungs = createBloomingFlower('phe', 'Phế (Phổi - Hoa Bách Hợp Trắng)', 0xffffff, { x: 0.2, y: 1.25, z: 0.18 }, 1.05, {
         element: 'Kim',
-        desc: 'Chủ khí, chủ bì mao, khai khiếu ra mũi. Hư nhược gây đoản hơi, da khô, dễ cảm mạo.',
-        remedy: 'Bách Hợp, Mạch Môn, Sa Sâm, Kỷ Tử. Tập thở bụng sâu 5h-7h sáng.',
+        desc: 'Chủ khí, chủ bì mao, khai khiếu ra mũi. Phế dưỡng tốt giúp làn da căng bóng mịn màng, chống khô nám.',
+        remedy: 'Trà Bách Hợp, Sa Sâm, Kỷ Tử, Mạch Môn (Uống sáng sớm 5h-7h).'
       });
 
-      const organLiver = createOrgan('can', 'Can (Gan - Mộc)', 0x10b981, { x: -0.22, y: 0.7, z: 0.2 }, 0.26, {
+      const flowerLiver = createBloomingFlower('can', 'Can (Gan - Cúc Hoa Hoàng Gia)', 0x10b981, { x: -0.22, y: 0.6, z: 0.2 }, 1.15, {
         element: 'Mộc',
-        desc: 'Chủ tàng huyết, chủ sơ tiết khí cơ. Uất trệ sinh cáu gắt, hoa mắt, mắt mờ đỏ, ngực sườn tức ách.',
-        remedy: 'Hoa Cúc, Câu Kỷ Tử, Quyết Minh Tử. Ngủ sâu trước 23h để dưỡng huyết tạng can.',
+        desc: 'Chủ tàng huyết, sơ tiết khí cơ. Can khí điều hòa giải trừ độc tố, sạch mụn nhọt, mắt sáng trong.',
+        remedy: 'Cúc La Mã, Câu Kỷ Tử, Quyết Minh Tử (Ngủ sâu trước 23h).'
       });
 
-      const organSpleen = createOrgan('ty', 'Tỳ (Tiêu Hóa - Thổ)', 0xf59e0b, { x: 0.22, y: 0.65, z: 0.18 }, 0.24, {
+      const flowerSpleen = createBloomingFlower('ty', 'Tỳ (Tiêu Hóa - Hoàng Kỳ & Quế Hoa)', 0xf59e0b, { x: 0.22, y: 0.55, z: 0.18 }, 1.05, {
         element: 'Thổ',
-        desc: 'Chủ vận hóa thủy cốc, sinh huyết. Hư nhược gây bụng đầy mềm, ăn không tiêu, người uể oải tích mỡ.',
-        remedy: 'Bạch Truật, Phục Linh, Ý Dĩ, Trần Bì. Ăn ấm, tránh thức ăn lạnh 7h-9h sáng.',
+        desc: 'Hậu thiên chi bản, chủ vận hóa dinh dưỡng sinh huyết. Tỳ khỏe giúp bụng thon gọn, không tích mỡ mềm.',
+        remedy: 'Bạch Truật, Phục Linh, Ý Dĩ, Trần Bì (Ăn ấm 7h-9h sáng).'
       });
 
-      const organKidney = createOrgan('than', 'Thận (Khí Lực - Thủy)', 0x38bdf8, { x: 0.0, y: 0.15, z: -0.2 }, 0.25, {
+      const flowerKidney = createBloomingFlower('than', 'Thận (Khí Lực - Hoa Súng Thục Địa)', 0x0284c7, { x: 0.0, y: 0.05, z: -0.1 }, 1.1, {
         element: 'Thủy',
-        desc: 'Chủ tàng tinh, chủ cốt tủy, cội nguồn sinh mệnh. Thận hư gây mỏi gối, đau lưng, sợ lạnh, giảm sinh lực.',
-        remedy: 'Thục Địa, Hoài Sơn, Kỷ Tử, Đỗ Trọng. Ngâm chân nước ấm gừng muối giờ Dậu (17h-19h).',
+        desc: 'Tiên thiên chi bản, chủ tàng tinh cốt tủy. Thận khỏe tóc đen dày mượt, sắc diện trẻ trung dồi dào sinh lực.',
+        remedy: 'Thục Địa, Kỷ Tử, Đỗ Trọng, Mè Đen (Ngâm chân nước gừng ấm 21h).'
       });
 
-      // --- 4.4 Major Acupoints (Huyệt Vị Hoàng Kim) ---
-      const acupointList = [
-        { name: 'Bách Hội (GV20)', y: 3.1, z: 0.0, desc: 'Đỉnh đầu hội tụ trăm mạch, định tâm an thần, trị đau đầu chóng mặt.' },
-        { name: 'Ấn Đường (EX-HN3)', y: 2.45, z: 0.45, desc: 'Giữa hai đầu lông mày, khai thông tâm trí, giảm căng thẳng mất ngủ.' },
-        { name: 'Đản Trung (CV17)', y: 1.45, z: 0.58, desc: 'Huyệt hội của khí, giải tỏa u uất lồng ngực, điều hòa phế khí.' },
-        { name: 'Trung Quản (CV12)', y: 0.45, z: 0.52, desc: 'Huyệt mộ của dạ dày, kiện tỳ hóa thấp, giảm đầy trướng bụng.' },
-        { name: 'Thần Khuyết (CV8)', y: -0.05, z: 0.48, desc: 'Rốn, ôn bổ nguyên dương, điều hòa tràng vị, giữ ấm hạ tiêu.' },
-        { name: 'Khí Hải (CV6)', y: -0.45, z: 0.46, desc: 'Bể chứa khí, đan điền chủ lực, bổ khí cố tinh, tăng cường nguyên khí.' },
+      // --- 4.4 Major Golden Acupoints (Huyệt Vị Vàng) ---
+      const acupoints = [
+        { name: 'Bách Hội (GV20)', y: 3.05, z: 0.0, desc: 'Hội tụ trăm mạch, định tâm an thần.' },
+        { name: 'Ấn Đường (EX-HN3)', y: 2.45, z: 0.42, desc: 'Khai thông trí não, giảm âu lo căng thẳng.' },
+        { name: 'Đản Trung (CV17)', y: 1.35, z: 0.55, desc: 'Huyệt hội của khí, dưỡng tâm an thần.' },
+        { name: 'Thần Khuyết (CV8 - Rốn)', y: -0.05, z: 0.45, desc: 'Ôn bổ nguyên dương, làm ấm bụng dưới.' },
+        { name: 'Khí Hải (CV6 - Đan Điền)', y: -0.45, z: 0.42, desc: 'Bể chứa sinh lực, bồi bổ nguyên khí.' }
       ];
       const acupointMeshes = [];
-      acupointList.forEach(pt => {
+      acupoints.forEach(pt => {
         const ptGeom = new THREE.OctahedronGeometry(0.06, 0);
         const ptMat = new THREE.MeshPhongMaterial({
-          color: 0xfde68a,
-          emissive: 0xf59e0b,
+          color: 0xf59e0b,
+          emissive: 0xfbbf24,
           emissiveIntensity: 1.0,
           shininess: 120
         });
@@ -918,56 +1641,52 @@
         acupointMeshes.push(ptMesh);
       });
 
-      // --- 4.5 Floating Botanical Symbiosis (Cánh Hoa Thảo Mộc Bay) ---
-      const botanicalsGroup = new THREE.Group();
-      scene.add(botanicalsGroup);
+      // --- 4.5 Floating 3D Botanical Petals (Hoa lá bay trong không gian 3D) ---
+      const floating3DPetalsGroup = new THREE.Group();
+      scene.add(floating3DPetalsGroup);
 
-      const petalColors = [0xfb7185, 0xfde68a, 0x34d399, 0xf472b6, 0xa7f3d0];
-      const petals = [];
-      for (let i = 0; i < 36; i++) {
-        const petalShape = new THREE.Shape();
-        petalShape.moveTo(0, 0);
-        petalShape.quadraticCurveTo(0.12, 0.18, 0, 0.35);
-        petalShape.quadraticCurveTo(-0.12, 0.18, 0, 0);
-        const petalGeom = new THREE.ShapeGeometry(petalShape);
+      const petalColors = [0xfb7185, 0xfde68a, 0x10b981, 0xf472b6, 0xa7f3d0];
+      const petals3D = [];
+      for (let i = 0; i < 40; i++) {
+        const pShape = new THREE.Shape();
+        pShape.moveTo(0, 0);
+        pShape.quadraticCurveTo(0.12, 0.18, 0, 0.35);
+        pShape.quadraticCurveTo(-0.12, 0.18, 0, 0);
+        const pGeom = new THREE.ShapeGeometry(pShape);
         const col = petalColors[i % petalColors.length];
-        const petalMat = new THREE.MeshPhongMaterial({
+        const pMat = new THREE.MeshPhongMaterial({
           color: col,
           emissive: col,
           emissiveIntensity: 0.3,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.65
+          opacity: 0.75
         });
-        const petalMesh = new THREE.Mesh(petalGeom, petalMat);
-        const radius = 1.6 + Math.random() * 2.2;
+        const pMesh = new THREE.Mesh(pGeom, pMat);
+        const radius = 1.4 + Math.random() * 2.4;
         const angle = Math.random() * Math.PI * 2;
-        petalMesh.position.set(
-          Math.cos(angle) * radius,
-          (Math.random() - 0.5) * 6,
-          Math.sin(angle) * radius
-        );
-        petalMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
-        const scale = 0.5 + Math.random() * 0.8;
-        petalMesh.scale.set(scale, scale, scale);
-        petalMesh.userData = {
-          speedY: 0.003 + Math.random() * 0.007,
+        pMesh.position.set(Math.cos(angle) * radius, (Math.random() - 0.5) * 5.5, Math.sin(angle) * radius);
+        pMesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+        const sc = 0.5 + Math.random() * 0.7;
+        pMesh.scale.set(sc, sc, sc);
+        pMesh.userData = {
+          speedY: 0.003 + Math.random() * 0.006,
           rotSpeed: (Math.random() - 0.5) * 0.02,
           radius: radius,
           angle: angle,
-          orbitSpeed: (Math.random() - 0.5) * 0.006
+          orbitSpeed: (Math.random() - 0.5) * 0.005
         };
-        botanicalsGroup.add(petalMesh);
-        petals.push(petalMesh);
+        floating3DPetalsGroup.add(pMesh);
+        petals3D.push(pMesh);
       }
 
-      // --- 4.6 Scanning Laser Beam (Vành Quét Xuyên Thấu) ---
-      const scanRingGeom = new THREE.RingGeometry(0.7, 0.85, 32);
+      // --- 4.6 Scanning Ring Beam ---
+      const scanRingGeom = new THREE.RingGeometry(0.7, 0.82, 32);
       const scanRingMat = new THREE.MeshBasicMaterial({
-        color: 0x34d399,
+        color: 0x059669,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0,
+        opacity: 0
       });
       const scanRing = new THREE.Mesh(scanRingGeom, scanRingMat);
       scanRing.rotation.x = Math.PI / 2;
@@ -975,9 +1694,9 @@
 
       let isScanning = false;
       let scanDirection = 1;
-      let scanY = -3.0;
+      let scanY = -2.8;
 
-      // 5. Interaction: Mouse Drag Rotation
+      // 5. Mouse Drag Orbit Rotation
       let isDragging = false;
       let previousMouseX = 0;
       let targetRotationY = 0;
@@ -986,9 +1705,7 @@
         isDragging = true;
         previousMouseX = e.clientX;
       });
-
       window.addEventListener('mouseup', () => { isDragging = false; });
-
       window.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         const deltaX = e.clientX - previousMouseX;
@@ -1011,7 +1728,7 @@
         targetRotationY += deltaX * 0.008;
       });
 
-      // Raycaster for Organ Click
+      // Raycaster for Organ/Acupoint click
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
       const popup = document.getElementById('organPopup');
@@ -1027,38 +1744,32 @@
         mouse.y = -((e.clientY - rect.top) / canvas.clientHeight) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
-        const meshesToTest = organObjects.map(o => o.mesh).concat(acupointMeshes);
-        const intersects = raycaster.intersectObjects(meshesToTest);
+        const clickableCores = organObjects.map(o => o.core).concat(acupointMeshes);
+        const intersects = raycaster.intersectObjects(clickableCores);
 
         if (intersects.length > 0) {
           const hit = intersects[0].object;
-          const data = hit.userData;
-          
-          if (data.isAcupoint) {
-            // Acupoint click
-            popupTitle.textContent = data.name;
-            popupDesc.textContent = data.desc;
-            popupRemedy.innerHTML = '<strong>Huyệt Vị Đông Y:</strong> Bấm huyệt hoặc cứu ngải 3-5 phút giúp khai thông kinh mạch tương ứng.';
+          if (hit.userData.isAcupoint) {
+            popupTitle.textContent = hit.userData.name;
+            popupDesc.textContent = hit.userData.desc;
+            popupRemedy.innerHTML = '<strong>Huyệt Vị Đông Y:</strong> Day bấm 3-5 phút theo chiều kim đồng hồ để khai thông kinh khí.';
             popup.style.display = 'block';
-            liveName.textContent = data.name + ' • Huyệt Vị Hoàng Kim';
-            pulseDot.style.background = '#fde68a';
-            pulseDot.style.boxShadow = '0 0 16px #fde68a';
+            liveName.textContent = hit.userData.name + ' &bull; Huyệt Vị Vàng';
+            pulseDot.style.background = '#f59e0b';
+            pulseDot.style.boxShadow = '0 0 16px #f59e0b';
           } else {
-            // Show organ popup
+            const parentGroup = hit.parent;
+            const data = parentGroup.userData;
             popupTitle.textContent = data.name;
             popupDesc.textContent = data.info.desc;
             popupRemedy.innerHTML = '<strong>Phác đồ thảo mộc:</strong> ' + data.info.remedy;
             popup.style.display = 'block';
-
-            // Update live banner
-            liveName.textContent = data.name + ' • Hệ Hành ' + data.info.element;
+            liveName.textContent = data.name + ' &bull; Hệ Hành ' + data.info.element;
             pulseDot.style.background = '#' + data.color.toString(16).padStart(6, '0');
             pulseDot.style.boxShadow = '0 0 16px #' + data.color.toString(16).padStart(6, '0');
+            parentGroup.scale.set(1.4, 1.4, 1.4);
+            setTimeout(() => parentGroup.scale.set(data.baseScale, data.baseScale, data.baseScale), 350);
           }
-
-          // Highlight with pulse
-          hit.scale.set(1.4, 1.4, 1.4);
-          setTimeout(() => hit.scale.set(1, 1, 1), 300);
         }
       });
 
@@ -1066,18 +1777,18 @@
         popup.style.display = 'none';
       });
 
-      // 6. Trigger Scan Button
-      document.getElementById('btnTriggerScan').addEventListener('click', () => {
+      // Scan Button Trigger
+      document.getElementById('btnScanHero').addEventListener('click', () => {
         isScanning = true;
-        scanY = -3.0;
+        scanY = -2.8;
         scanRingMat.opacity = 0.85;
         document.getElementById('organScanStats').textContent = 'ĐANG QUÉT XUYÊN THẤU TOÀN DIỆN...';
       });
 
-      // Controls
-      document.getElementById('btnLayerAll').addEventListener('click', (e) => {
+      // HUD Layer Toggles
+      document.getElementById('btnLayerBotanical').addEventListener('click', (e) => {
         setLayerMode(e.target, true, true, true);
-        document.getElementById('viewModeLabel').textContent = 'XUYÊN THẤU TOÀN PHẦN';
+        document.getElementById('viewModeLabel').textContent = 'CỘNG SINH HOA LÁ & TẠNG PHỦ';
       });
       document.getElementById('btnLayerOrgans').addEventListener('click', (e) => {
         setLayerMode(e.target, true, false, false);
@@ -1085,32 +1796,24 @@
       });
       document.getElementById('btnLayerMeridians').addEventListener('click', (e) => {
         setLayerMode(e.target, false, true, false);
-        document.getElementById('viewModeLabel').textContent = 'ĐƯỜNG KINH LẠC 12 KINH';
-      });
-      document.getElementById('btnLayerBotanicals').addEventListener('click', (e) => {
-        setLayerMode(e.target, true, false, true);
-        document.getElementById('viewModeLabel').textContent = 'THẢO MỘC VÀ KHÍ HUYẾT GIAO THOA';
+        document.getElementById('viewModeLabel').textContent = 'ĐƯỜNG KINH LẠC HUYỆT VỊ';
       });
       document.getElementById('btnResetView').addEventListener('click', () => {
         targetRotationY = 0;
         bodyGroup.rotation.y = 0;
       });
 
-      function setLayerMode(btn, showOrgans, showMeridians, showBotanicals = true) {
+      function setLayerMode(btn, showOrgans, showMeridians, showBotanicals) {
         document.querySelectorAll('.hud-controls .hud-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        organObjects.forEach(o => {
-          o.mesh.visible = showOrgans;
-          o.haloMesh.visible = showOrgans;
-        });
-        meridianTube.visible = showMeridians;
-        spinePointsMesh.visible = showMeridians;
-        acupointMeshes.forEach(m => { m.visible = showMeridians || showOrgans; });
-        botanicalsGroup.visible = showBotanicals;
+        organObjects.forEach(o => { o.group.visible = showOrgans; });
+        meridianMesh.visible = showMeridians;
+        acupointMeshes.forEach(m => { m.visible = showMeridians; });
+        floating3DPetalsGroup.visible = showBotanicals;
       }
 
-      // 7. Animation Loop (60 FPS)
-      let clock = new THREE.Clock();
+      // 6. Animation Loop (60 FPS)
+      const clock = new THREE.Clock();
 
       function animate() {
         requestAnimationFrame(animate);
@@ -1118,54 +1821,45 @@
 
         // Smooth rotation damping
         bodyGroup.rotation.y += (targetRotationY - bodyGroup.rotation.y) * 0.08;
-
-        // Auto gentle drift when idle
         if (!isDragging) {
-          targetRotationY += 0.0015;
+          targetRotationY += 0.0018;
         }
 
-        // Floating Botanical Petals Animation
-        petals.forEach(p => {
+        // Heart flower gentle pulse
+        const heartPulse = 1.0 + Math.sin(elapsedTime * 4.2) * 0.08;
+        flowerHeart.scale.set(heartPulse * 1.1, heartPulse * 1.1, heartPulse * 1.1);
+
+        // Liver & Kidney flowers gentle breathing
+        const breath = 1.0 + Math.sin(elapsedTime * 1.8) * 0.05;
+        flowerLungs.scale.set(breath * 1.05, breath * 1.05, breath * 1.05);
+
+        // Acupoints subtle twinkle
+        const ptTwinkle = 1.0 + Math.sin(elapsedTime * 3.0) * 0.15;
+        acupointMeshes.forEach(m => m.scale.set(ptTwinkle, ptTwinkle, ptTwinkle));
+
+        // Floating 3D Petals motion
+        petals3D.forEach(p => {
           p.userData.angle += p.userData.orbitSpeed;
           p.position.x = Math.cos(p.userData.angle) * p.userData.radius;
           p.position.z = Math.sin(p.userData.angle) * p.userData.radius;
           p.position.y += p.userData.speedY;
           p.rotation.x += p.userData.rotSpeed;
           p.rotation.y += p.userData.rotSpeed * 1.5;
-          if (p.position.y > 3.5) {
-            p.position.y = -3.5;
+          if (p.position.y > 3.2) {
+            p.position.y = -3.2;
           }
         });
 
-        // Acupoints subtle pulsation
-        const ptPulse = 1.0 + Math.sin(elapsedTime * 3.0) * 0.15;
-        acupointMeshes.forEach(m => m.scale.set(ptPulse, ptPulse, ptPulse));
-
-        // Heart pulse effect
-        const heartPulse = 1.0 + Math.sin(elapsedTime * 4.5) * 0.08;
-        organHeart.scale.set(heartPulse, heartPulse, heartPulse);
-
-        // Liver & Kidney subtle breathing
-        const breath = 1.0 + Math.sin(elapsedTime * 1.8) * 0.04;
-        organLungs.scale.set(breath, breath, breath);
-
-        // Meridian energy particle flow
-        const positions = spineGeom.attributes.position.array;
-        for (let i = 0; i < 40; i++) {
-          positions[i * 3 + 1] = -3.2 + ((i + (elapsedTime * 8) % 40) / 40) * 6.2;
-        }
-        spineGeom.attributes.position.needsUpdate = true;
-
-        // Scanning beam motion
+        // Scan beam motion
         if (isScanning) {
-          scanY += 0.06 * scanDirection;
+          scanY += 0.055 * scanDirection;
           scanRing.position.y = scanY;
-          if (scanY > 3.0) {
+          if (scanY > 2.8) {
             scanDirection = -1;
-          } else if (scanY < -3.0 && scanDirection === -1) {
+          } else if (scanY < -2.8 && scanDirection === -1) {
             isScanning = false;
             scanRingMat.opacity = 0;
-            document.getElementById('organScanStats').textContent = 'QUÉT HOÀN TẤT • ĐÃ LẬP HỒ SƠ 9 THỂ TẠNG';
+            document.getElementById('organScanStats').textContent = 'QUÉT HOÀN TẤT &bull; ĐÃ LẬP HỒ SƠ THỂ TẠNG';
           }
         }
 
@@ -1173,41 +1867,192 @@
       }
       animate();
 
-      // Resize handler
       window.addEventListener('resize', () => {
-        const newWidth = canvas.clientWidth;
-        const newHeight = canvas.clientHeight;
-        camera.aspect = newWidth / newHeight;
+        const newW = canvas.clientWidth;
+        const newH = canvas.clientHeight;
+        camera.aspect = newW / newH;
         camera.updateProjectionMatrix();
-        renderer.setSize(newWidth, newHeight);
+        renderer.setSize(newW, newH);
       });
     })();
+  </script>
 
-    // Interactive Quiz Logic
+  <!-- E-Commerce Cart & Interactive Checkout Logic -->
+  <script>
+    // State
+    const cart = [
+      { id: 'combo-14', name: 'Combo Khởi Sắc Dưỡng Nhan (14 Ngày)', price: 199000, qty: 1 }
+    ];
+    let currentCartTotal = 199000;
+    let currentOrderCode = 'DN' + Math.floor(1000 + Math.random() * 9000);
+
+    // DOM Elements
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartBackdrop = document.getElementById('cartBackdrop');
+    const cartBadgeCount = document.getElementById('cartBadgeCount');
+    const cartDrawerCount = document.getElementById('cartDrawerCount');
+    const cartItemsList = document.getElementById('cartItemsList');
+    const cartSubtotalText = document.getElementById('cartSubtotalText');
+    const checkoutModal = document.getElementById('checkoutModal');
+
+    function formatVND(n) {
+      return n.toLocaleString('vi-VN') + '₫';
+    }
+
+    function renderCart() {
+      cartItemsList.innerHTML = '';
+      let total = 0;
+      let count = 0;
+
+      cart.forEach((item, index) => {
+        total += item.price * item.qty;
+        count += item.qty;
+
+        const el = document.createElement('div');
+        el.className = 'cart-item';
+        el.innerHTML = `
+          <div style="width:48px; height:48px; border-radius:10px; background:#f0fdf4; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">&#127861;</div>
+          <div class="cart-item-info">
+            <div class="cart-item-title">${item.name}</div>
+            <div class="cart-item-price">${formatVND(item.price)}</div>
+          </div>
+          <div class="cart-stepper">
+            <button class="step-btn" onclick="updateQty(${index}, -1)">&minus;</button>
+            <span style="font-weight:700; font-size:0.9rem; padding:0 4px;">${item.qty}</span>
+            <button class="step-btn" onclick="updateQty(${index}, 1)">&plus;</button>
+          </div>
+        `;
+        cartItemsList.appendChild(el);
+      });
+
+      currentCartTotal = total;
+      cartBadgeCount.textContent = count;
+      cartDrawerCount.textContent = count;
+      cartSubtotalText.textContent = formatVND(total);
+
+      // Update VietQR dynamic image and bank details
+      updateVietQRImage(total);
+    }
+
+    window.updateQty = function(index, delta) {
+      if (!cart[index]) return;
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      renderCart();
+    };
+
+    function updateVietQRImage(amount) {
+      const img = document.getElementById('vietqrImg');
+      const valAmount = document.getElementById('valAmountText');
+      const valMemo = document.getElementById('valMemo');
+      const deepLink = document.getElementById('btnDeepLinkBank');
+
+      if (!valAmount || !img) return;
+      valAmount.textContent = formatVND(amount);
+      valMemo.textContent = 'DUONGNHAN ' + currentOrderCode;
+
+      const qrUrl = `https://img.vietqr.io/image/TCB-1022778686-compact2.png?amount=${amount}&addInfo=DUONGNHAN%20${currentOrderCode}&accountName=LE%20THI%20THANH%20MAI`;
+      img.src = qrUrl;
+      deepLink.href = qrUrl;
+    }
+
+    // Add to cart buttons listener
+    document.querySelectorAll('.btn-add-to-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const name = btn.dataset.name;
+        const price = parseInt(btn.dataset.price, 10);
+
+        const existing = cart.find(i => i.id === id);
+        if (existing) {
+          existing.qty += 1;
+        } else {
+          cart.push({ id, name, price, qty: 1 });
+        }
+        renderCart();
+        openCartDrawer();
+      });
+    });
+
+    function openCartDrawer() {
+      cartBackdrop.classList.add('active');
+      cartDrawer.classList.add('open');
+    }
+    function closeCartDrawer() {
+      cartBackdrop.classList.remove('active');
+      cartDrawer.classList.remove('open');
+    }
+
+    document.getElementById('btnOpenCart').addEventListener('click', openCartDrawer);
+    document.getElementById('btnCloseCart').addEventListener('click', closeCartDrawer);
+    cartBackdrop.addEventListener('click', closeCartDrawer);
+
+    // Open Checkout Modal
+    document.getElementById('btnCheckoutModal').addEventListener('click', () => {
+      closeCartDrawer();
+      checkoutModal.classList.add('open');
+    });
+    document.getElementById('btnCloseCheckout').addEventListener('click', () => {
+      checkoutModal.classList.remove('open');
+    });
+
+    // Payment Tabs Switcher
+    const tabVietQR = document.getElementById('tabVietQR');
+    const tabCard = document.getElementById('tabCard');
+    const tabMomo = document.getElementById('tabMomo');
+    const payBoxVietQR = document.getElementById('payBoxVietQR');
+    const payBoxCard = document.getElementById('payBoxCard');
+    const payBoxMomo = document.getElementById('payBoxMomo');
+
+    function switchPaymentTab(activeTab, activeBox) {
+      [tabVietQR, tabCard, tabMomo].forEach(t => t.classList.remove('active'));
+      [payBoxVietQR, payBoxCard, payBoxMomo].forEach(b => b.style.display = 'none');
+      activeTab.classList.add('active');
+      activeBox.style.display = 'block';
+    }
+
+    tabVietQR.addEventListener('click', () => switchPaymentTab(tabVietQR, payBoxVietQR));
+    tabCard.addEventListener('click', () => switchPaymentTab(tabCard, payBoxCard));
+    tabMomo.addEventListener('click', () => switchPaymentTab(tabMomo, payBoxMomo));
+
+    // Copy to clipboard utility
+    window.copyText = function(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const oldText = btn.textContent;
+        btn.textContent = 'Đã sao chép!';
+        setTimeout(() => { btn.textContent = oldText; }, 1800);
+      });
+    };
+
+    // Confirm Payment
+    document.getElementById('btnConfirmPaid').addEventListener('click', () => {
+      const email = document.getElementById('custEmail').value || 'quý khách';
+      alert(`Cảm ơn bạn! Hệ thống đã ghi nhận đơn hàng DUONGNHAN ${currentOrderCode}. Cẩm nang và mã tra cứu sẽ được gửi tức thì về email: ${email}`);
+      checkoutModal.classList.remove('open');
+    });
+
+    // Initial render
+    renderCart();
+
+    // Quiz Logic
     (function initQuizLogic() {
       const buttons = document.querySelectorAll('.quiz-opt-btn');
       const resultBox = document.getElementById('quizResultBox');
       const resultTitle = document.getElementById('resultTitle');
       const resultDesc = document.getElementById('resultDesc');
-      const selected = {};
 
       buttons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', () => {
           const parent = btn.closest('.quiz-options');
           parent.querySelectorAll('.quiz-opt-btn').forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
 
-          const organ = btn.dataset.organ;
           const type = btn.dataset.type;
-          selected[parent] = { organ, type, text: btn.textContent };
 
-          // Trigger simulated scan pulse
-          const scanBtn = document.getElementById('btnTriggerScan');
-          if (scanBtn) scanBtn.click();
-
-          // If answered both questions
-          const answeredCount = document.querySelectorAll('.quiz-opt-btn.selected').length;
-          if (answeredCount >= 2) {
+          const answered = document.querySelectorAll('.quiz-opt-btn.selected').length;
+          if (answered >= 2) {
             resultBox.style.display = 'block';
             if (type === 'khi-hu') {
               resultTitle.textContent = 'CHẨN ĐOÁN: BẠN THUỘC THỂ KHÍ HƯ (TẠNG PHẾ & TỲ SUY GIẢM)';

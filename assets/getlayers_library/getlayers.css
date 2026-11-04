@@ -1,0 +1,215 @@
+/**
+ * GetLayers Cinematic UI Design System
+ * Reverse-engineered & adapted from https://getlayers.ai
+ * Architecture: Textura Agency Cinematic Design Layer
+ */
+
+:root {
+  /* Surface & Canvas */
+  --layer-bg: #07090e;
+  --layer-bg-card: rgba(12, 14, 20, 0.75);
+  --layer-border-soft: rgba(255, 255, 255, 0.08);
+  --layer-border-subtle: rgba(255, 255, 255, 0.04);
+  --layer-border-highlight: rgba(255, 255, 255, 0.18);
+  
+  /* Aurora & Shimmer Backdrops */
+  --layer-aurora: radial-gradient(120% 90% at 0% 0%, rgba(254, 234, 225, 0.04), transparent 55%),
+                  radial-gradient(120% 90% at 100% 100%, rgba(192, 206, 242, 0.04), transparent 60%);
+  --layer-glass-blur: blur(24px) saturate(1.4);
+  --layer-rim-light: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  --layer-shadow-depth: 0 30px 60px -36px rgba(0, 0, 0, 0.85);
+
+  /* Typography Colors */
+  --layer-text-primary: #f8fafc;
+  --layer-text-muted: #94a3b8;
+  --layer-text-dim: #64748b;
+
+  /* Accents */
+  --layer-emerald: #10b981;
+  --layer-emerald-glow: rgba(16, 185, 129, 0.15);
+  --layer-rose: #fb7185;
+  --layer-rose-glow: rgba(251, 113, 133, 0.15);
+  --layer-gold: #d4af37;
+  --layer-gold-glow: rgba(212, 175, 55, 0.15);
+  --layer-cyan: #38bdf8;
+  --layer-cyan-glow: rgba(56, 189, 248, 0.15);
+
+  /* Radius */
+  --layer-radius-sm: 8px;
+  --layer-radius-md: 14px;
+  --layer-radius-lg: 20px;
+  --layer-radius-pill: 9999px;
+}
+
+/* 1. Cinematic Glass Card */
+.layer-glass-card {
+  position: relative;
+  background: var(--layer-aurora), var(--layer-bg-card);
+  border: 1px solid var(--layer-border-soft);
+  border-radius: var(--layer-radius-lg);
+  -webkit-backdrop-filter: var(--layer-glass-blur);
+  backdrop-filter: var(--layer-glass-blur);
+  box-shadow: var(--layer-rim-light), var(--layer-shadow-depth);
+  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.layer-glass-card:hover {
+  border-color: var(--layer-border-highlight);
+  box-shadow: var(--layer-rim-light), 0 36px 70px -30px rgba(0, 0, 0, 0.95);
+  transform: translateY(-2px);
+}
+
+/* 2. Dynamic Specular Border Glow (Masked) */
+.layer-border-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+  -webkit-mask-clip: content-box, border-box;
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.layer-glass-card:hover .layer-border-glow {
+  opacity: 1;
+}
+
+.layer-glow-blob {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 65%);
+  filter: blur(20px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+/* 3. Glass Buttons */
+.layer-btn-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--layer-radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--layer-text-primary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--layer-border-soft);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.layer-btn-glass:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--layer-border-highlight);
+  transform: translateY(-1px);
+}
+
+.layer-btn-glass:focus-visible {
+  outline: 2px solid var(--layer-cyan);
+  outline-offset: 2px;
+}
+
+.layer-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--layer-radius-md);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #051610;
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px -4px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.layer-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 26px -4px rgba(16, 185, 129, 0.55);
+}
+
+/* 4. Ambient Stage Backdrop */
+.layer-ambient-stage {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.layer-spotlight-top {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.08) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+.layer-spotlight-accent {
+  position: absolute;
+  bottom: 10%;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 65%);
+  filter: blur(80px);
+}
+
+/* 5. Badges & Micro-Pills */
+.layer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--layer-radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--layer-border-soft);
+  color: var(--layer-text-muted);
+}
+
+.layer-pill-emerald {
+  background: var(--layer-emerald-glow);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.layer-pill-gold {
+  background: var(--layer-gold-glow);
+  border-color: rgba(212, 175, 55, 0.3);
+  color: #fbbf24;
+}
+
+/* 6. Accessibility & Hallmarks */
+@media (prefers-reduced-motion: reduce) {
+  .layer-glass-card,
+  .layer-btn-glass,
+  .layer-btn-primary {
+    transition: none !important;
+    transform: none !important;
+  }
+}

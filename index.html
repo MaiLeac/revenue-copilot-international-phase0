@@ -3,177 +3,325 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Money HQ Digital Assets Studio | Công Cụ B2B & Cẩm Nang Chăm Sóc Sức Khỏe Chủ Động</title>
+  <title>Money HQ Studio | Cinematic Digital Assets & Quantitative Control Plane</title>
   <link rel="stylesheet" href="assets/web_capability_library/tokens.css" />
-  <meta name="description" content="Hệ sinh thái sản phẩm số vận hành tự động: Cẩm Nang Dưỡng Nhan Đông Y Ứng Dụng (EXP-03) và Global E-Commerce Catalogue CSV Fixer (EXP-02)." />
+  <link rel="stylesheet" href="assets/getlayers_library/getlayers.css" />
+  <meta name="description" content="Trung tâm điều hành hệ sinh thái sản phẩm số tự động & quant trading: BLOOM Somatic Intelligence, CatalogueQA Enterprise, Vibe-Trading Hub." />
+  
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "Money HQ Autonomous Digital Products",
-    "itemListElement": [
-      {
-        "@type": "SoftwareApplication",
-        "position": 1,
-        "name": "Cẩm Nang Dưỡng Nhan & Trắc Nghiệm 7 Thể Chất Đông Y",
-        "applicationCategory": "HealthApplication",
-        "offers": {"@type": "Offer", "price": "12.00", "priceCurrency": "USD"}
-      },
-      {
-        "@type": "SoftwareApplication",
-        "position": 2,
-        "name": "Global E-Commerce Catalogue CSV Fixer & Profit Auditor",
-        "applicationCategory": "BusinessApplication",
-        "offers": {"@type": "Offer", "price": "9.00", "priceCurrency": "USD"}
-      }
-    ]
+    "@type": "SoftwareApplication",
+    "name": "Money HQ Autonomous Studio",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser"
   }
   </script>
+
   <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --emerald: #10b981;
-      --amber: #f59e0b;
-      --rose: #f43f5e;
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: var(--layer-bg);
+      color: var(--layer-text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
-    .container { max-width: 1080px; margin: 0 auto; padding: 40px 20px; }
-    .badge {
-      display: inline-block;
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 14px;
+    .wrapper {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+      position: relative;
+      z-index: 10;
     }
-    h1 { font-size: 2.2rem; margin-bottom: 12px; }
-    .subtitle { color: var(--muted); max-width: 760px; margin-bottom: 32px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
+    .header {
+      margin-bottom: 48px;
+    }
+    .eyebrow-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .lead {
+      font-size: 1.1rem;
+      color: var(--layer-text-muted);
+      max-width: 720px;
+      margin-bottom: 32px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 28px;
+      margin-bottom: 48px;
+    }
+    .product-card {
+      padding: 32px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      min-height: 380px;
     }
-    .card h2 { font-size: 1.35rem; margin-bottom: 10px; }
-    .card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 16px; }
-    .price-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
+    .card-top {
+      margin-bottom: 24px;
+    }
+    .card-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 14px 0 10px;
+      letter-spacing: -0.02em;
+    }
+    .card-desc {
+      color: var(--layer-text-muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
       margin-bottom: 18px;
+    }
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-bottom: 24px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feature-list li span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+    }
+    .price-tag {
+      font-size: 0.95rem;
       font-weight: 700;
       color: #fbbf24;
+      margin-bottom: 20px;
     }
-    .btn-group { display: flex; flex-wrap: wrap; gap: 10px; }
-    .btn {
-      display: inline-block;
-      text-decoration: none;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-    .btn-primary { background: var(--emerald); color: #06281e; }
-    .btn-secondary { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
-    .how-it-works {
-      margin-top: 40px;
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-    }
-    footer {
-      margin-top: 48px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.85rem;
+    .card-actions {
       display: flex;
-      justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
     }
-    footer a { color: #38bdf8; text-decoration: none; }
+    .stats-shelf {
+      padding: 32px;
+      margin-bottom: 48px;
+      background: var(--layer-aurora), rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--layer-border-soft);
+      border-radius: var(--layer-radius-lg);
+      backdrop-filter: var(--layer-glass-blur);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+    .stat-item h3 {
+      font-size: 0.82rem;
+      color: var(--layer-text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .stat-item p {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .stat-item p.emerald { color: #34d399; }
+    .stat-item p.gold { color: #fbbf24; }
+    .stat-item p.cyan { color: #38bdf8; }
+
+    footer {
+      border-top: 1px solid var(--layer-border-subtle);
+      padding-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--layer-text-dim);
+    }
+    footer a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <span class="badge">MONEY HQ DIGITAL ASSET STUDIO • VẬN HÀNH TỰ ĐỘNG 24/7</span>
-    <h1>Hệ Sinh Thái Sản Phẩm Số & Công Cụ B2B Quốc Tế</h1>
-    <p class="subtitle">
-      Trải nghiệm trực tiếp trên trình duyệt (100% Client-Side, bảo mật dữ liệu tuyệt đối).
-      Hỗ trợ thanh toán tự động qua <strong>Payoneer Quốc tế (USD)</strong> và <strong>Chuyển khoản VietQR 24/7 (VND)</strong>.
-    </p>
+  <!-- Ambient Backdrop -->
+  <div class="layer-ambient-stage" aria-hidden="true">
+    <div class="layer-spotlight-top"></div>
+    <div class="layer-spotlight-accent"></div>
+  </div>
+
+  <div class="wrapper">
+    <header class="header">
+      <div class="eyebrow-row">
+        <span class="layer-pill layer-pill-emerald">Hệ Thống Đang Hoạt Động 24/7</span>
+        <span class="layer-pill">GetLayers &amp; MotionSites Standard</span>
+      </div>
+      <h1>Money HQ Digital Studio</h1>
+      <p class="lead">
+        Hệ sinh thái sản phẩm số định hướng thương mại quốc tế và bộ máy giao dịch định lượng tự động.
+        Giao diện Dark Obsidian chuẩn điện ảnh, bảo mật 100% Client-Side.
+      </p>
+    </header>
 
     <div class="grid">
-      <div class="card">
-        <div>
-          <span class="badge">SỨC KHỎE & DƯỠNG NHAN (VN & GLOBAL DIASPORA)</span>
-          <h2>1. Trắc Nghiệm 7 Thể Chất Đông Y & Cẩm Nang Dưỡng Nhan 28 Ngày</h2>
-          <p>
-            Đánh giá nhanh thể chất (Khí hư, Huyết hư, Dương hư, Âm hư, Khí trệ, Đàm thấp, Bình hòa) trong 2 phút.
-            Tra cứu 14 bài trà/canh thực dưỡng, nghe hướng dẫn Audio giọng đọc và tải trọn bộ Cẩm nang PDF A4.
+      <!-- Card 1: BLOOM Somatic Intelligence -->
+      <article class="layer-glass-card product-card">
+        <div class="layer-border-glow">
+          <div class="layer-glow-blob" style="top: 20%; left: 30%;"></div>
+        </div>
+        <div class="card-top">
+          <span class="layer-pill layer-pill-emerald">EXP-03 • Sức Khỏe &amp; Thể Chất</span>
+          <h2 class="card-title">BLOOM: Somatic Intelligence</h2>
+          <p class="card-desc">
+            Chẩn đoán thể chất Đông Y qua 5 vùng cơ thể tương tác (Tâm Thần, Sắc Diện, Khí Lực, Tỳ Vị, Tuần Hoàn).
+            Lấy cảm hứng từ kiệt tác <em>Bloom</em> trên MotionSites và GetLayers AI.
           </p>
-          <div class="price-row">
-            <span>Giá trọn bộ: 299.000đ (VN) / $12 USD (Quốc tế)</span>
-          </div>
+          <ul class="feature-list">
+            <li><span class="dot"></span> Phân loại chính xác 9 thể chất Đông Y</li>
+            <li><span class="dot"></span> Công thức trà thảo mộc theo nhịp sinh học 24h</li>
+            <li><span class="dot"></span> Tích hợp VietQR &amp; Payoneer tự động</li>
+          </ul>
+          <div class="price-tag">69.000đ (Bản Cá Nhân) / $12 USD (Quốc Tế)</div>
         </div>
-        <div class="btn-group">
-          <a class="btn btn-primary" href="experiments/exp03-duong-nhan-ai-mvp/">Làm Trắc Nghiệm Miễn Phí</a>
-          <a class="btn btn-secondary" href="experiments/exp03-duong-nhan-ai-mvp/handbook.html">Xem Cẩm Nang 28 Ngày</a>
+        <div class="card-actions">
+          <a class="layer-btn-primary" href="experiments/exp03-duong-nhan-ai-mvp/">Trải Nghiệm BLOOM <span aria-hidden="true">&rarr;</span></a>
+          <a class="layer-btn-glass" href="experiments/exp03-duong-nhan-ai-mvp/handbook.html">Cẩm Nang 28 Ngày</a>
         </div>
-      </div>
+      </article>
 
-      <div class="card">
-        <div>
-          <span class="badge">B2B E-COMMERCE SAAS TOOL (SHOPIFY / AMAZON / SHOPEE)</span>
-          <h2>2. Global Catalogue CSV Fixer & Profit Leak Auditor</h2>
-          <p>
-            Tự động phát hiện lỗi biên lợi nhuận âm, chuẩn hóa SKU/Variant, dọn sạch rác HTML và xuất file CSV
-            chuẩn hóa ngay trên trình duyệt mà không cần upload dữ liệu nhạy cảm lên server.
+      <!-- Card 2: CatalogueQA Enterprise -->
+      <article class="layer-glass-card product-card">
+        <div class="layer-border-glow">
+          <div class="layer-glow-blob" style="top: 80%; left: 70%;"></div>
+        </div>
+        <div class="card-top">
+          <span class="layer-pill layer-pill-cyan">EXP-02 • B2B E-Commerce SaaS</span>
+          <h2 class="card-title">CatalogueQA Enterprise</h2>
+          <p class="card-desc">
+            Công cụ làm sạch dữ liệu danh mục CSV và kiểm toán rò rỉ lợi nhuận (Profit Leak Auditor).
+            Tự động sửa lỗi font tiếng Việt rách/bể, chuẩn hóa SKU với cam kết bảo mật Zero Data Retention.
           </p>
-          <div class="price-row">
-            <span>Bản Pro Không Giới Hạn: $9 USD / 199.000đ</span>
-          </div>
+          <ul class="feature-list">
+            <li><span class="dot"></span> Sửa triệt để lỗi mã hóa UTF-8 tiếng Việt</li>
+            <li><span class="dot"></span> So sánh Before / After trực quan tại chỗ</li>
+            <li><span class="dot"></span> 100% Client-Side không giữ dữ liệu shop</li>
+          </ul>
+          <div class="price-tag">Bản Pro: $9 USD / 199.000đ</div>
         </div>
-        <div class="btn-group">
-          <a class="btn btn-primary" href="experiments/exp02-catalogue-qa-pilot/">Mở Công Cụ CSV Fixer</a>
+        <div class="card-actions">
+          <a class="layer-btn-primary" href="experiments/exp02-catalogue-qa-pilot/">Mở CSV Fixer <span aria-hidden="true">&rarr;</span></a>
+          <a class="layer-btn-glass" href="experiments/exp02-catalogue-qa-pilot/privacy.html">Chính Sách Bảo Mật</a>
         </div>
-      </div>
+      </article>
+
+      <!-- Card 3: Vibe-Trading UI -->
+      <article class="layer-glass-card product-card">
+        <div class="layer-border-glow">
+          <div class="layer-glow-blob" style="top: 50%; left: 50%;"></div>
+        </div>
+        <div class="card-top">
+          <span class="layer-pill layer-pill-gold">PORT 8899 • Trading Web SPA</span>
+          <h2 class="card-title">Vibe-Trading Dashboard</h2>
+          <p class="card-desc">
+            Giao diện nghiên cứu tài chính và trợ lý giao dịch đa tác tử do anh phát triển.
+            Đã phục hồi hoàn toàn trên cổng mạng nội bộ 8899.
+          </p>
+          <ul class="feature-list">
+            <li><span class="dot"></span> Biểu đồ nến và theo dõi tài sản theo thời gian thực</li>
+            <li><span class="dot"></span> Kết nối mô hình tài chính và backtest</li>
+            <li><span class="dot"></span> Giao diện Dark Luxury chuẩn Trading Terminal</li>
+          </ul>
+          <div class="price-tag">Địa chỉ local: http://127.0.0.1:8899/</div>
+        </div>
+        <div class="card-actions">
+          <a class="layer-btn-primary" href="http://127.0.0.1:8899/" target="_blank" rel="noopener">Mở Vibe-Trading (:8899) <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </article>
+
+      <!-- Card 4: Quantitative Audit & MT5 Basket -->
+      <article class="layer-glass-card product-card">
+        <div class="layer-border-glow">
+          <div class="layer-glow-blob" style="top: 10%; left: 90%;"></div>
+        </div>
+        <div class="card-top">
+          <span class="layer-pill">QUANT AUDIT • P0 SAFETY</span>
+          <h2 class="card-title">Hồ Sơ Kiểm Toán MT5 1 Năm</h2>
+          <p class="card-desc">
+            Báo cáo định lượng danh mục Đa Tài Sản (EURUSD, GBPUSD, XAUUSD) trên 6.817 nến H1.
+            Tích hợp bộ lọc tin tức NewsBlackoutFilter (P0) tránh biến động mạnh.
+          </p>
+          <ul class="feature-list">
+            <li><span class="dot"></span> 98 lệnh đóng nến trên dữ liệu Exness thực</li>
+            <li><span class="dot"></span> Max Drawdown 6.78% (Đạt tiêu chuẩn quỹ FTMO &lt; 10%)</li>
+            <li><span class="dot"></span> Vàng (XAUUSD) sinh lời dương (+767 USD)</li>
+          </ul>
+          <div class="price-tag">Trạng thái: Sẵn sàng nâng cấp Break-Even +1.0R</div>
+        </div>
+        <div class="card-actions">
+          <a class="layer-btn-glass" href="trading-agent-exness-demo/research/QUANT_BACKTEST_AUDIT_REPORT.md">Xem Báo Cáo Audit <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </article>
     </div>
 
-    <div class="how-it-works">
-      <h3>Quy trình Trải nghiệm & Mở khóa Tự động</h3>
-      <p style="color: var(--muted); margin-top: 8px;">
-        1. Dùng thử miễn phí tính năng chẩn đoán/kiểm tra ngay trên web.<br/>
-        2. Thanh toán qua <strong>VietQR</strong> (khách Việt Nam) hoặc <strong>Payoneer: lethanhmaicombo@gmail.com</strong> (khách Quốc tế).<br/>
-        3. Nhận mã kích hoạt và tải trọn bộ sản phẩm ngay lập tức, kèm bảo hành hoàn tiền 7 ngày.
-      </p>
-    </div>
+    <!-- Live Performance Shelf -->
+    <section class="stats-shelf">
+      <div class="eyebrow-row">
+        <span class="layer-pill layer-pill-emerald">Giám Sát Định Lượng</span>
+        <span style="font-size: 0.85rem; color: var(--layer-text-muted);">Số liệu tổng hợp từ hệ thống Watchdog &amp; Backtest</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <h3>Tổng Lệnh Backtest 1 Năm</h3>
+          <p class="cyan">98 Lệnh</p>
+        </div>
+        <div class="stat-item">
+          <h3>Max Drawdown (1 Năm)</h3>
+          <p class="emerald">6.78% <span style="font-size: 0.9rem; font-weight: 500; color: #94a3b8;">(FTMO &lt; 10%)</span></p>
+        </div>
+        <div class="stat-item">
+          <h3>Max Daily Loss</h3>
+          <p class="emerald">1.21% <span style="font-size: 0.9rem; font-weight: 500; color: #94a3b8;">(FTMO &lt; 5%)</span></p>
+        </div>
+        <div class="stat-item">
+          <h3>Công Cụ Cào Lead</h3>
+          <p class="gold">Agent-Reach v1.6.1</p>
+        </div>
+      </div>
+    </section>
 
     <footer>
-      <div>© 2026 Money HQ Digital Studio • Liên hệ hỗ trợ: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a></div>
+      <div>&copy; 2026 Money HQ Studio &bull; Vận hành tự động độc lập &bull; Liên hệ: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a></div>
       <div>
-        <a href="experiments/exp03-duong-nhan-ai-mvp/">Dưỡng Nhan Bản Thảo</a> •
-        <a href="experiments/exp02-catalogue-qa-pilot/">Global CSV Fixer</a> •
-        <a href="sitemap.xml">Sitemap</a>
+        <a href="http://127.0.0.1:8000/experiments/exp03-duong-nhan-ai-mvp/">BLOOM</a> &bull;
+        <a href="http://127.0.0.1:8000/experiments/exp02-catalogue-qa-pilot/">CatalogueQA</a> &bull;
+        <a href="http://127.0.0.1:8899/">Vibe-Trading</a>
       </div>
     </footer>
   </div>

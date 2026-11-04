@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Thanh Toán Đơn Hàng • BẢN THẢO THẤU THỂ</title>
-<meta name="description" content="Trang thanh toán chính thức của Bản Thảo Thấu Thể. Tích hợp thanh toán an toàn qua VietQR Techcombank và Payoneer Quốc Tế.">
+<meta name="description" content="Trang thanh toán chính thức Cẩm Nang Dưỡng Nhan 28 Ngày & Bộ Quà Tặng Trà Thảo Mộc Thượng Hạng. Quét mã VietQR 24/7 và Ví MoMo / Thẻ Visa tiện lợi.">
 
 <!-- Fonts & Tokens -->
 <link rel="stylesheet" href="../../assets/web_capability_library/tokens.css">
@@ -29,6 +29,8 @@
     --brand-rose: #f43f5e;
     --brand-peach: #fb7185;
     --brand-amber: #d97706;
+    --brand-momo: #a50064;
+    --brand-momo-light: #fdf2f8;
 
     --font-heading: 'Playfair Display', Georgia, serif;
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -77,6 +79,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
   .brand-logo {
     display: flex;
@@ -112,8 +117,9 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    transition: color 0.2s ease;
   }
-  .back-link:hover { text-decoration: underline; }
+  .back-link:hover { color: var(--brand-emerald); }
 
   /* Layout Container */
   .checkout-wrapper {
@@ -121,8 +127,8 @@
     margin: 40px auto 80px;
     padding: 0 24px;
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 40px;
+    grid-template-columns: 1.18fr 0.82fr;
+    gap: 36px;
     align-items: start;
   }
 
@@ -130,6 +136,7 @@
     .checkout-wrapper {
       grid-template-columns: 1fr;
       margin-top: 20px;
+      gap: 24px;
     }
   }
 
@@ -138,27 +145,26 @@
     background: var(--bg-card);
     border: 1.5px solid var(--border-soft);
     border-radius: 24px;
-    padding: 32px;
+    padding: 30px;
     box-shadow: var(--shadow-card);
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
   .card-title {
     font-family: var(--font-heading);
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     font-weight: 700;
     color: var(--text-heading);
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
     gap: 10px;
   }
 
-  /* Plan Switcher Pills */
+  /* Plan Switcher Cards */
   .plan-picker {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 24px;
   }
   .plan-card {
     border: 2px solid var(--border-soft);
@@ -169,7 +175,7 @@
     align-items: center;
     cursor: pointer;
     background: #ffffff;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
   }
   .plan-card:hover {
     border-color: var(--brand-mint);
@@ -178,22 +184,23 @@
   .plan-card.active {
     border-color: var(--brand-emerald);
     background: #ecfdf5;
-    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.12);
+    box-shadow: 0 6px 20px rgba(5, 150, 105, 0.12);
   }
   .plan-info-title {
     font-weight: 700;
     color: var(--text-heading);
-    font-size: 1rem;
-    margin-bottom: 2px;
+    font-size: 1.02rem;
+    margin-bottom: 3px;
   }
   .plan-info-sub {
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     color: var(--text-muted);
   }
   .plan-price-tag {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 800;
     color: var(--brand-emerald-dark);
+    text-align: right;
   }
 
   /* Form Elements */
@@ -206,7 +213,7 @@
     .form-row { grid-template-columns: 1fr; }
   }
   .form-group {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
   .form-label {
     display: block;
@@ -217,7 +224,7 @@
   }
   .form-input {
     width: 100%;
-    padding: 13px 16px;
+    padding: 12px 16px;
     border-radius: 12px;
     border: 1.5px solid var(--border-soft);
     font-size: 0.95rem;
@@ -237,42 +244,50 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
   .pay-tab-btn {
     background: #ffffff;
-    border: 1.5px solid var(--border-soft);
+    border: 2px solid var(--border-soft);
     padding: 14px 16px;
     border-radius: 14px;
-    font-size: 0.92rem;
+    font-size: 0.94rem;
     font-weight: 700;
     color: var(--text-heading);
     cursor: pointer;
     text-align: center;
-    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .pay-tab-btn:hover {
+    border-color: var(--brand-mint);
   }
   .pay-tab-btn.active {
     border-color: var(--brand-emerald);
     background: #ecfdf5;
     color: var(--brand-emerald-dark);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.1);
   }
 
-  /* VietQR Presentation Box */
+  /* VietQR & MoMo Presentation Box */
   .qr-box {
     background: #ffffff;
     border: 1.5px solid var(--border-glow);
     border-radius: 20px;
-    padding: 28px;
+    padding: 24px;
     text-align: center;
   }
   .qr-frame {
     display: inline-block;
     padding: 12px;
     background: #ffffff;
-    border: 1px solid var(--border-soft);
+    border: 1.5px solid var(--border-soft);
     border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    margin-bottom: 18px;
+    box-shadow: 0 10px 25px rgba(6, 78, 59, 0.08);
+    margin-bottom: 16px;
   }
   .bank-table {
     width: 100%;
@@ -281,13 +296,13 @@
     border-collapse: collapse;
   }
   .bank-table td {
-    padding: 10px 14px;
+    padding: 10px 12px;
     border-bottom: 1px solid rgba(0,0,0,0.05);
     text-align: left;
   }
   .bank-table td:first-child {
     color: var(--text-muted);
-    width: 36%;
+    width: 38%;
   }
   .bank-table td:last-child {
     font-weight: 700;
@@ -307,20 +322,35 @@
   }
   .copy-btn:hover { background: #d1fae5; }
 
+  /* Fee Included Notice */
+  .fee-included-banner {
+    background: #f0fdf4;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.86rem;
+    color: #065f46;
+    margin-top: 14px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   /* Buttons */
   .btn-submit {
     background: linear-gradient(135deg, #059669 0%, #047857 100%);
     color: #ffffff;
     font-weight: 800;
-    font-size: 1.08rem;
-    padding: 16px 28px;
+    font-size: 1.05rem;
+    padding: 16px 24px;
     border-radius: 14px;
     border: none;
     box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.4);
     cursor: pointer;
     width: 100%;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 18px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -336,7 +366,7 @@
     border: 1.5px solid var(--border-soft);
     color: var(--brand-emerald-dark);
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     padding: 12px 20px;
     border-radius: 12px;
     text-decoration: none;
@@ -344,7 +374,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 14px;
+    margin-top: 12px;
     width: 100%;
     transition: border-color 0.2s ease, background-color 0.2s ease;
   }
@@ -361,12 +391,12 @@
   .summary-line {
     display: flex;
     justify-content: space-between;
-    padding: 12px 0;
-    font-size: 0.95rem;
+    padding: 10px 0;
+    font-size: 0.94rem;
     border-bottom: 1px solid rgba(0,0,0,0.06);
   }
   .summary-line.total {
-    font-size: 1.3rem;
+    font-size: 1.35rem;
     font-weight: 800;
     color: var(--text-heading);
     border-bottom: none;
@@ -374,10 +404,10 @@
   }
   .bonus-box {
     background: #fff1f2;
-    border: 1px dashed var(--brand-peach);
+    border: 1.5px dashed var(--brand-peach);
     border-radius: 14px;
     padding: 16px;
-    margin: 20px 0;
+    margin: 18px 0;
     font-size: 0.88rem;
     color: #9f1239;
   }
@@ -392,7 +422,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 24px;
+    margin-top: 22px;
     font-size: 0.85rem;
     color: var(--text-muted);
   }
@@ -404,7 +434,7 @@
 
   footer {
     border-top: 1px solid var(--border-soft);
-    padding: 30px 24px;
+    padding: 28px 24px;
     background: #ffffff;
     text-align: center;
     color: var(--text-muted);
@@ -429,33 +459,33 @@
   <main class="checkout-wrapper">
     <!-- LEFT COLUMN: Delivery Details & Payment Selection -->
     <div>
-      <!-- 1. Select Package -->
+      <!-- 1. Select Package (Mua Sách Tặng Trà & Quà Tặng) -->
       <div class="section-card">
-        <h2 class="card-title">&#10047; 1. Chọn Gói Liệu Trình Dưỡng Nhan</h2>
+        <h2 class="card-title">&#10047; 1. Chọn Gói Cẩm Nang Dưỡng Nhan 28 Ngày</h2>
         <div class="plan-picker">
           <!-- Plan 1 -->
-          <div class="plan-card" data-plan="combo-14" data-name="Combo Khởi Sắc Dưỡng Nhan (14 Ngày)" data-price="199000">
+          <div class="plan-card" data-plan="combo-14" data-name="Cẩm Nang Khởi Sắc 28 Ngày &bull; TẶNG 1 Hộp Trà 14 Ngày" data-price="199000">
             <div>
-              <div class="plan-info-title">Combo Khởi Sắc Dưỡng Nhan (14 Ngày)</div>
-              <div class="plan-info-sub">14 Gói trà túi lọc tam giác + TẶNG 100% Ebook 28 Ngày</div>
+              <div class="plan-info-title">Cẩm Nang Khởi Sắc 28 Ngày</div>
+              <div class="plan-info-sub">&#127873; <strong>TẶNG 100%:</strong> 1 Hộp 14 gói trà ngũ tạng túi lọc tam giác theo thể chất + Freeship</div>
             </div>
             <div class="plan-price-tag">199.000₫</div>
           </div>
 
           <!-- Plan 2 (Default Featured) -->
-          <div class="plan-card active" data-plan="combo-30" data-name="Liệu Trình Hoàng Gia Ngũ Tạng (30 Ngày)" data-price="389000">
+          <div class="plan-card active" data-plan="combo-30" data-name="Trọn Bộ Cẩm Nang Hoàng Gia 28 Ngày &bull; TẶNG 2 Hộp Trà 30 Ngày + Bình Giữ Nhiệt" data-price="389000">
             <div>
-              <div class="plan-info-title">&#10022; Liệu Trình Hoàng Gia Ngũ Tạng (30 Ngày) &bull; Khuyên Dùng</div>
-              <div class="plan-info-sub">2 Hộp trà 30 ngày + TẶNG Bình Thủy Tinh Giữ Nhiệt + Ebook + Tư vấn 1-1</div>
+              <div class="plan-info-title">&#10022; Trọn Bộ Cẩm Nang Chuyên Sâu Hoàng Gia (Khuyên Dùng)</div>
+              <div class="plan-info-sub">&#127873; <strong>ĐẠI TIỆC QUÀ TẶNG:</strong> TẶNG 2 Hộp trà 30 ngày + Bình Thủy Tinh Giữ Nhiệt 2 Lớp + Tư vấn 1-1</div>
             </div>
             <div class="plan-price-tag">389.000₫</div>
           </div>
 
           <!-- Plan 3 -->
-          <div class="plan-card" data-plan="ebook-digital" data-name="Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (Digital PDF)" data-price="69000">
+          <div class="plan-card" data-plan="ebook-digital" data-name="Bản Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (Digital PDF Tải Ngay)" data-price="69000">
             <div>
-              <div class="plan-info-title">Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (Digital)</div>
-              <div class="plan-info-sub">File PDF 182 trang in ấn + 187 công thức thảo mộc (Tải tức thì)</div>
+              <div class="plan-info-title">Bản Ebook Digital Cẩm Nang 28 Ngày (PDF)</div>
+              <div class="plan-info-sub">182 Trang in ấn màu + 187 công thức thảo mộc tạng phủ (Tải tức thì qua email)</div>
             </div>
             <div class="plan-price-tag">69.000₫</div>
           </div>
@@ -464,7 +494,7 @@
 
       <!-- 2. Shipping Details -->
       <div class="section-card">
-        <h2 class="card-title">&#128230; 2. Thông Tin Nhận Hàng &amp; Nhận Ebook</h2>
+        <h2 class="card-title">&#128230; 2. Thông Tin Nhận Quà Tặng &amp; Kích Hoạt Cẩm Nang</h2>
         <form id="orderForm" onsubmit="return false;">
           <div class="form-group">
             <label class="form-label">Họ và tên người nhận *</label>
@@ -473,18 +503,18 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Số điện thoại *</label>
+              <label class="form-label">Số điện thoại nhận hàng *</label>
               <input class="form-input" id="custPhone" type="tel" placeholder="0985 xxx xxx" required value="0985250444">
             </div>
             <div class="form-group">
-              <label class="form-label">Email nhận file Ebook ngay *</label>
+              <label class="form-label">Email nhận Cẩm Nang Ebook tải ngay *</label>
               <input class="form-input" id="custEmail" type="email" placeholder="email@gmail.com" required value="lethanhmaicombo@gmail.com">
             </div>
           </div>
 
           <div class="form-group" id="addressGroup">
-            <label class="form-label">Địa chỉ giao hàng (Số nhà, tên đường, phường/xã, quận/huyện...) *</label>
-            <input class="form-input" id="custAddress" type="text" placeholder="Nhập địa chỉ nhận trà và quà tặng">
+            <label class="form-label">Địa chỉ nhận hàng (Số nhà, đường, phường/xã, quận/huyện...) *</label>
+            <input class="form-input" id="custAddress" type="text" placeholder="Nhập địa chỉ nhận trà và quà tặng vật phẩm">
           </div>
 
           <div style="background: #f0fdf4; border: 1.5px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 14px 18px; margin-top: 10px; display: flex; align-items: center; gap: 12px;">
@@ -496,19 +526,26 @@
         </form>
       </div>
 
-      <!-- 3. Payment Method -->
+      <!-- 3. Payment Method: Quét VietQR / MoMo Đa Năng 24/7 (Phí 3% Đã Gộp Trọn Gói) -->
       <div class="section-card">
-        <h2 class="card-title">&#128179; 3. Chọn Phương Thức Thanh Toán</h2>
+        <h2 class="card-title">&#128179; 3. Thanh Toán Tiện Lợi (MoMo, VietQR &amp; Thẻ)</h2>
         <div class="payment-tabs">
-          <button class="pay-tab-btn active" id="tabVietQR" type="button">&#9889; Quét VietQR / Chuyển Khoản</button>
-          <button class="pay-tab-btn" id="tabCard" type="button">&#127758; Thẻ Quốc Tế / Payoneer</button>
+          <button class="pay-tab-btn active" id="tabVietQR" type="button">
+            &#9889; Quét VietQR Napas 24/7 (50+ Bank)
+          </button>
+          <button class="pay-tab-btn" id="tabMoMo" type="button">
+            &#128241; Quét App MoMo / Cà Thẻ Visa
+          </button>
         </div>
 
         <!-- Cổng 1: VietQR Napas 24/7 (Techcombank 1022 7786 86 - LE THI THANH MAI) -->
         <div class="qr-box" id="payBoxVietQR">
-          <div style="font-size: 1.05rem; font-weight: 800; color: var(--brand-emerald-dark); margin-bottom: 12px;">
-            QUÉT VIETQR CHUYỂN KHOẢN TỰ ĐỘNG 24/7
+          <div style="font-size: 1.05rem; font-weight: 800; color: var(--brand-emerald-dark); margin-bottom: 8px;">
+            MÃ VIETQR CHUYỂN KHOẢN TỰ ĐỘNG 24/7
           </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
+            Mở <strong>App Ngân Hàng</strong> (Techcombank, Vietcombank, MB, VPBank...) hoặc <strong>App MoMo</strong> để quét mã.
+          </p>
 
           <div class="qr-frame">
             <img id="vietqrImg" src="https://img.vietqr.io/image/TCB-1022778686-compact2.png?amount=389000&addInfo=DUONGNHAN%207886&accountName=LE%20THI%20THANH%20MAI" alt="VietQR Thanh Toán Techcombank" width="240" height="240" style="display: block; border-radius: 8px;">
@@ -546,8 +583,13 @@
             </tr>
           </table>
 
+          <div class="fee-included-banner">
+            <span>&#10003;</span>
+            <span><strong>Giá trọn gói minh bạch:</strong> Đã bao gồm thuế, phí giao dịch và miễn phí vận chuyển tận nơi. Bạn chỉ cần thanh toán đúng số tiền niêm yết (0đ phụ phí).</span>
+          </div>
+
           <a class="btn-app-link" id="deepLinkApp" href="https://img.vietqr.io/image/TCB-1022778686-compact2.png" target="_blank" rel="noopener">
-            &#128242; Mở App Ngân Hàng Trên Điện Thoại (Napas 247)
+            &#128242; Mở App Ngân Hàng / Quét VietQR 24/7
           </a>
 
           <button class="btn-submit" id="btnConfirmPaid" type="button">
@@ -555,21 +597,39 @@
           </button>
         </div>
 
-        <!-- Cổng 2: Payoneer Global Payment Link -->
-        <div class="qr-box" id="payBoxCard" style="display: none;">
-          <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-heading); margin-bottom: 8px;">
-            Thanh Toán Thẻ Visa / Mastercard Qua Payoneer
+        <!-- Cổng 2: MoMo & Cà Thẻ Visa / Mastercard -->
+        <div class="qr-box" id="payBoxMoMo" style="display: none;">
+          <div style="font-size: 1.05rem; font-weight: 800; color: var(--brand-momo); margin-bottom: 8px;">
+            THANH TOÁN QUA VÍ MOMO HOẶC CÀ THẺ VISA / MASTERCARD
           </div>
-          <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 16px;">
-            Dành cho khách hàng quốc tế. Thanh toán được xử lý trực tiếp qua đường dẫn an toàn của cổng Payoneer Global.
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
+            Mở <strong>App MoMo</strong> quét mã QR bên dưới. Bạn có thể chọn nguồn tiền: <strong>Ví MoMo</strong>, <strong>Thẻ ATM</strong> hoặc <strong>Thẻ Tín Dụng Quốc Tế (Visa / Mastercard)</strong> đã gắn trong ví.
           </p>
-          <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 18px; margin-bottom: 20px; text-align: left;">
-            <div style="font-size: 0.92rem; margin-bottom: 6px;">Số tiền thanh toán: <strong id="usdAmountText">$17.00 USD</strong></div>
-            <div style="font-size: 0.82rem; color: var(--text-muted);">Phí quẹt thẻ quốc tế (~3%) được xử lý tự động bởi cổng Payoneer.</div>
+
+          <div class="qr-frame" style="border-color: rgba(165, 0, 100, 0.3);">
+            <img id="momoQrImg" src="https://img.vietqr.io/image/TCB-1022778686-compact2.png?amount=389000&addInfo=MOMO%20DUONGNHAN%207886&accountName=LE%20THI%20THANH%20MAI" alt="Quét Mã MoMo Đa Năng" width="240" height="240" style="display: block; border-radius: 8px;">
           </div>
-          <a class="btn-submit" href="https://myaccount.payoneer.com/" target="_blank" rel="noopener" style="text-decoration: none;">
-            Mở Trang Thanh Toán Payoneer &rarr;
-          </a>
+
+          <div style="background: var(--brand-momo-light); border: 1.5px solid rgba(165, 0, 100, 0.2); border-radius: 14px; padding: 14px; margin-bottom: 14px; text-align: left;">
+            <div style="font-size: 0.92rem; font-weight: 700; color: var(--brand-momo); margin-bottom: 6px;">
+              &#128179; Hướng Dẫn Cà Thẻ Quốc Tế / Thẻ Tín Dụng Qua MoMo:
+            </div>
+            <ol style="font-size: 0.84rem; color: #475569; padding-left: 20px; line-height: 1.6;">
+              <li>Mở ứng dụng <strong>MoMo</strong> trên điện thoại.</li>
+              <li>Chọn <strong>Quét Mã</strong> và quét mã QR trên màn hình.</li>
+              <li>Tại bước chọn nguồn tiền, chọn <strong>Thẻ Visa / Mastercard</strong> của bạn hoặc <strong>Ví MoMo</strong>.</li>
+              <li>Bấm xác nhận thanh toán.</li>
+            </ol>
+          </div>
+
+          <div class="fee-included-banner">
+            <span>&#10003;</span>
+            <span><strong>Toàn bộ phí quẹt thẻ 3% đã được hỗ trợ 100%:</strong> Quý khách chỉ thanh toán đúng số tiền hàng, không phát sinh bất kỳ khoản phí phụ trội nào.</span>
+          </div>
+
+          <button class="btn-submit" id="btnConfirmMoMo" type="button" style="background: linear-gradient(135deg, #a50064 0%, #83004f 100%); box-shadow: 0 10px 25px -5px rgba(165, 0, 100, 0.4);">
+            &#10003; Tôi Đã Thanh Toán Qua MoMo &bull; Kích Hoạt Đơn Hàng
+          </button>
         </div>
       </div>
     </div>
@@ -579,38 +639,45 @@
       <div class="section-card">
         <h3 class="card-title" style="font-size: 1.3rem;">Tóm Tắt Đơn Hàng</h3>
 
-        <div style="display: flex; gap: 14px; align-items: center; padding-bottom: 18px; border-bottom: 1px solid rgba(0,0,0,0.06);">
-          <div style="width: 52px; height: 52px; border-radius: 12px; background: #f0fdf4; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">&#127861;</div>
+        <div style="display: flex; gap: 14px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.06);">
+          <div style="width: 52px; height: 52px; border-radius: 12px; background: #f0fdf4; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">&#128218;</div>
           <div>
-            <div style="font-weight: 700; color: var(--text-heading);" id="summaryPlanName">Liệu Trình Hoàng Gia Ngũ Tạng (30 Ngày)</div>
-            <div style="font-size: 0.84rem; color: var(--text-muted);" id="summaryPlanQty">Số lượng: 1 hộp chuyên sâu</div>
+            <div style="font-weight: 700; color: var(--text-heading);" id="summaryPlanName">Trọn Bộ Cẩm Nang Chuyên Sâu Hoàng Gia 28 Ngày</div>
+            <div style="font-size: 0.84rem; color: var(--text-muted);" id="summaryPlanQty">Cẩm nang độc bản + Quà tặng gửi tận nhà</div>
           </div>
         </div>
 
-        <!-- Bonus Gifts -->
+        <!-- Irresistible Free Bonus Gifts Box (Mua Sách Tặng Trà & Quà) -->
         <div class="bonus-box">
-          <div class="bonus-item">
-            <span>&#127873;</span>
-            <span><strong>TẶNG 100%:</strong> Ebook Cẩm Nang Dưỡng Nhan 28 Ngày (Trị giá 299.000₫)</span>
+          <div style="font-weight: 800; font-size: 0.92rem; margin-bottom: 10px; color: #881337;">
+            &#127873; ĐẶC QUYỀN QUÀ TẶNG KÈM THEO CẨM NANG:
+          </div>
+          <div class="bonus-item" id="bonusTea">
+            <span>&#10003;</span>
+            <span id="bonusTeaText"><strong>TẶNG 100%:</strong> 2 Hộp Trà Đại Bổ Ngũ Tạng 30 Ngày (Trị giá 300.000₫)</span>
           </div>
           <div class="bonus-item" id="bonusBottle">
-            <span>&#127873;</span>
-            <span><strong>TẶNG THÊM:</strong> Bình Thủy Tinh Giữ Nhiệt 2 Lớp (Trị giá 150.000₫)</span>
+            <span>&#10003;</span>
+            <span><strong>TẶNG THÊM:</strong> Bình Thủy Tinh Giữ Nhiệt 2 Lớp Dưỡng Nhan (Trị giá 150.000₫)</span>
           </div>
           <div class="bonus-item">
-            <span>&#127873;</span>
-            <span><strong>TẶNG KÈM:</strong> Audio Dẫn Thiền Khai Thông Tạng Phủ 15 Phút</span>
+            <span>&#10003;</span>
+            <span><strong>TẶNG KÈM:</strong> Audio Dẫn Thiền Khai Thông Tạng Phủ 15 Phút + Bản Đồ 108 Huyệt Vị</span>
           </div>
         </div>
 
-        <!-- Price Breakdown -->
+        <!-- Price Breakdown (0đ Fees, All-Inclusive) -->
         <div>
           <div class="summary-line">
-            <span>Tạm tính:</span>
+            <span>Tạm tính (Giá cẩm nang):</span>
             <span id="summarySubtotal">389.000₫</span>
           </div>
           <div class="summary-line">
-            <span>Phí vận chuyển:</span>
+            <span>Phí xử lý giao dịch / Cà thẻ (3%):</span>
+            <span style="color: var(--brand-emerald); font-weight: 700;">0₫ (Đã hỗ trợ 100%)</span>
+          </div>
+          <div class="summary-line">
+            <span>Phí vận chuyển toàn quốc:</span>
             <span style="color: var(--brand-emerald); font-weight: 700;">MIỄN PHÍ (Freeship)</span>
           </div>
           <div class="summary-line total">
@@ -623,7 +690,7 @@
         <div class="trust-strip">
           <div class="trust-item">&#10003; 100% Thảo Mộc Nguyên Bản Thuận Tự Nhiên</div>
           <div class="trust-item">&#10003; Hỗ trợ đổi trả miễn phí trong 7 ngày nếu không hài lòng</div>
-          <div class="trust-item">&#10003; Tư vấn viên Đông Y đồng hành theo dõi thể trạng qua Zalo</div>
+          <div class="trust-item">&#10003; Chuyên gia Đông Y đồng hành theo dõi thể trạng qua Zalo</div>
         </div>
       </div>
     </aside>
@@ -635,19 +702,20 @@
 
   <script>
     let currentAmount = 389000;
-    let currentPlanName = 'Liệu Trình Hoàng Gia Ngũ Tạng (30 Ngày)';
+    let currentPlanName = 'Trọn Bộ Cẩm Nang Chuyên Sâu Hoàng Gia 28 Ngày';
     const orderCode = 'DN' + Math.floor(1000 + Math.random() * 9000);
 
     const planCards = document.querySelectorAll('.plan-card');
     const summaryPlanName = document.getElementById('summaryPlanName');
     const summarySubtotal = document.getElementById('summarySubtotal');
     const summaryTotal = document.getElementById('summaryTotal');
+    const bonusTeaText = document.getElementById('bonusTeaText');
     const bonusBottle = document.getElementById('bonusBottle');
     const txtAmount = document.getElementById('txtAmount');
     const txtMemo = document.getElementById('txtMemo');
     const vietqrImg = document.getElementById('vietqrImg');
+    const momoQrImg = document.getElementById('momoQrImg');
     const deepLinkApp = document.getElementById('deepLinkApp');
-    const usdAmountText = document.getElementById('usdAmountText');
 
     txtMemo.textContent = 'DUONGNHAN ' + orderCode;
 
@@ -669,18 +737,19 @@
 
       if (plan === 'combo-30') {
         bonusBottle.style.display = 'flex';
-        usdAmountText.textContent = '$17.00 USD';
+        bonusTeaText.innerHTML = '<strong>TẶNG 100%:</strong> 2 Hộp Trà Đại Bổ Ngũ Tạng 30 Ngày (Trị giá 300.000₫)';
       } else if (plan === 'combo-14') {
         bonusBottle.style.display = 'none';
-        usdAmountText.textContent = '$9.00 USD';
+        bonusTeaText.innerHTML = '<strong>TẶNG 100%:</strong> 1 Hộp 14 Gói Trà Ngũ Tạng Phù Hợp Thể Chất (Trị giá 180.000₫)';
       } else {
         bonusBottle.style.display = 'none';
-        usdAmountText.textContent = '$3.00 USD';
+        bonusTeaText.innerHTML = '<strong>KÍCH HOẠT TỨC THÌ:</strong> File PDF 182 trang in màu gửi về email ngay lập tức';
       }
 
-      // Re-generate VietQR image URL for Techcombank 1022 7786 86
+      // Re-generate VietQR & MoMo image URL for Techcombank 1022 7786 86
       const qrUrl = `https://img.vietqr.io/image/TCB-1022778686-compact2.png?amount=${price}&addInfo=DUONGNHAN%20${orderCode}&accountName=LE%20THI%20THANH%20MAI`;
       vietqrImg.src = qrUrl;
+      momoQrImg.src = qrUrl;
       deepLinkApp.href = qrUrl;
     }
 
@@ -698,21 +767,21 @@
 
     // Payment Tab Switcher
     const tabVietQR = document.getElementById('tabVietQR');
-    const tabCard = document.getElementById('tabCard');
+    const tabMoMo = document.getElementById('tabMoMo');
     const payBoxVietQR = document.getElementById('payBoxVietQR');
-    const payBoxCard = document.getElementById('payBoxCard');
+    const payBoxMoMo = document.getElementById('payBoxMoMo');
 
     tabVietQR.addEventListener('click', () => {
       tabVietQR.classList.add('active');
-      tabCard.classList.remove('active');
+      tabMoMo.classList.remove('active');
       payBoxVietQR.style.display = 'block';
-      payBoxCard.style.display = 'none';
+      payBoxMoMo.style.display = 'none';
     });
-    tabCard.addEventListener('click', () => {
-      tabCard.classList.add('active');
+    tabMoMo.addEventListener('click', () => {
+      tabMoMo.classList.add('active');
       tabVietQR.classList.remove('active');
       payBoxVietQR.style.display = 'none';
-      payBoxCard.style.display = 'block';
+      payBoxMoMo.style.display = 'block';
     });
 
     // Copy to clipboard
@@ -725,10 +794,13 @@
     };
 
     // Confirm button
-    document.getElementById('btnConfirmPaid').addEventListener('click', () => {
+    function handleConfirmPaid() {
       const email = document.getElementById('custEmail').value || 'bạn';
-      alert(`Đã ghi nhận thanh toán cho đơn hàng DUONGNHAN ${orderCode}! Hệ thống đang kích hoạt file Ebook 28 Ngày và gửi hướng dẫn về email: ${email}`);
-    });
+      alert(`Đã ghi nhận thanh toán cho đơn hàng DUONGNHAN ${orderCode}! Hệ thống đang kích hoạt file Cẩm Nang Dưỡng Nhan 28 Ngày và gửi thông tin xác nhận quà tặng về email: ${email}`);
+    }
+
+    document.getElementById('btnConfirmPaid').addEventListener('click', handleConfirmPaid);
+    document.getElementById('btnConfirmMoMo').addEventListener('click', handleConfirmPaid);
   </script>
 </body>
 </html>

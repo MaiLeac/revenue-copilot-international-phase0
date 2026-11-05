@@ -1,0 +1,33 @@
+{
+  "checked_at_utc": "2026-11-05T15:16:09+00:00",
+  "inputs": [
+    "samples\\data_cleanup\\batch_a.csv",
+    "samples\\data_cleanup\\batch_b.csv"
+  ],
+  "output": "samples\\data_cleanup\\master.csv",
+  "input_rows": 6,
+  "output_rows": 4,
+  "exact_duplicate_rows_removed": 2,
+  "columns": [
+    "Record ID",
+    "Name",
+    "City",
+    "Status"
+  ],
+  "duplicate_provenance": [
+    {
+      "source": "samples\\data_cleanup\\batch_a.csv",
+      "source_row": 4,
+      "duplicate_of": "samples\\data_cleanup\\batch_a.csv",
+      "duplicate_of_row": 2
+    },
+    {
+      "source": "samples\\data_cleanup\\batch_b.csv",
+      "source_row": 3,
+      "duplicate_of": "samples\\data_cleanup\\batch_a.csv",
+      "duplicate_of_row": 3
+    }
+  ],
+  "method": "Trim header and cell edge whitespace; merge columns by exact header; remove only exact full-row duplicates.",
+  "requires_customer_decision": "Which columns are irrelevant, whether near-duplicates should merge, and how conflicting values should be resolved."
+}

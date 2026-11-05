@@ -27,6 +27,7 @@
 - MT5 đang ở mức nghiên cứu/demo. Tiếp tục tìm lỗi và kiểm định lợi thế sau phí, ngoài mẫu và rủi ro; không tự nâng lên giao dịch tiền thật hay thi quỹ chỉ vì hai tuần demo.
 - Kiểm tra 12:37 ICT: container Agent Zero chạy trong WSL nhưng cả ba lịch runtime đều tắt. Lượt thử CatalogueQA chỉ chạy test cũ, không sửa file; chưa có AI tự thực thi hằng ngày.
 - Bộ rà rủi ro không dùng AI chạy bằng Windows Task Scheduler mỗi ngày 09:00 (`MoneyHQ-RiskReview`); lượt chạy thử 05/11 thành công, kết quả cục bộ ở `operations/risk_review_latest.json`. Bộ này chỉ phát hiện một số lỗi có thể kiểm tra tự động; không cấp quyền hành động đối ngoại. [Cách vận hành](OPERATING_SYSTEM.md).
+- [Lần thực thi 05/11](operations/ACTION_2026-11-05_DATA_CLEANUP.md): đã tạo và kiểm thử mẫu giao việc làm sạch dữ liệu; một job đang hiển thị công khai bị chặn bởi yêu cầu số dư tối thiểu của nền tảng. Chưa gửi bid hay thu tiền.
 
 **Mỗi AI vào repo:** đọc [AGENTS.md](AGENTS.md), [trạng thái có bằng chứng](PROJECT_STATE.md), [bản đồ tài liệu](docs/DOCUMENT_STATUS.md); tra [công cụ/repo](assets/web_capability_library/CAPABILITY_ROUTING.md) khi có việc cụ thể. Tự làm việc nội bộ đã được giao. Với chi tiền, giao dịch tài chính, liên hệ người khác, xuất bản hoặc dùng dữ liệu khách, kiểm tra quyền đã cấp và giới hạn; chỉ xin quyền mới khi vượt phạm vi. Không bịa kết quả hoặc coi im lặng là phê duyệt.
 

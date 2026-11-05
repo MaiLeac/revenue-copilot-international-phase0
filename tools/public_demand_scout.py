@@ -153,7 +153,8 @@ def main() -> int:
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
     from tools.money_hq_cycle import run_cycle
-    cycle = run_cycle(root=root, runtime=args.output_dir)
+    from tools.telegram_notify import send_telegram_alert
+    cycle = run_cycle(root=root, runtime=args.output_dir, notifier=send_telegram_alert)
     print(json.dumps({"scout": result, "cycle": cycle}, ensure_ascii=False))
     return 0 if result["successful_queries"] else 2
 

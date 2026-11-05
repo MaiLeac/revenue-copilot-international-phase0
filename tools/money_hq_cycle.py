@@ -12,6 +12,7 @@ import json
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Callable
 
 SCRIPT_ROOT = Path(__file__).resolve().parents[1]
 if str(SCRIPT_ROOT) not in sys.path:
@@ -43,7 +44,8 @@ def _recent_candidates(path: Path, now: datetime) -> list[dict]:
     return sorted(candidates.values(), key=lambda row: row["checked_at"], reverse=True)
 
 
-def run_cycle(root: Path = ROOT, runtime: Path = RUNTIME, now: datetime | None = None) -> dict:
+def run_cycle(root: Path = ROOT, runtime: Path = RUNTIME, now: datetime | None = None,
+              notifier: Callable[[str], dict] | None = None) -> dict:
     now = now or datetime.now(timezone.utc)
     finance = review_finance(root)
     mt5 = review_mt5(root, now)
@@ -97,6 +99,35 @@ def run_cycle(root: Path = ROOT, runtime: Path = RUNTIME, now: datetime | None =
         "next_gate": "Xác minh người mua và bối cảnh; duyệt cách liên hệ trước khi gửi" if target else "Chưa có tín hiệu mua mới; cải thiện đề nghị hiện có hoặc chất lượng nguồn",
     }
     runtime.mkdir(parents=True, exist_ok=True)
+    signature = {
+        "cash": result["cash_collected_l4_vnd"],
+        "cost": result["recorded_incremental_cost_vnd"],
+        "buyers": result["buyer_candidates_last_7d"],
+        "buyer_ids": sorted(row["signal_id"] for row in candidates),
+        "mt5_stale": "MT5_HEARTBEAT_STALE" in result["risk_codes"],
+    }
+    notice_path = runtime / "last_notice.json"
+    try:
+        last_notice = json.loads(notice_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        last_notice = None
+    if notifier and signature != last_notice:
+        mt5_text = "mất heartbeat" if signature["mt5_stale"] else "xem trạng thái trên WINK"
+        message = (
+            f"<b>MONEY HQ · {now.astimezone().strftime('%d/%m %H:%M')}</b>\n"
+            f"Thu thực: {signature['cash']:,} VND; chi ghi: {signature['cost']:,} VND.\n"
+            f"Scout: {signature['buyers']} tín hiệu mua cần xác minh; {result['action']}.\n"
+            f"MT5 demo: {mt5_text}. Sách số: bản nháp."
+        )
+        try:
+            response = notifier(message)
+            if response.get("ok") and not response.get("dry_run"):
+                notice_path.write_text(json.dumps(signature, ensure_ascii=False), encoding="utf-8")
+                result["telegram_notice"] = "sent"
+            else:
+                result["telegram_notice"] = "not_configured_or_dry_run"
+        except Exception as exc:
+            result["telegram_notice"] = "failed:" + type(exc).__name__
     (runtime / "cycle_latest.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return result
 

@@ -4,6 +4,7 @@ Nguồn duy nhất của tiền thu là `finance/CASH_LEDGER.csv`: trạng thái
 
 1. Windows Task `MoneyHQ-PublicDemandScout` chạy lúc 08:35, 14:35, 20:35 theo giờ máy. Nó đọc tối đa sáu truy vấn công khai HN/GitHub, miễn phí; mã Python ở `tools/public_demand_scout.py`.
 2. Sau mỗi lượt, `tools/money_hq_cycle.py` đối soát tiền/chi phí, rủi ro, heartbeat MT5 và tín hiệu người mua. Kết quả ở `operations/public_demand_scout/cycle_latest.json` (chỉ trên máy, không lên GitHub). Nếu có tín hiệu mua rõ ràng mới, nó tạo **một** `offer_draft_latest.json` và không tạo lại cùng tín hiệu. Bản nháp chưa phải khách, hợp đồng hay tiền.
+   Cùng lịch này gửi Telegram cho Mai khi tiền thu, chi phí, tập ứng viên hoặc tình trạng heartbeat MT5 thay đổi; trạng thái không đổi thì im lặng. Không cần thêm lịch báo cáo riêng.
 3. `MoneyHQ-RiskReview` kiểm tra độc lập mỗi ngày. Lỗi nghiêm trọng phải được xử lý trước khi tiêu tiền, công bố khẳng định thương mại hoặc chạy MT5. `tools/trading_ctl.py start` chỉ ghi yêu cầu; phải thấy heartbeat mới và tài khoản demo được xác minh mới nói daemon đang chạy.
 4. Lịch Codex YouTube và Loser Kingdom giữ nhịp mỗi ngày trong đúng dự án, một thay đổi dùng được/lượt và kiểm tra artifact. Không tính báo cáo hay chạy lại test cũ là tiến bộ. Agent Zero hiện chưa có tác vụ lịch bật và mô hình Google đã hết quota; giao diện còn mở được nhưng không được kể là worker đang tự làm việc.
 5. Cổng WINK chính: `http://127.0.0.1:8000/`; bảng cá nhân: `http://127.0.0.1:8000/dashboard`. Phần Tài sản AI của bảng cá nhân đọc trạng thái chu trình này.

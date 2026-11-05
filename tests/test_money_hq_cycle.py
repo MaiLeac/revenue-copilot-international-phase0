@@ -46,3 +46,17 @@ def test_cycle_creates_one_local_draft_and_does_not_claim_sale(tmp_path):
     assert first["cash_collected_l4_vnd"] == 200000
     draft = json.loads((runtime / "offer_draft_latest.json").read_text(encoding="utf-8"))
     assert draft["status"] == "LOCAL_DRAFT_ONLY_NOT_A_CUSTOMER"
+
+
+def test_telegram_notice_only_on_meaningful_change(tmp_path):
+    _ledgers(tmp_path)
+    runtime = tmp_path / "runtime"
+    sent = []
+    def fake_notify(message):
+        sent.append(message)
+        return {"ok": True}
+    now = datetime(2026, 11, 6, tzinfo=timezone.utc)
+    run_cycle(tmp_path, runtime, now, notifier=fake_notify)
+    run_cycle(tmp_path, runtime, now, notifier=fake_notify)
+    assert len(sent) == 1
+    assert "Thu thực: 200,000 VND" in sent[0]

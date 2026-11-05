@@ -1,5 +1,7 @@
 import tempfile
 import unittest
+import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 from tools.risk_review import review_finance, review_mt5
@@ -47,6 +49,18 @@ class RiskReviewTests(unittest.TestCase):
     def test_missing_mt5_guards_fail_closed(self):
         issues = review_mt5(self.root)
         self.assertEqual(issues[0]["code"], "MT5_GUARD_MISSING")
+
+    def test_stale_running_label_is_flagged(self):
+        base = self.root / "trading-agent-exness-demo"
+        (base / "config").mkdir(parents=True)
+        (base / "app/mt5").mkdir(parents=True)
+        (base / "config/demo.yaml").write_text("account_mode: demo_only\n", encoding="utf-8")
+        (base / "app/mt5/execution.py").write_text("ACCOUNT_TRADE_MODE_DEMO\n", encoding="utf-8")
+        (base / "run_state.json").write_text(json.dumps({"status": "RUNNING", "last_heartbeat_utc": "2026-11-05T01:00:00+00:00"}), encoding="utf-8")
+        now = datetime(2026, 11, 5, 1, 10, tzinfo=timezone.utc)
+        self.assertEqual(review_mt5(self.root, now)[0]["code"], "MT5_HEARTBEAT_STALE")
+        (base / "run_state.json").write_text(json.dumps({"status": "RUNNING", "last_heartbeat_utc": "2026-11-05T01:09:00+00:00"}), encoding="utf-8")
+        self.assertEqual(review_mt5(self.root, now), [])
 
 
 if __name__ == "__main__":

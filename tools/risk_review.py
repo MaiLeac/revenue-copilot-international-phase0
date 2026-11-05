@@ -11,7 +11,7 @@ import csv
 import json
 import re
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -78,7 +78,7 @@ def review_finance(root: Path) -> list[dict[str, str]]:
     return issues
 
 
-def review_mt5(root: Path) -> list[dict[str, str]]:
+def review_mt5(root: Path, now: datetime | None = None) -> list[dict[str, str]]:
     config = root / "trading-agent-exness-demo/config/demo.yaml"
     source = root / "trading-agent-exness-demo/app/mt5/execution.py"
     if not config.is_file() or not source.is_file():
@@ -87,6 +87,21 @@ def review_mt5(root: Path) -> list[dict[str, str]]:
     code = source.read_text(encoding="utf-8")
     if not re.search(r"(?m)^account_mode:\s*demo_only\s*$", cfg) or "ACCOUNT_TRADE_MODE_DEMO" not in code:
         return [finding("MT5_DEMO_GUARD_CHANGED", "critical", "open", "trading-agent-exness-demo", "Stop MT5 execution and inspect account mode and order guard.")]
+    state_file = root / "trading-agent-exness-demo/run_state.json"
+    if not state_file.is_file():
+        return [finding("MT5_RUNTIME_UNVERIFIED", "info", "unverified", "trading-agent-exness-demo/run_state.json", "Check the demo daemon before claiming that it is scanning markets.")]
+    try:
+        state = json.loads(state_file.read_text(encoding="utf-8"))
+        if state.get("status") != "RUNNING":
+            return []
+        heartbeat = datetime.fromisoformat(state["last_heartbeat_utc"].replace("Z", "+00:00"))
+        if heartbeat.tzinfo is None:
+            raise ValueError("heartbeat lacks timezone")
+        age = (now or datetime.now(timezone.utc)) - heartbeat.astimezone(timezone.utc)
+    except (OSError, ValueError, KeyError, TypeError):
+        return [finding("MT5_HEARTBEAT_INVALID", "high", "open", "trading-agent-exness-demo/run_state.json", "Do not claim the demo bot is running; inspect the daemon and state writer.")]
+    if age > timedelta(minutes=5) or age < -timedelta(minutes=1):
+        return [finding("MT5_HEARTBEAT_STALE", "high", "open", "trading-agent-exness-demo/run_state.json", "Do not claim the demo bot is running; inspect the process and restart only after demo guards are verified.")]
     return []
 
 

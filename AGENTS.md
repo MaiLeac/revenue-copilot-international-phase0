@@ -25,3 +25,5 @@ Before any external action, read `operations/risk_review_latest.json` if present
 The owner is writing the Bản Thảo book. The seven-page web exercise is illustrative material, not approved book excerpts. Only digital products are planned. No tea, physical gifts, payment, preorder, confirmed price, automated bank confirmation or file delivery is live. `experiments/exp03-duong-nhan-ai-mvp/products.json` is the current public product list. Historical experiment specs and distribution kits may conflict; preserve them as history and do not reactivate their claims.
 
 Never claim revenue without bank evidence. Never expose payment credentials or install and run unreviewed third-party code. Follow the user's authorization for each external action.
+
+For opportunity work, read `operations/PUBLIC_DEMAND_SCOUT.md` and the local `operations/public_demand_scout/latest.json` if present. Verify buyer, current need, existing alternatives, and payout before proposing an offer. The Scout does not contact anyone or prove demand.

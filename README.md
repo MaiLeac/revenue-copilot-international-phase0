@@ -29,3 +29,5 @@
 - Bộ rà rủi ro không dùng AI chạy bằng Windows Task Scheduler mỗi ngày 09:00 (`MoneyHQ-RiskReview`); lượt chạy thử 05/11 thành công, kết quả cục bộ ở `operations/risk_review_latest.json`. Bộ này chỉ phát hiện một số lỗi có thể kiểm tra tự động; không cấp quyền hành động đối ngoại. [Cách vận hành](OPERATING_SYSTEM.md).
 
 **Mỗi AI vào repo:** đọc [AGENTS.md](AGENTS.md), [trạng thái có bằng chứng](PROJECT_STATE.md), [bản đồ tài liệu](docs/DOCUMENT_STATUS.md); tra [công cụ/repo](assets/web_capability_library/CAPABILITY_ROUTING.md) khi có việc cụ thể. Tự làm việc nội bộ đã được giao. Với chi tiền, giao dịch tài chính, liên hệ người khác, xuất bản hoặc dùng dữ liệu khách, kiểm tra quyền đã cấp và giới hạn; chỉ xin quyền mới khi vượt phạm vi. Không bịa kết quả hoặc coi im lặng là phê duyệt.
+
+- Public Demand Scout: Windows task `MoneyHQ-PublicDemandScout` checks public discussion APIs three times daily. See [runbook](operations/PUBLIC_DEMAND_SCOUT.md). Source-linked posts are signals, not buyers or verified gaps.

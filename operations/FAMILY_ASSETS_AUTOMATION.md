@@ -1,7 +1,9 @@
-# Family assets: current automation boundary (06/11/2026)
+# WINK private asset workflow · 06/11/2026
 
-- Windows task `FamilyAssets_AutoPriceUpdater` runs Python at 20:00 local time with `--telegram-prices-only`. It fetches public SOL, PSOL, USD/VND and KNP silver quotes and sends **one short Telegram bulletin**. The KNP page does not expose a verified quote date to this parser, so the bulletin labels its freshness unverified. The task does **not** edit the Google Sheet.
-- The Codex daily Sheet automation is paused at the owner's request to avoid AI usage. The last revision of its prompt remains stored in the automation; its active status must be checked in the app rather than inferred from this document.
-- `tools/auto_update_family_assets.py` also has a Google Sheets API write mode. It verifies expected price-row codes and writes only public reference prices. It does not calculate holdings, Exness equity, debt, or daily snapshots. The machine has Python Sheets libraries but **no Google Application Default Credentials** as of this check. Do not schedule write mode or claim Sheet/history updated until one-time Google authorization is set up and a read/write/readback run succeeds.
-- Never restore the old `gsheets` CLI implementation: the command is absent on this machine, and that implementation used hardcoded Exness equity, debt and holdings. Do not report a price bulletin as portfolio PnL.
-- Telegram delivery is verified only when `send_telegram_alert` returns `ok=True` and no `dry_run` flag. One test message reached Telegram on 06/11/2026.
+- Windows task `FamilyAssets_AutoPriceUpdater` runs `tools/auto_update_family_assets.py --telegram-prices-only` daily at 20:00 ICT. Python fetches public reference prices, writes to local SQLite, then sends a per-owner Telegram report. The flag is a compatibility alias; running without it does the same thing.
+- The private database is `C:/Users/ACER/Documents/Codex/wink-private/wink.db`, outside the public Git repository. Initial data was imported once from local `holdings.json` and `prices.json`. Edits from the WINK dashboard are audited in the `asset_edits` table.
+- The WINK dashboard runs on `http://127.0.0.1:8000` only. It shows Mai, Mẹ and Bầu (Việt) separately, with quantity, original cost, estimated market value, and estimated change. No debt is counted. Exness equity and quantities need manual updates; the dashboard does not connect to brokerage accounts.
+- KNP silver page does not expose a verified quote date to this parser. Exness equity was last manually recorded 07/10/2026. These limits must remain visible in the report and dashboard.
+- This script no longer requests Google Sheets access or writes to the Sheet. The old Codex Sheet automation remains paused. Do not revive it without a new owner decision.
+- Agent Zero is shown as read-only status plus a local launch link. WINK does not send financial data or commands to Agent Zero and does not claim its scheduled jobs are active.
+- Telegram delivery counts as verified only when `send_telegram_alert` returns `ok=True` without `dry_run`.

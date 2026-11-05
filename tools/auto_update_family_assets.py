@@ -1,10 +1,4 @@
-"""Update public reference prices in the family Sheet; never infer private holdings.
-
-Google Sheets access uses Application Default Credentials with the Sheets scope.
-The user's quantities, Exness equity, cost basis and history are left to the
-existing verified Sheet workflow. This script never substitutes a silver futures
-quote for the Exness account equity and never invents debt or past snapshots.
-"""
+"""Refresh public reference prices in WINK's local private database and report to Telegram."""
 from __future__ import annotations
 
 import argparse
@@ -22,9 +16,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from tools.telegram_notify import send_telegram_alert
+from tools.wink_private_model import build_state, save_prices
 
-SHEET_ID = "1UPReETEtQJVYTEXHyzLbOOm5aNVJpjzEYr6aJKWIals"
-SCOPE = "https://www.googleapis.com/auth/spreadsheets"
 ICT = timezone(timedelta(hours=7))
 log = logging.getLogger("family_assets_prices")
 
@@ -89,56 +82,6 @@ def fetch_usd_vnd() -> tuple[float, str, str]:
     return rate, source_at.astimezone(ICT).strftime("%d/%m/%Y %H:%M"), "open.er-api.com"
 
 
-def sheets_service():
-    import google.auth
-    from googleapiclient.discovery import build
-
-    credentials, _ = google.auth.default(scopes=[SCOPE])
-    return build("sheets", "v4", credentials=credentials, cache_discovery=False).spreadsheets()
-
-
-def update_prices(service, quotes: dict[str, tuple], errors: dict[str, str]) -> int:
-    values = service.values()
-    current = values.get(spreadsheetId=SHEET_ID, range="'Gia tai san'!A4:H8").execute().get("values", [])
-    for row, code in ((5, "BAC_KNP_2024"), (6, "SOL_USD"), (7, "USD_VND"), (8, "PSOL_USD")):
-        actual = current[row - 4][0] if len(current) > row - 4 and current[row - 4] else ""
-        if actual != code:
-            raise ValueError(f"Sheet đổi bố cục tại A{row}: chờ kiểm tra, không ghi")
-
-    now = datetime.now(ICT).strftime("%d/%m/%Y %H:%M")
-    updates = []
-
-    def put(cell: str, value: Any) -> None:
-        updates.append({"range": f"'Gia tai san'!{cell}", "values": [[value]]})
-
-    if "KNP" in quotes:
-        buy, sell, source = quotes["KNP"]
-        for cell, value in (("C5", buy), ("D5", sell), ("E5", source), ("G5", now), ("H5", "Đã kiểm tra nguồn")):
-            put(cell, value)
-    if "SOL" in quotes:
-        price, source = quotes["SOL"]
-        for cell, value in (("C6", price), ("E6", source), ("G6", now), ("H6", "Đã kiểm tra nguồn")):
-            put(cell, value)
-    if "FX" in quotes:
-        rate, source_at, source = quotes["FX"]
-        for cell, value in (("C7", rate), ("E7", source), ("F7", source_at), ("G7", now), ("H7", "Đã kiểm tra nguồn")):
-            put(cell, value)
-    if "PSOL" in quotes:
-        price, source_at, source = quotes["PSOL"]
-        for cell, value in (("C8", price), ("E8", source), ("F8", source_at), ("G8", now), ("H8", "Đã kiểm tra nguồn")):
-            put(cell, value)
-    for code, row in (("KNP", 5), ("SOL", 6), ("FX", 7), ("PSOL", 8)):
-        if code in errors:
-            put(f"H{row}", f"Lỗi nguồn: {errors[code][:65]}")
-    if not updates:
-        raise ValueError("Không có giá hoặc trạng thái nào để ghi")
-    values.batchUpdate(spreadsheetId=SHEET_ID, body={"valueInputOption": "USER_ENTERED", "data": updates}).execute()
-    check = values.batchGet(spreadsheetId=SHEET_ID, ranges=[f"'Gia tai san'!H{row}" for row in (5, 6, 7, 8)]).execute()["valueRanges"]
-    if len(check) != 4 or any(not item.get("values") for item in check):
-        raise RuntimeError("Không đọc lại đủ trạng thái nguồn sau khi ghi Sheet")
-    return len(quotes)
-
-
 def collect_quotes() -> tuple[dict[str, tuple], dict[str, str]]:
     quotes, errors = {}, {}
     for code, fetch in (("KNP", fetch_knp), ("SOL", fetch_sol), ("FX", fetch_usd_vnd), ("PSOL", fetch_psol)):
@@ -150,61 +93,68 @@ def collect_quotes() -> tuple[dict[str, tuple], dict[str, str]]:
     return quotes, errors
 
 
-def prices_message(quotes: dict[str, tuple], errors: dict[str, str], stamp: str) -> str:
-    """Short, truthful bulletin when Sheets authorization is unavailable."""
-    parts = []
-    for code, label, unit in (("SOL", "SOL", "$"), ("PSOL", "PSOL", "$"), ("FX", "USD/VND", "")):
-        if code in quotes:
-            parts.append(f"{label} {unit}{quotes[code][0]:,.2f}")
-    if not parts:
-        return f"⚠️ Giá tài sản {stamp}: không lấy được nguồn; Sheet chưa ghi."
-    note = "; bạc KNP chưa xác minh ngày" if "KNP" in quotes else "; bạc KNP lỗi nguồn"
-    if errors and any(code != "KNP" for code in errors):
-        note += "; lỗi " + ",".join(code for code in errors if code != "KNP")
-    return f"📊 Giá {stamp}: " + ", ".join(parts) + note + ". Sheet chưa ghi."
+def _mil(value: float | None) -> str:
+    return "?" if value is None else f"{value / 1_000_000:+,.1f}".replace(",", " ")
+
+
+def _value_mil(value: float | None) -> str:
+    return _mil(value).lstrip("+")
+
+
+def _usd(value: float | None) -> str:
+    return "?" if value is None else f"{value:,.2f}".replace(",", " ")
+
+
+def format_telegram_report(state: dict[str, Any], stamp: str, fresh_count: int) -> str:
+    """Compact owner/asset accounting; all VND differences are estimates."""
+    lines = [f"📊 WINK · {stamp} · {fresh_count}/4 nguồn giá mới"]
+    assets = state.get("assets") or []
+    for owner, label in (("Mai", "MAI"), ("Mẹ", "MẸ"), ("Việt", "BẦU (VIỆT)")):
+        group = [a for a in assets if a.get("owner") == owner]
+        if not group:
+            continue
+        lines.append(label)
+        for a in group:
+            qty = a.get("quantity")
+            if a.get("price_code") == "FX":
+                cost = a.get("cost_usd")
+                diff = a.get("change_usd")
+                lines.append(f"• Exness: equity {_usd(qty)} USD / nạp {_usd(cost)} USD; chênh {_usd(diff)} USD (~{_mil(a.get('estimated_change_vnd'))}tr). Nhập tay {a.get('quantity_asof') or '?'}.")
+            else:
+                short = "Bạc KNP" if a.get("price_code") == "KNP" else a.get("name", "Tài sản")
+                unit = "kg" if a.get("price_code") == "KNP" else "PSOL"
+                qty_text = f"{qty:g}" if isinstance(qty, (int, float)) else str(qty)
+                lines.append(f"• {short} {qty_text} {unit}: vốn {_value_mil(a.get('cost_comparison_vnd'))}tr → {_value_mil(a.get('value_vnd'))}tr ({_mil(a.get('estimated_change_vnd'))}tr).")
+        total = state.get("owner_totals_vnd", {}).get(owner)
+        lines.append(f"Tổng {label}: {_value_mil(total)}tr tạm tính.")
+    lines.append("Bạc KNP: ngày giá nguồn chưa xác minh. Exness là equity cũ, không phải lãi đã chốt; VND quy đổi theo FX mới.")
+    if state.get("price_errors"):
+        lines.append("Lỗi nguồn: " + ", ".join(state["price_errors"]))
+    return "\n".join(lines)
 
 
 def main() -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dry-run", action="store_true", help="Fetch public prices only; no Sheet or Telegram")
-    parser.add_argument("--check-auth", action="store_true", help="Check Google Sheets credentials only")
-    parser.add_argument("--telegram-prices-only", action="store_true", help="Send public prices; explicitly state Sheet was not updated")
+    parser.add_argument("--dry-run", action="store_true", help="Fetch public prices only; no local write or Telegram")
+    parser.add_argument("--telegram-prices-only", action="store_true", help="Compatibility alias for local WINK update")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-    if args.check_auth:
-        sheets_service()
-        print("Google Sheets credentials available")
-        return 0
     if args.dry_run:
         quotes, errors = collect_quotes()
         print(json.dumps({"quotes": quotes, "errors": errors}, ensure_ascii=False))
         return 0 if quotes else 1
     stamp = datetime.now(ICT).strftime("%d/%m %H:%M")
-    if args.telegram_prices_only:
-        quotes, errors = collect_quotes()
-        message = prices_message(quotes, errors, stamp)
-        result = send_telegram_alert(message)
-        if not result.get("ok") or result.get("dry_run"):
-            log.error("Telegram delivery not verified")
-            return 1
-        print(message)
-        return 0 if quotes else 1
+    quotes, errors = collect_quotes()
     try:
-        service = sheets_service()
-        quotes, errors = collect_quotes()
-        count = update_prices(service, quotes, errors)
-        message = f"📊 Giá tài sản {stamp}: Sheet đã ghi {count}/4 nguồn."
-        if errors:
-            message += " Lỗi: " + ", ".join(errors)
+        save_prices(quotes, errors)
+        message = format_telegram_report(build_state(), stamp, len(quotes))
     except Exception as exc:
-        log.error("Sheet update failed: %s", exc.__class__.__name__)
-        message = f"⚠️ Giá tài sản {stamp}: chưa cập nhật Sheet ({exc.__class__.__name__})."
+        log.error("Private dashboard update failed: %s", exc.__class__.__name__)
+        message = f"⚠️ WINK {stamp}: chưa lưu được giá ({exc.__class__.__name__})."
         result = send_telegram_alert(message)
-        if not result.get("ok") or result.get("dry_run"):
-            log.error("Telegram delivery not verified")
-        return 1
+        return 1 if result.get("ok") and not result.get("dry_run") else 2
     result = send_telegram_alert(message)
     if not result.get("ok") or result.get("dry_run"):
         log.error("Telegram delivery not verified")

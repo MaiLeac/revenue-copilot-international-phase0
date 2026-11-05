@@ -1,63 +1,33 @@
 from __future__ import annotations
 
-from tools.auto_update_family_assets import prices_message, update_prices
+from tools.auto_update_family_assets import format_telegram_report
 
 
-class FakeValues:
-    def __init__(self, rows):
-        self.rows = rows
-        self.written = None
-
-    def get(self, **kwargs):
-        return self
-
-    def batchUpdate(self, **kwargs):
-        self.written = kwargs["body"]["data"]
-        return self
-
-    def batchGet(self, **kwargs):
-        self.readback = True
-        return self
-
-    def execute(self):
-        if self.written is None:
-            return {"values": self.rows}
-        if getattr(self, "readback", False):
-            return {"valueRanges": [{"values": [["OK"]]} for _ in range(4)]}
-        return {}
-
-
-class FakeService:
-    def __init__(self, rows):
-        self.api = FakeValues(rows)
-
-    def values(self):
-        return self.api
-
-
-def test_rejects_changed_sheet_layout_before_writing():
-    sheet = FakeService([["header"], ["wrong"], ["SOL_USD"], ["USD_VND"], ["PSOL_USD"]])
-    try:
-        update_prices(sheet, {"SOL": (90.0, "Coinbase")}, {})
-    except ValueError as exc:
-        assert "A5" in str(exc)
-    else:
-        raise AssertionError("Changed portfolio layout must block all writes")
-    assert sheet.api.written is None
-
-
-def test_writes_reference_prices_only_and_no_private_portfolio_fields():
-    sheet = FakeService([["header"], ["BAC_KNP_2024"], ["SOL_USD"], ["USD_VND"], ["PSOL_USD"]])
-    assert update_prices(sheet, {"SOL": (90.0, "Coinbase")}, {"KNP": "stale"}) == 1
-    ranges = [entry["range"] for entry in sheet.api.written]
-    assert all("Gia tai san" in range_ for range_ in ranges)
-    assert not any("Danh muc" in range_ or "Lich su ngay" in range_ for range_ in ranges)
-    assert "'Gia tai san'!H5" in ranges
-    assert "'Gia tai san'!C6" in ranges
-
-
-def test_telegram_price_bulletin_never_claims_sheet_was_updated():
-    text = prices_message({"SOL": (90.0, "Coinbase")}, {"KNP": "unknown"}, "06/11 20:00")
-    assert "SOL $90.00" in text
-    assert "Sheet chưa ghi" in text
-    assert len(text) < 160
+def test_report_names_each_owner_and_discloses_stale_exness():
+    state = {
+        "assets": [
+            {"owner": "Mai", "name": "Bạc KNP", "price_code": "KNP", "quantity": 9,
+             "cost_comparison_vnd": 409_400_000, "value_vnd": 356_850_000,
+             "estimated_change_vnd": -52_550_000},
+            {"owner": "Mai", "name": "PSOL", "price_code": "PSOL", "quantity": 19.65951,
+             "cost_comparison_vnd": 44_300_000, "value_vnd": 50_200_000,
+             "estimated_change_vnd": 5_900_000},
+            {"owner": "Mai", "name": "Exness", "price_code": "FX", "quantity": 1287.82,
+             "cost_usd": 3000.97, "change_usd": -1713.15,
+             "estimated_change_vnd": -44_028_000, "quantity_asof": "2026-10-07"},
+            {"owner": "Mẹ", "name": "Bạc", "price_code": "KNP", "quantity": 6,
+             "cost_comparison_vnd": 327_500_000, "value_vnd": 237_900_000,
+             "estimated_change_vnd": -89_600_000},
+            {"owner": "Việt", "name": "Bạc", "price_code": "KNP", "quantity": 2,
+             "cost_comparison_vnd": 174_900_000, "value_vnd": 79_300_000,
+             "estimated_change_vnd": -95_600_000},
+        ],
+        "owner_totals_vnd": {"Mai": 440_150_000, "Mẹ": 237_900_000, "Việt": 79_300_000},
+        "price_errors": {},
+    }
+    text = format_telegram_report(state, "06/11 20:00", 4)
+    for token in ("MAI", "MẸ", "BẦU (VIỆT)", "Bạc KNP 9 kg", "PSOL", "3 000.97 USD", "2026-10-07"):
+        assert token in text
+    assert "vốn 409.4tr → 356.9tr (-52.5tr)" in text
+    assert "không phải lãi đã chốt" in text
+    assert "Sheet" not in text

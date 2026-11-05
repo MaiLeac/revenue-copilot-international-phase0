@@ -40,11 +40,11 @@ class FastWorkspaceHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         path = urlsplit(self.path).path
-        if path == "/" or path == "/api/private/state":
+        if path in {"/dashboard", "/dashboard/", "/api/private/state"}:
             if not self._private_allowed():
                 self.send_error(403)
                 return
-            if path == "/":
+            if path in {"/dashboard", "/dashboard/"}:
                 page = PRIVATE_PAGE.read_text(encoding="utf-8").replace("__CSRF_TOKEN__", PRIVATE_CSRF)
                 self._reply(200, page.encode("utf-8"), "text/html; charset=utf-8")
             else:
@@ -52,9 +52,13 @@ class FastWorkspaceHandler(SimpleHTTPRequestHandler):
                 state["agent_zero"] = agent_zero_status()
                 self._reply(200, json.dumps(state, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
             return
-        if path == "/legacy":
-            self.path = "/index.html"
-            super().do_GET()
+        if path in {"/", "/index.html", "/legacy"}:
+            page = (WORKSPACE_ROOT / "index.html").read_text(encoding="utf-8")
+            old_link = '<a class="btn-venture" href="https://winkhere.com/" target="_blank" rel="noopener">Truy Cập winkhere.com &rarr;</a>'
+            private_link = '<a class="btn-venture" href="/dashboard" rel="nofollow">Bảng tài sản riêng &rarr;</a> '
+            if old_link in page:
+                page = page.replace(old_link, private_link + old_link, 1)
+            self._reply(200, page.encode("utf-8"), "text/html; charset=utf-8")
             return
         super().do_GET()
 

@@ -1,0 +1,7 @@
+# Family assets: current automation boundary (06/11/2026)
+
+- Windows task `FamilyAssets_AutoPriceUpdater` runs Python at 20:00 local time with `--telegram-prices-only`. It fetches public SOL, PSOL, USD/VND and KNP silver quotes and sends **one short Telegram bulletin**. The KNP page does not expose a verified quote date to this parser, so the bulletin labels its freshness unverified. The task does **not** edit the Google Sheet.
+- The Codex daily Sheet automation is paused at the owner's request to avoid AI usage. The last revision of its prompt remains stored in the automation; its active status must be checked in the app rather than inferred from this document.
+- `tools/auto_update_family_assets.py` also has a Google Sheets API write mode. It verifies expected price-row codes and writes only public reference prices. It does not calculate holdings, Exness equity, debt, or daily snapshots. The machine has Python Sheets libraries but **no Google Application Default Credentials** as of this check. Do not schedule write mode or claim Sheet/history updated until one-time Google authorization is set up and a read/write/readback run succeeds.
+- Never restore the old `gsheets` CLI implementation: the command is absent on this machine, and that implementation used hardcoded Exness equity, debt and holdings. Do not report a price bulletin as portfolio PnL.
+- Telegram delivery is verified only when `send_telegram_alert` returns `ok=True` and no `dry_run` flag. One test message reached Telegram on 06/11/2026.

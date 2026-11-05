@@ -14,3 +14,14 @@ is not proof of a buyer, payment, or unmet market. For any candidate, verify the
 source post, current need, buyer/payer, existing alternatives, why they fail, and
 whether a response is permitted. If cheap existing products solve it, reject the
 copycat offer unless a specific buyer proves a remaining gap.
+
+## From signal to work
+
+The scheduled script only collects candidates; **it does not evaluate competitors or execute work by itself**. An AI working from this repo must take one source-linked candidate at a time:
+
+1. Reopen the original request and record an absolute last-check time, current availability, buyer outcome, and budget/payment conditions. Reject stale or inaccessible listings.
+2. Compare the exact request with at least the obvious free/native tool and visible competing bids or products. State the buyer's remaining gap; do not invent a moat. Verify platform fees, required deposits, payout path, privacy and permitted response channel.
+3. If the economics and access pass, perform the smallest safe **internal** part of delivery now on synthetic/public data and test it. Record artifact, result, time and cash cost. Do not stop at an idea card.
+4. If a real customer response, account, customer data, or commercial commitment is needed, prepare the exact next action and follow the repo's authorization rules. Record submitted/accepted/paid only after evidence exists. If blocked, state the concrete blocker and switch to the next candidate; do not count preparation as revenue.
+
+[05 Nov execution example](ACTION_2026-11-05_DATA_CLEANUP.md): a real listing was checked against competing bids and native tools, a cleanup sample was built and tested, then the bid was stopped because the platform requires a minimum account balance. No money was collected.

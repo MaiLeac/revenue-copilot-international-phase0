@@ -7,7 +7,7 @@ import math
 import os
 import sqlite3
 import threading
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +17,7 @@ HOLDINGS_FILE = PRIVATE_DIR / "holdings.json"
 PRICES_FILE = PRIVATE_DIR / "prices.json"
 DB_FILE = PRIVATE_DIR / "wink.db"
 _WRITE_LOCK = threading.Lock()
+ICT = timezone(timedelta(hours=7))
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -39,6 +40,7 @@ def _connect() -> sqlite3.Connection:
     conn.execute("CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, data TEXT NOT NULL)")
     conn.execute("CREATE TABLE IF NOT EXISTS quotes (code TEXT PRIMARY KEY, data TEXT NOT NULL)")
     conn.execute("CREATE TABLE IF NOT EXISTS asset_edits (id INTEGER PRIMARY KEY, at TEXT NOT NULL, asset_id TEXT NOT NULL, old_data TEXT NOT NULL, new_data TEXT NOT NULL)")
+    conn.execute("CREATE TABLE IF NOT EXISTS daily_snapshots (day TEXT PRIMARY KEY, captured_at TEXT NOT NULL, data TEXT NOT NULL)")
     if not conn.execute("SELECT 1 FROM meta WHERE key='initialized'").fetchone():
         holdings, prices = _read_json(HOLDINGS_FILE), _read_json(PRICES_FILE)
         for asset in holdings.get("assets") or []:
@@ -98,6 +100,27 @@ def save_prices(quotes: dict[str, tuple], errors: dict[str, str]) -> None:
             conn.execute("INSERT OR REPLACE INTO quotes(code,data) VALUES (?,?)", (code, json.dumps(data, ensure_ascii=False)))
         _meta_set(conn, "prices_checked_at", now)
         _meta_set(conn, "price_errors", errors)
+    record_snapshot()
+
+
+def load_history() -> list[dict[str, Any]]:
+    with _connect() as conn:
+        return [json.loads(row[0]) for row in conn.execute("SELECT data FROM daily_snapshots ORDER BY day")]
+
+
+def record_snapshot() -> dict[str, Any]:
+    """Save the actual observed portfolio state once per ICT day; no backfilled guesses."""
+    state = build_state()
+    now = datetime.now(ICT)
+    snapshot = {"day": now.date().isoformat(), "captured_at": now.isoformat(timespec="seconds"),
+                "prices_checked_at": state["prices_checked_at"],
+                "price_errors": state["price_errors"], "assets": state["assets"],
+                "owner_totals_vnd": state["owner_totals_vnd"],
+                "family_total_vnd": state["family_total_vnd"]}
+    with _WRITE_LOCK, _connect() as conn:
+        conn.execute("INSERT OR REPLACE INTO daily_snapshots(day,captured_at,data) VALUES (?,?,?)",
+                     (snapshot["day"], snapshot["captured_at"], json.dumps(snapshot, ensure_ascii=False)))
+    return snapshot
 
 
 def _money(value: Any) -> float | None:
@@ -177,6 +200,7 @@ def build_state() -> dict[str, Any]:
         "cash": cash_collected(),
         "themes": holdings.get("themes") or [],
         "theme_origin": holdings.get("theme_origin"),
+        "history": load_history(),
         "projects": [
             {"name": "Bản Thảo", "kind": "Sách số", "status": "Bản thảo; chưa có tiền thu được ghi nhận"},
             {"name": "CatalogueQA", "kind": "Công cụ B2B", "status": "Nguyên mẫu; chưa có tiền thu được ghi nhận"},
@@ -211,4 +235,5 @@ def update_asset(asset_id: str, quantity: Any, cost: Any, asof: str | None) -> d
             conn.execute("INSERT INTO asset_edits(at,asset_id,old_data,new_data) VALUES (?,?,?,?)",
                          (now, asset_id, json.dumps(old, ensure_ascii=False), json.dumps(asset, ensure_ascii=False)))
             _meta_set(conn, "captured_at", now)
-            return asset
+    record_snapshot()
+    return asset

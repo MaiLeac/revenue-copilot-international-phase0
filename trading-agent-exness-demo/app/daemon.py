@@ -246,10 +246,23 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
 
                     # Evaluate 4-tier H4/H1 trend pullback strategy
                     signal = strategy.evaluate(base_sym, h4_candles, h1_candles)
+                    state["last_evaluation"] = {
+                        "symbol": base_sym,
+                        "closed_h1_bar_utc": last_bar_time,
+                        "evaluated_at_utc": now_utc.isoformat(),
+                        "direction": signal.direction,
+                        "reason": signal.reason,
+                        "decision": "no_signal" if signal.direction == "FLAT" else "pending_risk_checks",
+                    }
+                    state["evaluated_bars_total"] = int(state.get("evaluated_bars_total", 0)) + 1
+                    if signal.direction == "FLAT":
+                        logger.info("No trade signal for %s on closed H1 bar %s: %s", base_sym, last_bar_time, signal.reason)
                     if signal.direction in ("BUY", "SELL"):
                         # P0 Safety: Enforce News Blackout Filter before order execution
                         is_blackout, blackout_reason = news_filter.is_blackout(base_sym, now_utc)
                         if is_blackout:
+                            state["last_evaluation"]["decision"] = "blocked_news"
+                            state["last_evaluation"]["block_reason"] = blackout_reason
                             logger.warning(
                                 f"Trade signal on {base_sym} suppressed by News Blackout Filter: {blackout_reason}"
                             )
@@ -258,6 +271,7 @@ def run_daemon_loop(config_path: str = "config/demo.yaml", loop_interval_sec: in
                         logger.info(f"Signal detected for {spec.broker_symbol}: {signal.direction} @ {signal.entry_price} ({signal.reason})")
                         # Place order
                         order_res: OrderResult = adapter.place_order(signal, spec)
+                        state["last_evaluation"]["decision"] = "order_sent" if order_res.success else "order_rejected"
                         if order_res.success:
                             trade_msg = (
                                 f"📈 <b>VÀO LỆNH DEMO THÀNH CÔNG!</b>\n\n"

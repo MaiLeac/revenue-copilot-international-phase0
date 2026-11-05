@@ -231,7 +231,9 @@ class MT5MarketDataReader:
         spec = self.read_symbol_spec(base_symbol)
         mt5_tf = getattr(self._mt5, f"TIMEFRAME_{tf_clean}", TIMEFRAME_MAP[tf_clean])
 
-        rates = self._mt5.copy_rates_from_pos(spec.broker_symbol, mt5_tf, 0, count)
+        # MT5 position 0 is the still-forming candle. Signals must only see
+        # candles whose OHLC is final, including on daemon restart.
+        rates = self._mt5.copy_rates_from_pos(spec.broker_symbol, mt5_tf, 1, count)
         if rates is None or len(rates) == 0:
             raise MarketDataError(
                 f"Missing candles: copy_rates_from_pos('{spec.broker_symbol}', '{tf_clean}', {count}) returned empty."

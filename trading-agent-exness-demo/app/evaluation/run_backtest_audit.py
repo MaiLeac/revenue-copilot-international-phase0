@@ -65,9 +65,9 @@ def run_comprehensive_audit() -> str:
     # Format Markdown Report
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     lines = [
-        "# Money HQ Quantitative Strategy Backtest Audit Report",
+        "# Synthetic strategy harness — not market performance",
         f"**Date:** {timestamp}",
-        "**Methodology:** 70% In-Sample (IS) / 30% Out-of-Sample (OOS) Bar-by-Bar Walk-Forward",
+        "**Methodology:** deterministic sine/cosine candles split 70%/30%; both segments are synthetic, so OOS is not unseen market data",
         "**Friction Inclusions:** Spread (12-25 pts), Commission ($7.00/lot), Slippage (2 pts/side), Overnight Swap",
         "**Risk Governance:** Strictly Zero Martingale, Predefined ATR Stop-Loss, Max Open Risk 0.50%\n",
         "## Performance Metrics Summary\n",
@@ -84,10 +84,8 @@ def run_comprehensive_audit() -> str:
             )
 
     lines.extend([
-        "\n## Key Quantitative Takeaways",
-        "1. **Out-of-Sample Resilience:** All three candidate instruments maintained positive net expectancy in the 30% unseen OOS segment after full commission and spread deductions.",
-        "2. **Drawdown Discipline:** Maximum drawdown across all tested segments remained strictly below **1.2%**, well within the conservative 3.0% maximum risk threshold mandated by Money HQ.",
-        "3. **Execution Readiness:** Strategy logic is decoupled from execution adapters and verified through deterministic unit tests (`pytest trading-agent-exness-demo/tests`).",
+        "\n## Interpretation",
+        "These generated candles only test code behavior. They cannot show profitability, broker fill quality, future drawdown, or readiness to trade or enter a funded challenge.",
     ])
 
     return "\n".join(lines)

@@ -1,0 +1,136 @@
+{
+  "inputs": {
+    "EURUSD_H1": {
+      "path": "data\\backtest_cache\\EURUSD_H1.json",
+      "bars": 6500,
+      "sha256": "b54f6b86e8c0c01de94fc578da1d0aaf5343bb817faa4a448460d792d7e9b41e"
+    },
+    "EURUSD_H4": {
+      "path": "data\\backtest_cache\\EURUSD_H4.json",
+      "bars": 1725,
+      "sha256": "03a065d593ef2d03d1fb953e3be069e93bd82237e35720d04aa5e684377361a4"
+    },
+    "GBPUSD_H1": {
+      "path": "data\\backtest_cache\\GBPUSD_H1.json",
+      "bars": 6500,
+      "sha256": "a9dcc81c778ab3603c1c32e72005a110a78ad0135509f10cb69b382dffa0c900"
+    },
+    "GBPUSD_H4": {
+      "path": "data\\backtest_cache\\GBPUSD_H4.json",
+      "bars": 1725,
+      "sha256": "1ed2547e3fefde795ce540f727fa65c383b4686b4a1d8fcf04eaca17fd3f0f33"
+    },
+    "XAUUSD_H1": {
+      "path": "data\\backtest_cache\\XAUUSD_H1.json",
+      "bars": 6500,
+      "sha256": "f74f82f940aeb50368c576fceadc260fce376b9c1964c3d1b502ab1c2b9502ab"
+    },
+    "XAUUSD_H4": {
+      "path": "data\\backtest_cache\\XAUUSD_H4.json",
+      "bars": 1725,
+      "sha256": "80e8c82e4484782da2d280c0efcc030c0e9d096d94b834dd1ab2726f531a6507"
+    }
+  },
+  "assumptions": "Historical simulation using cached broker bars; fixed spread/slippage/swap; no verified historical news calendar; no real fills.",
+  "stats": {
+    "starting_capital": 100000.0,
+    "final_equity": 95700.7,
+    "net_profit": -4299.3,
+    "return_pct": -4.3,
+    "total_trades": 98,
+    "wins": 29,
+    "losses": 69,
+    "win_rate": 29.59,
+    "profit_factor": 0.75,
+    "max_drawdown_pct": 6.92,
+    "max_drawdown_cash": 7051.96,
+    "expectancy_r": -0.18,
+    "stats_by_symbol": {
+      "EURUSD": {
+        "trades": 37,
+        "wins": 12,
+        "win_rate": 32.4,
+        "pnl": -898.15
+      },
+      "GBPUSD": {
+        "trades": 27,
+        "wins": 5,
+        "win_rate": 18.5,
+        "pnl": -3357.72
+      },
+      "XAUUSD": {
+        "trades": 34,
+        "wins": 12,
+        "win_rate": 35.3,
+        "pnl": -43.42
+      }
+    },
+    "monthly_stats": {
+      "2025-11": {
+        "trades": 1,
+        "wins": 0,
+        "pnl": -254.28000000000316
+      },
+      "2025-12": {
+        "trades": 17,
+        "wins": 8,
+        "pnl": 1138.6051700000876
+      },
+      "2026-01": {
+        "trades": 11,
+        "wins": 3,
+        "pnl": -701.2849099999975
+      },
+      "2026-02": {
+        "trades": 5,
+        "wins": 1,
+        "pnl": -535.1353600000325
+      },
+      "2026-03": {
+        "trades": 9,
+        "wins": 2,
+        "pnl": -822.9978800000139
+      },
+      "2026-04": {
+        "trades": 4,
+        "wins": 0,
+        "pnl": -1009.9739999999501
+      },
+      "2026-05": {
+        "trades": 8,
+        "wins": 0,
+        "pnl": -1968.7997200000093
+      },
+      "2026-06": {
+        "trades": 11,
+        "wins": 4,
+        "pnl": 222.101090000011
+      },
+      "2026-07": {
+        "trades": 2,
+        "wins": 0,
+        "pnl": -487.5600000000253
+      },
+      "2026-08": {
+        "trades": 14,
+        "wins": 6,
+        "pnl": 547.1392300001012
+      },
+      "2026-09": {
+        "trades": 6,
+        "wins": 1,
+        "pnl": -728.8085200000129
+      },
+      "2026-10": {
+        "trades": 9,
+        "wins": 3,
+        "pnl": -92.47229000001067
+      },
+      "2026-11": {
+        "trades": 1,
+        "wins": 1,
+        "pnl": 394.16799999998693
+      }
+    }
+  }
+}

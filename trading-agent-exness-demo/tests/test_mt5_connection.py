@@ -131,9 +131,10 @@ class MockMT5Backend:
     def copy_rates_from_pos(
         self, symbol: str, timeframe: int, start_pos: int, count: int
     ) -> list[dict[str, Any]]:
+        assert start_pos == 1, "Strategy data must exclude MT5's forming bar"
         step = 900 if timeframe == 15 else 3600
         bars: list[dict[str, Any]] = []
-        base_time = self.now_ts - (count - 1) * step
+        base_time = self.now_ts - count * step
         for i in range(count):
             bars.append(
                 {

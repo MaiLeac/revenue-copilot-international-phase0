@@ -25,7 +25,8 @@ if str(REPO_ROOT) not in sys.path:
 import MetaTrader5 as mt5
 
 from app.mt5.market_data import CandleBar
-from app.risk.news_filter import NewsBlackoutFilter, NewsEvent
+from app.risk.news_filter import NewsBlackoutFilter
+from app.config import NewsFilterConfig
 from app.strategies.trend_pullback import TrendFollowingPullbackStrategy
 
 logger = logging.getLogger("quant_backtest")
@@ -190,35 +191,13 @@ class PortfolioBacktester:
         self.session_end_hour = session_end_hour
 
         self.strategy = TrendFollowingPullbackStrategy()
-        self.news_filter = NewsBlackoutFilter(auto_fetch=False)
-
-        # Seed high-impact news schedule
-        self._seed_news_calendar()
+        self.news_filter = NewsBlackoutFilter(config=NewsFilterConfig(enabled=False), auto_fetch=False)
+        # No verified historical event calendar is available for this simulation.
 
         self.closed_trades: list[BacktestTrade] = []
         self.open_trades: list[BacktestTrade] = []
         self.equity_curve: list[tuple[datetime, float]] = []
         self.daily_equity: dict[str, float] = {}
-
-    def _seed_news_calendar(self) -> None:
-        """Seed representative high-impact news releases for 1-year backtesting."""
-        events: list[NewsEvent] = []
-        # First Friday NFP at 13:30 UTC for all 12 months
-        for month in range(1, 13):
-            # approximate first Friday and mid-month CPI
-            nfp_dt = datetime(2025 if month >= 11 else 2026, month, 6, 13, 30, tzinfo=timezone.utc)
-            cpi_dt = datetime(2025 if month >= 11 else 2026, month, 14, 13, 30, tzinfo=timezone.utc)
-            fomc_dt = datetime(2025 if month >= 11 else 2026, month, 22, 19, 0, tzinfo=timezone.utc)
-            boe_dt = datetime(2025 if month >= 11 else 2026, month, 8, 12, 0, tzinfo=timezone.utc)
-            ecb_dt = datetime(2025 if month >= 11 else 2026, month, 18, 13, 15, tzinfo=timezone.utc)
-            events.extend([
-                NewsEvent(title="US Non-Farm Payrolls", country="USD", date_utc=nfp_dt, impact="High"),
-                NewsEvent(title="US CPI Inflation", country="USD", date_utc=cpi_dt, impact="High"),
-                NewsEvent(title="FOMC Rate Decision", country="USD", date_utc=fomc_dt, impact="High"),
-                NewsEvent(title="BoE Official Bank Rate", country="GBP", date_utc=boe_dt, impact="High"),
-                NewsEvent(title="ECB Main Refinancing Rate", country="EUR", date_utc=ecb_dt, impact="High"),
-            ])
-        self.news_filter.inject_events(events)
 
     def run(self, symbol_data: dict[str, tuple[list[CandleBar], list[CandleBar]]]) -> dict[str, Any]:
         logger.info(f"Starting 1-Year Multi-Symbol Backtest on {list(symbol_data.keys())}...")
@@ -331,9 +310,12 @@ class PortfolioBacktester:
                 if h1_idx is None or h1_idx < 60:
                     continue
 
-                h1_slice = h1s[max(0, h1_idx - 60) : h1_idx + 1]
-                # Efficient bisect lookup for H4 candles
-                h4_pos = bisect.bisect_right(h4_times_by_sym[sym], current_time)
+                # current_time is the OPEN of the execution H1 bar. Only
+                # earlier, fully closed H1/H4 bars may inform the signal.
+                h1_slice = h1s[h1_idx - 60 : h1_idx]
+                h4_pos = bisect.bisect_right(
+                    h4_times_by_sym[sym], current_time - timedelta(hours=4)
+                )
                 if h4_pos < 200:
                     continue
                 h4_slice = h4s[max(0, h4_pos - 250) : h4_pos]
@@ -341,19 +323,18 @@ class PortfolioBacktester:
                 signal = self.strategy.evaluate(sym, h4_slice, h1_slice)
                 if signal.direction in ("BUY", "SELL") and signal.entry_price and signal.stop_loss and signal.take_profit:
                     spec = PORTFOLIO_SPECS[sym]
+                    execution_bar = data_by_sym[sym][current_time]
+                    spread_cost = spec.spread_pips * (spec.point * 10)
+                    slippage = spec.slippage_points * spec.point
+                    entry_fill = (execution_bar.open + spread_cost + slippage) if signal.direction == "BUY" else (execution_bar.open - slippage)
                     risk_cash = self.equity * (self.risk_per_trade_pct / 100.0)
-                    risk_dist = abs(signal.entry_price - signal.stop_loss)
+                    risk_dist = (entry_fill - signal.stop_loss) if signal.direction == "BUY" else (signal.stop_loss - entry_fill)
                     if risk_dist <= 0:
                         continue
 
                     # Position sizing: lots = risk_cash / (risk_dist * contract_size)
                     raw_volume = risk_cash / (risk_dist * spec.contract_size)
                     volume = round(max(0.01, min(20.0, raw_volume)), 2)
-
-                    # Real spread and slippage on entry
-                    spread_cost = spec.spread_pips * (spec.point * 10)
-                    slippage = spec.slippage_points * spec.point
-                    entry_fill = (signal.entry_price + spread_cost + slippage) if signal.direction == "BUY" else (signal.entry_price - slippage)
 
                     new_trade = BacktestTrade(
                         ticket=trade_counter,
@@ -401,7 +382,7 @@ class PortfolioBacktester:
         gross_loss = abs(sum(t.pnl_cash for t in losses))
         net_profit = self.equity - self.starting_capital
         win_rate = (len(wins) / total_trades) * 100.0
-        profit_factor = round(gross_profit / gross_loss, 2) if gross_loss > 0 else 99.9
+        profit_factor = round(gross_profit / gross_loss, 2) if gross_loss > 0 else None
 
         # Max drawdown calculation
         peak = self.starting_capital
@@ -460,86 +441,31 @@ class PortfolioBacktester:
 
 
 def generate_dossier_markdown(stats: dict[str, Any], filepath: Path) -> None:
-    """Write exhaustive institutional audit dossier in Markdown."""
+    """Write measured simulation results without making prop-firm or live-trading claims."""
     filepath.parent.mkdir(parents=True, exist_ok=True)
-
-    ftmo_target_met = stats["return_pct"] >= 10.0
-    ftmo_dd_safe = stats["max_drawdown_pct"] < 10.0
-    ftmo_daily_safe = True  # Verified by daily risk gate
-
-    md = f"""# 📊 INSTITUTIONAL QUANT AUDIT REPORT: MULTI-ASSET BASKET (1-YEAR)
-**Strategy ID:** `trend_pullback` v2.0 (4-Tier Structural Trend-Following)  
-**Basket Assets:** `EURUSD`, `GBPUSD`, `XAUUSD` (Gold)  
-**Execution Environment:** MetaTrader 5 (Exness Raw Spread Execution Simulation)  
-**Audit Scope:** 1 Full Calendar Year (~6,000 H1 Bars per Symbol)  
-**Safety & Compliance:** Strict P0 `NewsBlackoutFilter`, 0.25% Risk/Trade, 0.75% Max Basket Risk  
-**Date of Audit:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}  
-
----
-
-## 1. Executive Summary & Key Performance Indicators (KPIs)
-
-| Metric | Target / Benchmark | Realized Performance | Audit Status |
-| :--- | :--- | :--- | :--- |
-| **Initial Account Capital** | $100,000.00 USD | **$100,000.00 USD** | BASELINE |
-| **Final Net Equity** | - | **${stats['final_equity']:,.2f} USD** | PROFITABLE |
-| **Net Return** | +10.0% (Prop Target) | **+{stats['return_pct']:.2f}%** (${stats['net_profit']:,.2f}) | {'✅ TARGET EXCEEDED' if ftmo_target_met else '⚠️ NEAR TARGET'} |
-| **Total Trades Executed** | >= 50 trades/yr | **{stats['total_trades']} trades** (~{stats['total_trades'] // 12} trades/mo) | ✅ STATISTICALLY SIGNIFICANT |
-| **Win Rate** | >= 45.0% | **{stats['win_rate']:.2f}%** ({stats['wins']} Wins / {stats['losses']} Losses) | ✅ VERIFIED |
-| **Profit Factor** | >= 1.50 | **{stats['profit_factor']:.2f}** | ✅ EXCELLENT (> 1.8) |
-| **Expectancy per Trade** | > +0.20 R | **+{stats['expectancy_r']:.2f} R** | ✅ POSITIVE EDGE |
-| **Maximum Drawdown (Peak-to-Trough)** | < 10.0% (FTMO Rule) | **{stats['max_drawdown_pct']:.2f}%** (${stats['max_drawdown_cash']:,.2f}) | ✅ SAFE PASS (Buffer: {10.0 - stats['max_drawdown_pct']:.2f}%) |
-| **Maximum Daily Loss Observed** | < 5.0% (FTMO Rule) | **1.21%** | ✅ SAFE PASS (Buffer: 3.79%) |
-
----
-
-## 2. Multi-Asset Portfolio Breakdown (Why Single-Asset Failed)
-
-The single-asset EURUSD setup produced only **~4 trades/month**, which is mathematically insufficient to pass prop firm evaluations (FTMO Phase 1 requires 10% gain within a reasonable window). Expanding into an uncorrelated **Multi-Asset Basket** triplicates the opportunity pipeline while preserving the strict **0.25% risk cap per trade**:
-
-| Asset Symbol | Asset Class | Total Trades | Win Count | Win Rate (%) | Total Net Contribution ($) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **EURUSD** | FX Major (Low Volatility) | {stats['stats_by_symbol']['EURUSD']['trades']} | {stats['stats_by_symbol']['EURUSD']['wins']} | {stats['stats_by_symbol']['EURUSD']['win_rate']}% | ${stats['stats_by_symbol']['EURUSD']['pnl']:,.2f} |
-| **GBPUSD** | FX Major (High Beta) | {stats['stats_by_symbol']['GBPUSD']['trades']} | {stats['stats_by_symbol']['GBPUSD']['wins']} | {stats['stats_by_symbol']['GBPUSD']['win_rate']}% | ${stats['stats_by_symbol']['GBPUSD']['pnl']:,.2f} |
-| **XAUUSD** | Commodity (Gold Trend Sitter) | {stats['stats_by_symbol']['XAUUSD']['trades']} | {stats['stats_by_symbol']['XAUUSD']['wins']} | {stats['stats_by_symbol']['XAUUSD']['win_rate']}% | ${stats['stats_by_symbol']['XAUUSD']['pnl']:,.2f} |
-
----
-
-## 3. Monthly Performance Breakdown
-
-| Month (YYYY-MM) | Closed Trades | Wins | Win Rate (%) | Net Monthly PnL ($) |
-| :--- | :--- | :--- | :--- | :--- |
-"""
-    for m_key in sorted(stats["monthly_stats"].keys()):
-        m_data = stats["monthly_stats"][m_key]
-        m_wr = round(m_data["wins"] / m_data["trades"] * 100.0, 1) if m_data["trades"] else 0.0
-        pnl_prefix = "+" if m_data["pnl"] >= 0 else ""
-        md += f"| `{m_key}` | {m_data['trades']} | {m_data['wins']} | {m_wr}% | {pnl_prefix}${m_data['pnl']:,.2f} |\n"
-
-    md += f"""
----
-
-## 4. Prop Firm Evaluation Audit (FTMO / MFF Phase 1 Compliance)
-
-| Evaluation Standard | FTMO Rule Limit | Realized Strategy Metric | Audit Verdict |
-| :--- | :--- | :--- | :--- |
-| **Phase 1 Profit Target** | +10.0% ($10,000) | **+{stats['return_pct']:.2f}%** | {'✅ PASS' if ftmo_target_met else '⚠️ ACCUMULATING'} |
-| **Max Daily Loss Limit** | 5.0% ($5,000) | **1.21%** (Max observed) | ✅ PASS (Zero Breaches) |
-| **Max Overall Drawdown** | 10.0% ($10,000) | **{stats['max_drawdown_pct']:.2f}%** | ✅ PASS (Safe Margin) |
-| **News Trading Violation** | Disqualified on High News | **0 Violations** (`NewsBlackoutFilter`) | ✅ PASS (Enforced Embargo) |
-| **Mandatory Stop Loss** | Required on every order | **100% Orders with ATR SL** | ✅ PASS (Hard Fail-Closed) |
-
----
-
-## 5. Architectural Conclusions & Deployment Directives
-
-1. **Trade Frequency Problem Solved:** Multi-symbol basket generates ~12 to 18 high-probability setups per month across London/NY sessions.
-2. **Gold (XAUUSD) Asymmetry:** Gold trades provided higher R:R payouts during sustained macro trend runs, offsetting minor EUR/GBP consolidation scratches.
-3. **P0 News Safety Proved Essential:** In historical testing, bypassing trades around CPI/NFP prevented ~7 catastrophic slippage whipsaws that would have spiked drawdown by >2.4%.
-4. **Current Status in Live MT5 Demo:** Bot daemon is actively monitoring all 3 pairs (`EURUSD`, `GBPUSD`, `XAUUSD`) with live risk reconciliation and Telegram watchdog alerts.
-"""
-    filepath.write_text(md, encoding="utf-8")
-    logger.info(f"Successfully generated Audit Report at {filepath}")
+    lines = [
+        "# MT5 strategy simulation — unverified market edge",
+        f"Generated UTC: {datetime.now(timezone.utc).isoformat(timespec='seconds')}",
+        "",
+        "This is a historical simulation, not demo account PnL, live profit, or a prop-firm qualification.",
+        "The price bars may come from a local cache when MT5 is unavailable; verify source and bar hashes separately.",
+        "Spread, slippage, swap and news timings are model assumptions, not reconciled broker fills or official event history.",
+        "",
+        "| Metric | Result |",
+        "|---|---:|",
+        f"| Starting capital (simulated USD) | {stats['starting_capital']:,.2f} |",
+        f"| Ending equity (simulated USD) | {stats['final_equity']:,.2f} |",
+        f"| Net PnL (simulated USD) | {stats['net_profit']:,.2f} |",
+        f"| Return | {stats['return_pct']:.2f}% |",
+        f"| Closed trades | {stats['total_trades']} |",
+        f"| Win rate | {stats['win_rate']:.2f}% |",
+        f"| Profit factor | {stats['profit_factor']:.2f} |" if stats['profit_factor'] is not None else "| Profit factor | undefined (no losing trades) |",
+        f"| Expectancy | {stats['expectancy_r']:.2f} R |",
+        f"| Max drawdown | {stats['max_drawdown_pct']:.2f}% |",
+        "",
+        "No live-capital or funded-challenge decision follows from these numbers. Preserve raw bars and a trade-by-trade ledger before further strategy tuning.",
+    ]
+    filepath.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -26,6 +26,31 @@ def test_clear_when_no_events(temp_cache_file):
     assert "Clear" in reason
 
 
+def test_live_mode_blocks_when_calendar_fetch_fails(temp_cache_file, monkeypatch):
+    monkeypatch.setattr(NewsBlackoutFilter, "fetch_calendar", lambda self: False)
+    filter_ = NewsBlackoutFilter(cache_file=temp_cache_file, auto_fetch=True)
+    blocked, reason = filter_.is_blackout("EURUSD", datetime.now(timezone.utc))
+    assert blocked
+    assert "calendar unavailable" in reason.lower()
+
+
+def test_live_mode_refreshes_stale_calendar(temp_cache_file, monkeypatch):
+    calls = []
+    def refreshed(self):
+        calls.append(1)
+        self._last_fetch_attempt_utc = datetime.now(timezone.utc)
+        self._last_fetch_utc = datetime.now(timezone.utc)
+        self._events = [NewsEvent("CPI", "USD", datetime.now(timezone.utc) + timedelta(hours=2), "High")]
+        return True
+    monkeypatch.setattr(NewsBlackoutFilter, "fetch_calendar", refreshed)
+    filter_ = NewsBlackoutFilter(cache_file=temp_cache_file, auto_fetch=True)
+    filter_._last_fetch_utc = datetime.now(timezone.utc) - timedelta(hours=5)
+    filter_._last_fetch_attempt_utc = datetime.now(timezone.utc) - timedelta(minutes=16)
+    blocked, _ = filter_.is_blackout("EURUSD")
+    assert not blocked
+    assert len(calls) == 2
+
+
 def test_blackout_window_trigger(temp_cache_file):
     filter_ = NewsBlackoutFilter(
         config=NewsFilterConfig(enabled=True, blackout_minutes_before=30, blackout_minutes_after=30),

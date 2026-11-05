@@ -77,9 +77,11 @@ class NewsBlackoutFilter:
         auto_fetch: bool = True,
     ) -> None:
         self.config = config or NewsFilterConfig()
+        self._require_fresh_calendar = auto_fetch
         self.cache_file = cache_file or Path("data/economic_calendar_cache.json")
         self._events: list[NewsEvent] = []
         self._last_fetch_utc: datetime | None = None
+        self._last_fetch_attempt_utc: datetime | None = None
 
         if self.cache_file.exists():
             self._load_cache()
@@ -124,6 +126,7 @@ class NewsBlackoutFilter:
 
     def fetch_calendar(self) -> bool:
         """Fetch weekly calendar from public API. Fails safely to cache if network fails."""
+        self._last_fetch_attempt_utc = datetime.now(timezone.utc)
         try:
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AutonomousTradingAgent/1.0"}
             resp = requests.get(FF_CALENDAR_URL, headers=headers, timeout=5.0)
@@ -187,6 +190,24 @@ class NewsBlackoutFilter:
         eval_time = target_time or datetime.now(timezone.utc)
         if eval_time.tzinfo is None:
             eval_time = eval_time.replace(tzinfo=timezone.utc)
+
+        # The live daemon must not treat an empty or old feed as proof that no
+        # high-impact event is scheduled. Offline simulations opt out of this
+        # gate explicitly and must disclose that historical news is unverified.
+        stale_calendar = (
+            self._last_fetch_utc is None
+            or not self._events
+            or self._last_fetch_utc.tzinfo is None
+            or datetime.now(timezone.utc) - self._last_fetch_utc > timedelta(hours=4)
+            or self._last_fetch_utc - datetime.now(timezone.utc) > timedelta(minutes=1)
+        )
+        if self._require_fresh_calendar and stale_calendar:
+            now = datetime.now(timezone.utc)
+            if self._last_fetch_attempt_utc is None or now - self._last_fetch_attempt_utc > timedelta(minutes=15):
+                self.fetch_calendar()
+                stale_calendar = self._last_fetch_utc is None or not self._events or now - self._last_fetch_utc > timedelta(hours=4)
+        if self._require_fresh_calendar and stale_calendar:
+            return True, "Economic calendar unavailable or older than four hours"
 
         currencies = set(self.get_currencies_for_symbol(symbol))
         before_delta = timedelta(minutes=self.config.blackout_minutes_before)

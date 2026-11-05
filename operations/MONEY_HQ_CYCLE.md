@@ -1,0 +1,13 @@
+# Money HQ: chu trình đang chạy
+
+Nguồn duy nhất của tiền thu là `finance/CASH_LEDGER.csv`: trạng thái `L4_COLLECTED_CASH`, VND và mã chứng từ đã che thông tin nhạy cảm. Chi phí tăng thêm lấy từ sổ chi phí và nhật ký AI. Tài sản gia đình, lãi MT5 demo, bản nháp sản phẩm và lượt truy cập không được cộng vào doanh thu.
+
+1. Windows Task `MoneyHQ-PublicDemandScout` chạy lúc 08:35, 14:35, 20:35 theo giờ máy. Nó đọc tối đa sáu truy vấn công khai HN/GitHub, miễn phí; mã Python ở `tools/public_demand_scout.py`.
+2. Sau mỗi lượt, `tools/money_hq_cycle.py` đối soát tiền/chi phí, rủi ro, heartbeat MT5 và tín hiệu người mua. Kết quả ở `operations/public_demand_scout/cycle_latest.json` (chỉ trên máy, không lên GitHub). Nếu có tín hiệu mua rõ ràng mới, nó tạo **một** `offer_draft_latest.json` và không tạo lại cùng tín hiệu. Bản nháp chưa phải khách, hợp đồng hay tiền.
+3. `MoneyHQ-RiskReview` kiểm tra độc lập mỗi ngày. Lỗi nghiêm trọng phải được xử lý trước khi tiêu tiền, công bố khẳng định thương mại hoặc chạy MT5. `tools/trading_ctl.py start` chỉ ghi yêu cầu; phải thấy heartbeat mới và tài khoản demo được xác minh mới nói daemon đang chạy.
+4. Lịch Codex YouTube và Loser Kingdom giữ nhịp mỗi ngày trong đúng dự án, một thay đổi dùng được/lượt và kiểm tra artifact. Không tính báo cáo hay chạy lại test cũ là tiến bộ. Agent Zero hiện chưa có tác vụ lịch bật và mô hình Google đã hết quota; giao diện còn mở được nhưng không được kể là worker đang tự làm việc.
+5. Cổng WINK chính: `http://127.0.0.1:8000/`; bảng cá nhân: `http://127.0.0.1:8000/dashboard`. Phần Tài sản AI của bảng cá nhân đọc trạng thái chu trình này.
+
+**Điểm dừng trước hành động ngoài máy:** Không tự gửi tin nhắn/chào hàng, đăng bài, tiêu tiền, tải dữ liệu khách lên dịch vụ khác, mở lệnh tiền thật hoặc công bố doanh thu thiếu chứng từ. Khi có ứng viên, phải xác minh bài gốc, người trả tiền, giải pháp hiện có và kênh liên hệ hợp lệ rồi xin quyết định cụ thể. Nếu không có tín hiệu mua, kết quả `action: none` là sự thật cần nhìn thẳng; không tạo khách giả.
+
+**Trạng thái đã kiểm tra 06/11/2026:** Scout 6/6 truy vấn, 0 tín hiệu mua mới; L4 0 VND; MT5 mất heartbeat và terminal không trả lời kết nối chỉ đọc. Backtest gần nhất âm 4,30%; chưa đủ cơ sở thi quỹ hoặc giao dịch thật.

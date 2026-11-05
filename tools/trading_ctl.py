@@ -93,6 +93,10 @@ def format_status(state: dict, as_json: bool = False) -> str:
     else:
         hb_label = "⚪ Chưa có thông tin"
 
+    # A saved RUNNING label is not evidence that a daemon is alive.
+    if status == "RUNNING" and (age_sec < 0 or age_sec >= 300):
+        status = "STALE / NOT VERIFIED RUNNING"
+
     account = state.get("account", {})
     login = account.get("login", "N/A")
     server = account.get("server", "N/A")
@@ -145,12 +149,10 @@ def cmd_status(args: argparse.Namespace) -> int:
 def cmd_start(args: argparse.Namespace) -> int:
     state = load_state()
     state["command"] = "start"
-    state["active"] = True
-    if state.get("status") == "PAUSED":
-        state["status"] = "RUNNING"
-    save_state(state)
-    print("✅ Đã thiết lập lệnh START cho bot trading trong run_state.json.")
-    print("Daemon trên Windows Host sẽ tự động nhận lệnh trong chu kỳ quét tiếp theo.")
+    if not save_state(state):
+        return 2
+    print("Đã ghi yêu cầu START. Chưa xác nhận daemon đang chạy.")
+    print("Nếu tiến trình đã dừng, lệnh này không tự khởi chạy lại. Kiểm tra heartbeat và tài khoản DEMO trước khi mở daemon.")
     print("\n" + format_status(state, as_json=args.json))
     return 0
 

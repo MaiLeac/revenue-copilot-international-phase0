@@ -74,7 +74,9 @@ def compute_money_hq_metrics(
         with cash_path.open("r", encoding="utf-8-sig", newline="") as fh:
             for row in csv.DictReader(fh):
                 status = (row.get("status") or "").strip().upper()
-                if status == "L4_COLLECTED_CASH":
+                if (status == "L4_COLLECTED_CASH"
+                    and (row.get("currency") or "").strip().upper() == "VND"
+                    and (row.get("proof_reference_redacted") or "").strip()):
                     realized_l4_vnd += _safe_int(row.get("net_usable_cash"))
                 refunds_vnd += _safe_int(row.get("refunds"))
                 ledger_owner_hours += _safe_float(row.get("owner_hours"))
@@ -95,7 +97,7 @@ def compute_money_hq_metrics(
     if ai_cost_log_csv and Path(ai_cost_log_csv).exists():
         with Path(ai_cost_log_csv).open("r", encoding="utf-8-sig", newline="") as fh:
             for row in csv.DictReader(fh):
-                incremental_api_costs_vnd += _safe_int(row.get("cost_vnd"))
+                incremental_api_costs_vnd += _safe_int(row.get("incremental_cost_vnd"))
 
     total_incremental_cost = variable_costs_vnd + incremental_api_costs_vnd
     net_realized_profit = realized_l4_vnd - total_incremental_cost

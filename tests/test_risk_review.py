@@ -61,6 +61,8 @@ class RiskReviewTests(unittest.TestCase):
         self.assertEqual(review_mt5(self.root, now)[0]["code"], "MT5_HEARTBEAT_STALE")
         (base / "run_state.json").write_text(json.dumps({"status": "RUNNING", "last_heartbeat_utc": "2026-11-05T01:09:00+00:00"}), encoding="utf-8")
         self.assertEqual(review_mt5(self.root, now), [])
+        (base / "run_state.json").write_text(json.dumps({"status": "STOPPED", "last_heartbeat_utc": "2026-11-05T01:09:00+00:00"}), encoding="utf-8")
+        self.assertEqual(review_mt5(self.root, now)[0]["code"], "MT5_DEMO_INACTIVE")
 
 
 if __name__ == "__main__":

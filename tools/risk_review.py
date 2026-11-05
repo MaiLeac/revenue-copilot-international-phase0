@@ -56,7 +56,9 @@ def review_finance(root: Path) -> list[dict[str, str]]:
         amount = money(row.get("net_usable_cash"))
         if amount is None:
             issues.append(finding("CASH_INVALID", "high", "open", f"finance/CASH_LEDGER.csv:{i}", "Correct the numeric net cash entry."))
-        elif row.get("currency", "").upper() == "VND" and row.get("proof_reference_redacted", "").strip():
+        elif (row.get("status", "").strip().upper() == "L4_COLLECTED_CASH"
+              and row.get("currency", "").upper() == "VND"
+              and row.get("proof_reference_redacted", "").strip()):
             verified_cash_vnd += amount
     ai_cost_vnd = Decimal(0)
     for i, row in enumerate(ai, start=2):
@@ -93,7 +95,7 @@ def review_mt5(root: Path, now: datetime | None = None) -> list[dict[str, str]]:
     try:
         state = json.loads(state_file.read_text(encoding="utf-8"))
         if state.get("status") != "RUNNING":
-            return []
+            return [finding("MT5_DEMO_INACTIVE", "info", "verified", "trading-agent-exness-demo/run_state.json", "Inspect the demo daemon; do not claim market scanning from a saved state file.")]
         heartbeat = datetime.fromisoformat(state["last_heartbeat_utc"].replace("Z", "+00:00"))
         if heartbeat.tzinfo is None:
             raise ValueError("heartbeat lacks timezone")

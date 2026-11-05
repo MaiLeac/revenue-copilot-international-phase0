@@ -30,6 +30,13 @@ def _read_json(path: Path) -> dict[str, Any]:
     return data
 
 
+def _read_runtime_json(path: Path) -> dict[str, Any]:
+    try:
+        return _read_json(path)
+    except (OSError, ValueError, UnicodeError):
+        return {}
+
+
 def _connect() -> sqlite3.Connection:
     """Open the private SQLite database and import the initial local JSON once."""
     DB_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -139,7 +146,7 @@ def cash_collected() -> dict[str, Any]:
     if path.exists():
         with path.open("r", encoding="utf-8-sig", newline="") as stream:
             for row in csv.DictReader(stream):
-                if row.get("status", "").strip().lower() not in {"collected", "received", "paid", "verified"}:
+                if row.get("status", "").strip().upper() != "L4_COLLECTED_CASH":
                     continue
                 if not row.get("proof_reference_redacted", "").strip():
                     continue
@@ -198,6 +205,7 @@ def build_state() -> dict[str, Any]:
         "owner_totals_vnd": {k: round(v, 2) for k, v in owner_totals.items()},
         "family_total_vnd": round(sum(owner_totals.values()), 2),
         "cash": cash_collected(),
+        "money_hq_cycle": _read_runtime_json(REPO_ROOT / "operations/public_demand_scout/cycle_latest.json"),
         "themes": holdings.get("themes") or [],
         "theme_origin": holdings.get("theme_origin"),
         "history": load_history(),

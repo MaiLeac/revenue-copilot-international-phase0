@@ -90,6 +90,9 @@ def classify(hit: dict, checked_at: str) -> dict:
     text = f"{hit['title']} {hit['excerpt']}"
     has_pain = bool(PAIN.search(text)) and bool(FIRST_PERSON_PROBLEM.search(text) or REQUEST.search(text)) and not bool(JOB_SEEKER.search(text))
     has_pay = bool(PAY.search(text))
+    # A feature request on someone else's GitHub project is not itself a buyer lead.
+    if hit["source"] == "github" and not has_pay:
+        has_pain = False
     if hit["topic"] == "open" and not has_pay:
         has_pain = False  # Broad general discussion is not yet a commercial lead.
     status = "buyer_intent_to_verify" if has_pain and has_pay else "pain_only" if has_pain else "context_only"
@@ -136,10 +139,22 @@ def run_once(output_dir: Path = OUTPUT, fetcher=fetch_json, now: datetime | None
 
 
 def main() -> int:
+    import sys
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="Bounded public discussion scout")
     parser.add_argument("--output-dir", type=Path, default=OUTPUT)
-    result = run_once(parser.parse_args().output_dir)
-    print(json.dumps(result, ensure_ascii=False))
+    args = parser.parse_args()
+    result = run_once(args.output_dir)
+    # Reuse the existing three daily Windows runs instead of adding a paid or
+    # competing scheduler. The cycle turns an explicit buyer signal into one
+    # local, reviewable offer draft and always reconciles finance and risk.
+    root = Path(__file__).resolve().parents[1]
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
+    from tools.money_hq_cycle import run_cycle
+    cycle = run_cycle(root=root, runtime=args.output_dir)
+    print(json.dumps({"scout": result, "cycle": cycle}, ensure_ascii=False))
     return 0 if result["successful_queries"] else 2
 
 

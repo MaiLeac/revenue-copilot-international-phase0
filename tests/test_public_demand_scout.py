@@ -16,6 +16,12 @@ def test_prs_are_excluded():
     assert rows[0]["excerpt"] == "Manual work"
 
 
+def test_github_feature_request_is_not_a_buyer_without_pay_language():
+    hit = {"signal_id": "github:1", "source": "github", "source_url": "https://github.com/a/b/issues/1", "posted_at": "2026-11-05", "title": "Need help with manual CSV import", "excerpt": "We need a tool for this", "topic": "operations"}
+    row = classify(hit, "2026-11-05T00:00:00Z")
+    assert row["opportunity_status"] == "context_only"
+
+
 def test_job_seeker_and_email_are_not_sold_as_buyer_signal():
     hit = {"signal_id": "hn:456", "source": "hn", "source_url": "https://news.ycombinator.com/item?id=456", "posted_at": "2026-11-05", "title": "Ask HN: Who wants to be hired?", "excerpt": "I need freelance work. Email me at person@example.com", "topic": "open"}
     row = classify(hit, "2026-11-05T00:00:00Z")

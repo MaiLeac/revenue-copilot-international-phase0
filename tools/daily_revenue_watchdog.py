@@ -26,6 +26,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
 from tools.telegram_notify import send_telegram_alert
+from tools.money_hq_dashboard import compute_money_hq_metrics
+from tools.risk_review import review_mt5
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("WinkWatchdog")
@@ -54,15 +56,15 @@ def run_diagnostics() -> dict:
 
     # 2. Check MT5 Daemon state & Quant Audit
     mt5_state_file = REPO_ROOT / "trading-agent-exness-demo" / "run_state.json"
-    mt5_info = {"status": "ACTIVE_DEMO", "balance": 100000.0, "pnl_pct": 0.0, "open_positions": 0}
+    mt5_info = {"status": "UNKNOWN", "balance": None, "pnl_pct": None, "open_positions": None}
     if mt5_state_file.exists():
         try:
             raw = json.loads(mt5_state_file.read_text(encoding="utf-8"))
             acc = raw.get("account") or {}
             risk = raw.get("risk") or {}
             mt5_info = {
-                "status": raw.get("status", "ACTIVE_DEMO"),
-                "balance": acc.get("balance", 100000.0),
+                "status": raw.get("status", "UNKNOWN"),
+                "balance": acc.get("balance"),
                 "currency": acc.get("currency", "USD"),
                 "pnl_pct": risk.get("daily_pnl_pct", 0.0),
                 "open_positions": len(raw.get("open_positions", [])),
@@ -73,27 +75,31 @@ def run_diagnostics() -> dict:
 
     # Read Quant Backtest Stats
     quant_stats_file = REPO_ROOT / "trading-agent-exness-demo" / "research" / "quant_backtest_stats.json"
-    quant_info = {"total_trades": 98, "max_drawdown_pct": 6.78, "win_rate": 28.57, "symbols": ["EURUSD", "GBPUSD", "XAUUSD"]}
+    quant_info = {"total_trades": None, "max_drawdown_pct": None, "win_rate": None, "symbols": []}
     if quant_stats_file.exists():
         try:
             q_raw = json.loads(quant_stats_file.read_text(encoding="utf-8"))
-            quant_info["total_trades"] = q_raw.get("total_trades", 98)
-            quant_info["max_drawdown_pct"] = q_raw.get("max_drawdown_pct", 6.78)
-            quant_info["win_rate"] = q_raw.get("win_rate", 28.57)
-            quant_info["symbols"] = list(q_raw.get("stats_by_symbol", {}).keys()) or ["EURUSD", "GBPUSD", "XAUUSD"]
+            quant_info["total_trades"] = q_raw.get("total_trades")
+            quant_info["max_drawdown_pct"] = q_raw.get("max_drawdown_pct")
+            quant_info["win_rate"] = q_raw.get("win_rate")
+            quant_info["symbols"] = list(q_raw.get("stats_by_symbol", {}).keys())
         except Exception as e:
             logger.error(f"Failed to read Quant Stats: {e}")
 
-    # 3. Read Dashboard numbers (L4 Cash)
-    md_path = REPO_ROOT / "finance" / "MONEY_HQ_DASHBOARD.md"
-    l4_cash = "0 VND"
-    if md_path.exists():
-        for line in md_path.read_text(encoding="utf-8").splitlines():
-            if "Realized Revenue (`L4`" in line or "Net Realized Profit (`L4`)" in line:
-                l4_cash = line.split(":", 1)[-1].strip().strip("`")
+    # Compute cash from source rows, never from a stale Markdown export.
+    metrics = compute_money_hq_metrics(
+        REPO_ROOT / "finance" / "CASH_LEDGER.csv",
+        REPO_ROOT / "finance" / "COST_LEDGER.csv",
+        REPO_ROOT / "finance" / "AI_USAGE_AND_COST_LOG.csv",
+    )
+    mt5_findings = review_mt5(REPO_ROOT)
+    if any(f["code"] in {"MT5_HEARTBEAT_STALE", "MT5_HEARTBEAT_INVALID", "MT5_DEMO_INACTIVE"} for f in mt5_findings):
+        mt5_info["status"] = "NOT VERIFIED RUNNING"
 
     return {
-        "l4_cash": l4_cash,
+        "l4_cash": f"{metrics.realized_revenue_l4_vnd:,} VND",
+        "incremental_cost_vnd": metrics.variable_costs_vnd + metrics.incremental_tool_api_costs_vnd,
+        "mt5_findings": [f["code"] for f in mt5_findings],
         "ports": port_status,
         "mt5": mt5_info,
         "quant": quant_info,
@@ -111,59 +117,24 @@ def run_diagnostics() -> dict:
 
 def generate_daily_brief(diag: dict) -> tuple[str, str]:
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
-    mt5 = diag["mt5"]
-    quant = diag["quant"]
     ports = diag["ports"]
-    symbols_str = ", ".join(quant["symbols"])
-
-    status_bloom = "ONLINE" if ports["bloom_8000"] else "OFFLINE"
-    status_loser = "ONLINE" if ports["loser_8888"] else "OFFLINE"
-    status_video = "ONLINE" if ports["video_3210"] else "STANDBY"
-    status_vibe = "ONLINE" if ports["vibe_8899"] else "OFFLINE"
-
+    sales_site = "mở được" if ports["bloom_8000"] else "không mở được"
+    checkout = "mở được" if ports["checkout_8000"] else "không mở được"
     tg_msg = (
-        f"👑 <b>BÁO CÁO ĐIỀU HÀNH HỆ SINH THÁI WINK ({now_str})</b>\n\n"
-        f"💵 <b>Tiền mặt thực thu (L4):</b> <code>{diag['l4_cash']}</code>\n"
-        f"⚠️ <b>Trạng thái:</b> Chưa ghi nhận tiền thực thu; lưu lượng truy cập và nhu cầu mua chưa được xác minh.\n\n"
-        f"🏛️ <b>TIẾN ĐỘ 5 MẶT TRẬN HỆ SINH THÁI WINK:</b>\n\n"
-        f"1. <b>Bản Thảo Thấu Thể (Dưỡng Nhan 28 Ngày) [{status_bloom}]:</b>\n"
-        f"   • Sách số đang được viết; chưa có sản phẩm hoàn chỉnh để bán hoặc tặng kèm.\n"
-        f"   • Sách số còn bản nháp; chưa mở thanh toán. Không công bố tài khoản cá nhân hoặc khẳng định phí khi chưa kiểm chứng.\n"
-        f"   • <i>Trang chính:</i> <code>{diag['urls']['duong_nhan']}</code>\n"
-        f"   • <i>Trang thanh toán:</i> <code>{diag['urls']['checkout']}</code>\n\n"
-        f"2. <b>Wink Living (Bất Động Sản):</b>\n"
-        f"   • Live ổn định trên Vercel: <code>{diag['urls']['wink_living']}</code>\n\n"
-        f"3. <b>Vương Quốc Loser [{status_loser}]:</b>\n"
-        f"   • Ứng dụng Pomodoro kỷ luật game hóa, trừ HP, thăng cấp XP chạy SQLite nội bộ không giật lag tại: <code>{diag['urls']['loser_kingdom']}</code>\n\n"
-        f"4. <b>Little Loop Factory [{status_video}]:</b>\n"
-        f"   • Xưởng render video tự động Remotion 4.0 + FFmpeg ($0 API), sẵn sàng tạo clip ngắn TikTok/Shorts kéo khách cho Bản Thảo Thấu Thể.\n\n"
-        f"5. <b>Vibe-Trading & Bot MT5 Exness (${mt5['balance']:,.2f}) [{status_vibe}]:</b>\n"
-        f"   • Danh mục {symbols_str}, quản trị rủi ro &lt; 0.75%, chặn tin đỏ NewsBlackoutFilter (P0).\n"
-        f"   • Kiểm toán 1 năm: Max Drawdown {quant['max_drawdown_pct']}% (chuẩn quỹ FTMO/MFF &lt; 10%).\n\n"
-        f"🎯 <b>3 HÀNH ĐỘNG CẦN LÀM ĐỂ BẮT ĐẦU CÓ TIỀN:</b>\n"
-        f"• <b>Việc 1:</b> Dùng Little Loop Factory render 3 kịch bản video ngắn và đăng kèm link checkout Bản Thảo Thấu Thể lên Threads/TikTok cá nhân.\n"
-        f"• <b>Việc 2:</b> Trải nghiệm luồng thanh toán MoMo / VietQR tại trang <code>{diag['urls']['checkout']}</code> để duyệt thử nghiệm.\n"
-        f"• <b>Việc 3:</b> Duy trì bot MT5 Exness forward-test demo đủ 2 tuần làm hồ sơ thi quỹ cấp vốn."
+        f"<b>MONEY HQ — {now_str}</b>\n"
+        f"Tiền thực nhận L4: <code>{diag['l4_cash']}</code>\n"
+        f"Chi phí tăng thêm đã ghi: <code>{diag['incremental_cost_vnd']:,} VND</code>\n"
+        f"Sách số: bản nháp {sales_site}; trang xem thử thanh toán {checkout}, chưa mở bán.\n"
+        f"MT5 demo: {diag['mt5']['status']} ({', '.join(diag['mt5_findings']) or 'heartbeat mới'}). Không tính tiền demo là thu nhập."
     )
-
-    md_content = f"""# WINK Ecosystem — Daily Operations & Revenue Brief
-
-## Cập nhật: {now_str}
-- **Thực thu L4 Realized Cash:** {diag['l4_cash']}
-- **Trạng thái:** Báo động đỏ (0 VND) — Chưa có lượt truy cập dẫn đến đơn hàng.
-
-### Báo cáo thực tế 5 nhánh hệ sinh thái:
-        f"   • Sách số đang được viết; chưa có sản phẩm hoàn chỉnh để bán hoặc tặng kèm.\n"
-2. **Wink Living:** Live Vercel tại `{diag['urls']['wink_living']}`.
-3. **Vương Quốc Loser:** Pomodoro kỷ luật game hóa live tại `{diag['urls']['loser_kingdom']}`.
-4. **Little Loop Factory:** Xưởng video Remotion 4.0 live tại `{diag['urls']['video_factory']}`.
-5. **Vibe-Trading & MT5 Exness:** Bot đa tài sản `{symbols_str}` forward-test tài khoản $100k, Max DD {quant['max_drawdown_pct']}%.
-
-### Kế hoạch hành động tạo doanh thu:
-- [ ] Dùng Little Loop Factory sản xuất video ngắn kéo traffic về Bản Thảo Thấu Thể.
-- [ ] Đăng teaser và phác đồ thể trạng lên mạng xã hội.
-- [ ] Quản trị bot MT5 Exness tuân thủ kỷ luật thi quỹ FTMO/MFF.
-"""
+    md_content = (
+        f"# Money HQ — kiểm tra {now_str}\n\n"
+        f"- Tiền thực nhận L4: {diag['l4_cash']}\n"
+        f"- Sách số: bản nháp {sales_site}; trang xem thử thanh toán {checkout}, chưa mở bán\n"
+        "- Traffic, checkout và giao sách tự động: chưa đo/kiểm chứng.\n"
+        "- MT5 là demo, không phải doanh thu.\n"
+        "- Điều kiện tiến triển: thay đổi luồng bán có kiểm chứng, hoặc tiền thực nhận.\n"
+    )
     return tg_msg, md_content
 
 

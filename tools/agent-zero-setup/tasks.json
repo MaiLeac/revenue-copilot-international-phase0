@@ -1,4 +1,6 @@
 {
+  "historical_status": "obsolete_template_do_not_apply",
+  "checked_at": "2026-11-05",
   "tasks": [
     {
       "uuid": "mhqops01",
@@ -6,7 +8,7 @@
       "state": "idle",
       "name": "Money HQ - Daily Operational and Opportunity Review",
       "system_prompt": "You are money-coo. Follow OPERATING_SYSTEM.md, agents/AI_ROUTING_POLICY.md, and agents/COST_OPTIMIZATION_POLICY.md. Use deterministic scripts first (0 VND marginal cost). Do not spawn recursive tasks.",
-      "prompt": "In /a0/usr/projects/money-hq, run `python -m pytest -q` and check active experiments EXP-01 (uTest + JOB-01) and EXP-02 (SVC-01 Catalogue QA) against their stop conditions in portfolio/OPPORTUNITY_REGISTER.md. Update operations/DAILY_BRIEF.md only if actionable status changed.",
+      "prompt": "In /a0/usr/projects/money-hq, run `python -m pytest -q` and inspect the 5 active WINK ventures (Bản Thảo Thấu Thể, Wink Living, Vương Quốc Loser, Little Loop Factory, Vibe-Trading). Update operations/DAILY_BRIEF.md only if actionable status changed. Never suggest freelance jobs or manual labor.",
       "attachments": [],
       "project_name": "money-hq",
       "project_color": "#10b981",

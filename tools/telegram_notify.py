@@ -1,7 +1,7 @@
 """Telegram notification dispatcher for Money HQ operations and failure detection.
 
 Reads credentials strictly from environment variables or the local non-Git
-Agent Zero .env file (`C:\\Users\\ACER\\agent-zero\\agent-zero\\usr\\.env`).
+Agent Zero .env file (`<LOCAL_USER_HOME>/agent-zero/agent-zero/usr/.env`).
 Never stores credentials in Git or logs.
 """
 
@@ -13,7 +13,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-DEFAULT_ENV_PATH = Path(r"C:\Users\ACER\agent-zero\agent-zero\usr\.env")
+DEFAULT_ENV_PATH = Path.home() / "agent-zero" / "agent-zero" / "usr" / ".env"
 
 
 def load_telegram_credentials(env_path: Path = DEFAULT_ENV_PATH) -> tuple[str, str]:

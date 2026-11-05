@@ -1,5 +1,7 @@
 # EXP-02 (Supporting Asset-Building Experiment) — E-Commerce SKU / Catalogue QA Pilot (`SVC-01`)
 
+> **Historical offer hypothesis.** As of 2026-11-05 this is a prototype/backup, with synthetic sample data and no verified paid customer in the cash ledger. The manual-service pricing, buyer response and outreach procedure below are not current approval to contact anyone or claims of sales. See [`PROJECT_STATE.md`](../../PROJECT_STATE.md).
+
 **Lane:** Service-to-Asset  
 **Status:** Active (Supporting #1 — Synthetic Sample & Engine Ready)  
 **Evidence Level:** `L1` buyer pain (`E01`–`E05` independent merchant/buyer requests) + `L2` software alternative (`E06` Matrixify $20/30 days). `L3/L4 = 0` (no paid client yet).

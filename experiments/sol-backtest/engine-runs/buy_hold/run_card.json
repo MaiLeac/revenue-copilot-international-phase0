@@ -122,7 +122,7 @@
     "config_hash": "2890a5ede935e6135de5738c2e841cbdaf6f31a7caaf88b3cf7f30e16ff2dd2a",
     "strategy_hash": "4777cf6a3c83896d4ebaf6c5b3125da7eb123d07c300fec065b0c44bf37f8ce7"
   },
-  "run_dir": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold",
+  "run_dir": "<LOCAL_USER_HOME>\\.vibe-trading\\runs\\verified_sol_20260928\\buy_hold",
   "schema_version": "0.1",
   "warnings": []
 }

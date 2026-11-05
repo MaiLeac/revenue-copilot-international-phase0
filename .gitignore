@@ -16,6 +16,8 @@ htmlcov/
 # Local run state & temporary outputs
 run_state.json
 *.tmp
+operations/owner_queue.sqlite3*
+operations/risk_review_latest.json
 assets/knowledge_mining_engine/data/
 trading-agent-exness-demo/run_state.json
 trading-agent-exness-demo/risk_state.json

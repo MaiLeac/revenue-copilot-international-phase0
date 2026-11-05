@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "products": [
+    {
+      "id": "ban-thao-28-ngay",
+      "name": "Bản Thảo · Sổ tay 28 ngày",
+      "format": "Sách số · định dạng khi phát hành sẽ được xác nhận",
+      "summary": "Một sổ tay về quan sát thói quen và ghi chép cá nhân. Tác giả đang viết bản đầy đủ.",
+      "status": "draft",
+      "price_vnd": null,
+      "detail_url": "index.html",
+      "sample_url": "handbook.html"
+    }
+  ]
+}

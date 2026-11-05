@@ -1,4 +1,7 @@
 {
+  "historical_status": "superseded_do_not_publish",
+  "superseded_at": "2026-11-05",
+  "current_source_of_truth": "experiments/exp03-duong-nhan-ai-mvp/products.json",
   "asset_id": "EXP-03",
   "product_name": "Cẩm Nang Dưỡng Nhan & Trắc Nghiệm 7 Thể Chất Đông Y",
   "live_url": "https://maileac.github.io/revenue-copilot-international-phase0/experiments/exp03-duong-nhan-ai-mvp/",

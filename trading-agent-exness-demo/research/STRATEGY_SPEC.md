@@ -1,7 +1,8 @@
 # Single Strategy Specification: H4/H1 Trend-Following Pullback Engine
+> **Research specification, not a current profit or prop-firm readiness claim.** See [`PROJECT_STATE.md`](../../PROJECT_STATE.md) and the dated audit before operational use.
 **Document Version:** 2.0 (Institutional Focus Pilot)  
 **Target Instrument:** `EURUSD` (Primary Pilot — Most liquid, lowest spread, zero slippage footprint)  
-**Execution Environment:** Exness MT5 Demo (`#464160066`, Server: `Exness-MT5Trial17`)  
+**Execution Environment:** Exness MT5 Demo (`<DEMO_ID_REDACTED>`, Server: `Exness-MT5Trial17`)  
 **Design Philosophy:** "Cá nhỏ bơi theo dấu chân Cá Voi" — Giảm tần số giao dịch, loại bỏ cuộc đua tốc độ, ưu tiên bảo toàn vốn, biến khả năng đứng ngoài thành lợi thế cấu trúc.
 
 ---

@@ -45,13 +45,13 @@ if ($Action -eq "Start") {
   # 1. Local Hub (:8000 & :8899)
   if (-not (Test-PortAlive "127.0.0.1" 8000)) {
     Write-Host " -> Launching Local Hub & Vibe Trading (:8000, :8899)..." -ForegroundColor White
-    Start-Process -FilePath "python" -ArgumentList "tools/serve_local_hub.py" -WorkingDirectory "C:\Users\ACER\Documents\Codex\revenue-copilot-international-phase0" -WindowStyle Hidden
+    Start-Process -FilePath "python" -ArgumentList "tools/serve_local_hub.py" -WorkingDirectory (Resolve-Path (Join-Path $PSScriptRoot ".." )).Path -WindowStyle Hidden
     Start-Sleep -Milliseconds 800
   }
 
   # 2. Loser Kingdom (:8888)
   if (-not (Test-PortAlive "127.0.0.1" 8888)) {
-    $loserDir = "C:\Users\ACER\.codex\worktrees\focus-back-restore\Loser Kingdom"
+    $loserDir = $env:LOSER_KINGDOM_DIR
     if (Test-Path "$loserDir\server.py") {
       Write-Host " -> Launching Loser Kingdom (:8888)..." -ForegroundColor White
       Start-Process -FilePath "python" -ArgumentList "server.py" -WorkingDirectory $loserDir -WindowStyle Hidden
@@ -61,7 +61,7 @@ if ($Action -eq "Start") {
 
   # 3. Little Loop Factory (:3210)
   if (-not (Test-PortAlive "127.0.0.1" 3210)) {
-    $videoDir = "C:\Users\ACER\OneDrive\Tài liệu\ChatGPT\Youtube\video-factory"
+    $videoDir = $env:VIDEO_FACTORY_DIR
     if (Test-Path "$videoDir\package.json") {
       Write-Host " -> Launching Little Loop Factory (:3210)..." -ForegroundColor White
       Start-Process -FilePath "npm.cmd" -ArgumentList "start" -WorkingDirectory $videoDir -WindowStyle Hidden

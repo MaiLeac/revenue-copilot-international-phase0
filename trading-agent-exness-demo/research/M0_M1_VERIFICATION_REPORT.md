@@ -1,4 +1,5 @@
 # Milestone M0 & M1 Verification Report
+> **Dated verification record, not current runtime or revenue evidence.** Recheck code and process state before making a present-tense claim; see [`PROJECT_STATE.md`](../../PROJECT_STATE.md).
 
 **Date:** 2026-11-01  
 **Project:** `trading-agent-exness-demo`  

@@ -9,7 +9,7 @@ Use this skill whenever the owner asks about trading, bot status, starting/stopp
 
 ## Critical Architecture Rule
 1. **Never attempt to install `MetaTrader5` via pip inside Docker/Linux.** The official MetaTrader 5 Python library is a Windows-only C-API extension that requires the native Windows MT5 Terminal (`terminal64.exe`). It cannot run in Linux/Docker.
-2. **The MT5 daemon already runs on the Windows host.** It runs autonomously in the background, connects to Exness Demo (`#464160066`), and monitors `EURUSD` using the Trend-Following Pullback strategy (H4/H1).
+2. **The MT5 daemon already runs on the Windows host.** It runs autonomously in the background, connects to Exness Demo (`<DEMO_ID_REDACTED>`), and monitors `EURUSD` using the Trend-Following Pullback strategy (H4/H1).
 3. **Control and monitor via `tools/trading_ctl.py` (0 token cost, 0 dependencies):**
    - Always execute `python tools/trading_ctl.py <command>` to inspect or control the bot.
    - It reads and updates `trading-agent-exness-demo/run_state.json` safely.
@@ -26,7 +26,7 @@ python tools/trading_ctl.py start
 ```bash
 python tools/trading_ctl.py status
 ```
-*Action:* Return the formatted status (Daemon status, heartbeat freshness, Account #464160066, Balance, Equity, Daily PnL %, Drawdown %, Open positions, Active Strategy).
+*Action:* Return the formatted status (Daemon status, heartbeat freshness, Account <DEMO_ID_REDACTED>, Balance, Equity, Daily PnL %, Drawdown %, Open positions, Active Strategy).
 
 ### 3. When owner asks "Tạm dừng trade", "Pause":
 ```bash
@@ -44,6 +44,6 @@ python tools/trading_ctl.py journal
 ```
 
 ## Security & Risk Guardrails
-- **DEMO ONLY:** The bot operates strictly on Exness Demo (`#464160066`, server `Exness-MT5Trial17`). Real money accounts are blocked by policy.
+- **DEMO ONLY:** The bot operates strictly on Exness Demo (`<DEMO_ID_REDACTED>`, server `Exness-MT5Trial17`). Real money accounts are blocked by policy.
 - **Fixed Risk:** Every trade risks exactly 0.25% of balance with mandatory hard Stop Loss.
 - **Never report Demo trading profit as business cashflow (L4).**

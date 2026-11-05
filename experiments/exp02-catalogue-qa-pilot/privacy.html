@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chính Sách Bảo Mật & Cam Kết Không Lưu Trữ (Privacy & Zero Retention) • CatalogueQA</title>
+<title>Quyền riêng tư của bản thử CatalogueQA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -69,35 +69,34 @@
 <body>
 <div class="container">
   <div class="nav">
-    <a href="index.html" class="brand">Catalogue<span>QA</span> Enterprise</a>
+    <a href="index.html" class="brand">Catalogue<span>QA</span></a>
     <a href="index.html" class="btn-back">← Quay lại Ứng Dụng</a>
   </div>
 
   <div class="card">
-    <div class="badge">🔒 Zero Data Retention Architecture</div>
-    <h1>Chính Sách Bảo Mật & Quyền Riêng Tư</h1>
-    <div class="updated">Cập nhật lần cuối: 04 Tháng 11, 2026 • Chứng chỉ Bảo mật Cục bộ ISO/IEC 27001-Aligned</div>
+    <div class="badge">Bản thử nghiệm • Xử lý CSV trong trình duyệt</div>
+    <h1>Quyền riêng tư</h1>
+    <div class="updated">Cập nhật: 05/11/2026</div>
 
     <div class="highlight-box">
-      <strong style="color: #fff;">Cam Kết Cốt Lõi:</strong> CatalogueQA được thiết kế theo nguyên lý <em>Local-First / Zero-Knowledge</em>. Khi bạn kéo thả tệp CSV bảng giá hay danh mục sản phẩm vào ứng dụng, <strong>dữ liệu không bao giờ rời khỏi trình duyệt của bạn</strong>.
+      <strong style="color: #fff;">Cách bản thử hoạt động:</strong> mã JavaScript dùng FileReader để đọc CSV trong tab hiện tại. Mã xử lý hiện tại không gửi nội dung tệp đến máy chủ.
     </div>
 
-    <h2>1. Không Thu Thập Dữ Liệu Tệp Cục Bộ (Zero Ingestion)</h2>
-    <p>Không giống như các công cụ chuyển đổi tệp trực tuyến thông thường lưu trữ dữ liệu lên đám mây, CatalogueQA vận hành thông qua công nghệ <code>FileReader API</code> và <code>Web Workers</code> ngay trên bộ nhớ RAM của thiết bị người dùng. Chúng tôi cam kết:</p>
+    <h2>1. Dữ liệu bạn chọn</h2>
+    <p>CSV được xử lý bằng <code>FileReader API</code> trong tab. Bản thử không có chức năng tạo tài khoản hoặc tải tệp lên máy chủ. Tệp xuất chỉ được tạo khi bạn bấm nút tải về.</p>
     <ul>
-      <li>Không có tệp CSV nào được tải lên máy chủ trung gian.</li>
-      <li>Không trích xuất giá nhập, danh sách nhà cung cấp hay chiến lược định giá của người bán.</li>
-      <li>Không sử dụng bất kỳ danh mục sản phẩm nào của khách hàng để huấn luyện mô hình trí tuệ nhân tạo (LLM).</li>
+      <li>Đừng gửi dữ liệu nhạy cảm qua email nếu chưa thống nhất phạm vi và cách bảo vệ dữ liệu.</li>
+      <li>Kiểm tra quyền sử dụng dữ liệu trước khi chọn tệp.</li>
     </ul>
 
-    <h2>2. Dữ Liệu Phi Cá Nhân & Thống Kê Ẩn Danh</h2>
-    <p>Chúng tôi chỉ ghi nhận các thông số kỹ thuật ẩn danh nhằm mục đích cải thiện hiệu năng (nếu người dùng cho phép): phiên bản trình duyệt, loại mã lỗi định dạng gặp phải (ví dụ: lỗi encoding VNI hay UTF-8 BOM), và thời gian xử lý trung bình. Các dữ liệu này hoàn toàn tách biệt với nội dung tệp thương mại.</p>
+    <h2>2. Thành phần bên ngoài</h2>
+    <p>Trang tải phông chữ từ Google Fonts. Nhà cung cấp phông chữ có thể nhận thông tin kỹ thuật của lượt tải trang; điều này tách biệt với nội dung CSV mà bạn chọn.</p>
 
-    <h2>3. Xóa Dữ Liệu Tức Thì (Instant Memory Flush)</h2>
-    <p>Khi bạn nhấn nút <em>"Xóa dữ liệu / Đóng phiên"</em> hoặc đóng tab trình duyệt, toàn bộ dữ liệu bảng tính trong bộ nhớ tạm sẽ bị hủy bỏ hoàn toàn mà không để lại bất kỳ dấu vết cache nào trên máy chủ.</p>
+    <h2>3. Kết thúc phiên</h2>
+    <p>Đóng tab để kết thúc xử lý trong trang. Tệp bạn đã tải xuống vẫn nằm trên thiết bị cho đến khi bạn tự xóa.</p>
 
-    <h2>4. Quyền Yêu Cầu Hỗ Trợ & Bảo Vệ Người Tiêu Dùng</h2>
-    <p>Nếu bạn có bất kỳ câu hỏi nào liên quan đến kiến trúc bảo mật, vui lòng liên hệ trực tiếp với bộ phận kỹ thuật thông qua cổng vận hành hệ thống.</p>
+    <h2>4. Liên hệ</h2>
+    <p>Nếu cần hỏi về bản thử, dùng địa chỉ liên hệ trên trang chính. Không gửi CSV chứa dữ liệu riêng tư trong email đầu tiên.</p>
   </div>
 
   <div class="footer">

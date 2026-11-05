@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-src = Path(r"C:\Users\ACER\AppData\Local\Programs\antigravity\data\scraped_telegram\khoahoctaichinh_Vuongtolinh.json")
+src = Path.home() / "AppData" / "Local" / "Programs" / "antigravity" / "data" / "scraped_telegram" / "khoahoctaichinh_Vuongtolinh.json"
 data = json.loads(src.read_text(encoding="utf-8"))
 
 lines = [f"TOTAL MESSAGES: {len(data)}\n" + "="*50]

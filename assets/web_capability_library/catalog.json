@@ -1,6 +1,8 @@
 {
-  "version": "2026-11-01.v1",
+  "version": "2026-11-05.v2",
   "owner": "MaiLeac",
+  "last_reviewed_at": "2026-11-05",
+  "verification_scope": "Curated snapshot. Star counts, maintenance labels, local paths and install state may be stale; verify source and license before reuse. Inclusion does not mean installed in Agent Zero.",
   "pagination_verified": {
     "github_owned_repositories_total": 9,
     "github_starred_repositories_total": 7,
@@ -155,10 +157,29 @@
       "target_projects": ["Money HQ Superagent Control Plane"]
     },
     {
+      "id": "EXT-01",
+      "name": "JCodesMore/ai-website-cloner-template",
+      "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+      "source_type": "user_supplied_reference",
+      "categories": [
+        "Landing page and website templates",
+        "AI-assisted design and frontend development tools",
+        "Browser automation and visual regression testing"
+      ],
+      "provides": "A website reconstruction workflow: map sections, inspect desktop and mobile behavior, build, compare and iterate. Next.js scaffold is optional; the workflow can guide a static HTML page.",
+      "license": "MIT (repository LICENSE observed 2026-11-05)",
+      "commercial_use": "Check target site's copyright and asset rights separately; template license does not grant rights to clone third-party content.",
+      "maintenance_status": "Not rechecked for this catalog update",
+      "framework_compatibility": "Workflow is framework-agnostic; supplied scaffold is Next.js",
+      "integration_complexity": "Low for workflow, higher for scaffold",
+      "reuse_mode": "adapt_pattern",
+      "target_projects": ["EXP-03 Bản Thảo", "Other Money HQ websites"]
+    },
+    {
       "id": "OWN-01",
       "name": "MaiLeac/flow-scout-core",
       "url": "https://github.com/MaiLeac/flow-scout-core",
-      "local_path": "C:\\Users\\ACER\\Documents\\Codex\\flow-scout-core",
+      "local_path": "<LOCAL_USER_HOME>\\Documents\\Codex\\flow-scout-core",
       "source_type": "owned_repo_and_local_clone",
       "categories": [
         "Browser automation and visual regression testing",
@@ -197,7 +218,7 @@
       "id": "OWN-03",
       "name": "MaiLeac/Sisan",
       "url": "https://github.com/MaiLeac/Sisan",
-      "local_path": "C:\\Users\\ACER\\Sisan",
+      "local_path": "<LOCAL_USER_HOME>\\Sisan",
       "source_type": "owned_repo_and_local_clone",
       "categories": [
         "Dashboard and application layouts",
@@ -218,7 +239,7 @@
       "id": "OWN-04",
       "name": "MaiLeac/vuong-quoc-loser & Loser-Kingdom-studio",
       "url": "https://github.com/MaiLeac/vuong-quoc-loser",
-      "local_path": "C:\\Users\\ACER\\.codex\\worktrees\\backup-task-ids\\Loser Kingdom",
+      "local_path": "<LOCAL_USER_HOME>\\.codex\\worktrees\\backup-task-ids\\Loser Kingdom",
       "source_type": "owned_repo_and_local_clone",
       "categories": [
         "Animation and micro-interaction libraries",

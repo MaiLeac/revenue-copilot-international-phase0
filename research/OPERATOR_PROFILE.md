@@ -1,4 +1,5 @@
 # Operator profile — International-first, Gate 0
+> **Hồ sơ Phase 0 ngày 26/10/2026, không phải định hướng kiếm tiền hiện hành.** Các giả định về giờ lao động, freelance, ngân sách và payment rail dưới đây thuộc nghiên cứu cũ. Xem [`README.md`](../README.md) và [`PROJECT_STATE.md`](../PROJECT_STATE.md).
 Ngày quan sát: 26/10/2026. Bản này thay thế khuyến nghị thị trường nội địa của bản Phase 0 cùng ngày; bản cũ giữ nguyên để truy vết.
 
 - Kinh nghiệm đã khai: xử lý đơn, dữ liệu kinh doanh, QA dữ liệu sản phẩm, hỗ trợ sales/operations.

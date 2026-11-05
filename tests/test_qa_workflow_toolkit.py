@@ -46,7 +46,7 @@ def test_preflight_validator_blocks_pii_and_incomplete_steps() -> None:
         title="Bug on page",
         environment="",
         url_or_build="https://example.com",
-        steps_to_reproduce=[" logged in with mypersonalemail@gmail.com "],
+        steps_to_reproduce=[" logged in with tester@example.invalid "],
         actual_result="Broken",
         expected_result="Works",
         attachments=[],

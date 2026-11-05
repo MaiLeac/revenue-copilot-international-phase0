@@ -1,4 +1,5 @@
 # WINK WEB BUILDER MASTER SUITE & DESIGN REPOSITORY ENGINE
+> **Reference catalog, not installed integrations (reviewed 2026-11-05).** Links and claims below are design ideas; verify source, license, status and cost before use. The current task-based index is [`CAPABILITY_ROUTING.md`](../web_capability_library/CAPABILITY_ROUTING.md). EXP-03 has no live paid checkout or physical gifts.
 > **Mục đích:** Bộ tài liệu chuẩn hóa toàn bộ công nghệ, quy tắc UI/UX, thư viện mã nguồn và kho repo GitHub được tuyển chọn để AI và nhà phát triển sử dụng ngay khi xây dựng sản phẩm web chuyển đổi cao.
 
 ---
@@ -66,7 +67,7 @@
                  │
                  ▼
 [Trang Checkout 1 Bước Tích Hợp Đa Cổng Thanh Toán]
-  ├── 1. Quét VietQR Napas 24/7 (Techcombank 1022 7786 86 - LE THI THANH MAI)
+  ├── 1. Quét VietQR Napas 24/7 (bank transfer details are configured locally, never stored in the public repository)
   │      └── Tự render mã QR với đúng số tiền và cú pháp đơn hàng + Nút mở app ngân hàng
   ├── 2. Thẻ Quốc Tế (Visa / Mastercard) qua Payoneer / Stripe
   └── 3. Ví Điện Tử MoMo / Cà Thẻ

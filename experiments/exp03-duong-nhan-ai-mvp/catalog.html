@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#26131e">
+  <meta name="description" content="Các sản phẩm số của Bản Thảo. Chỉ hiển thị sản phẩm có thông tin thật; sách đang viết chưa mở bán.">
+  <title>Sản phẩm số — Bản Thảo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap');
+    :root{color-scheme:light;--plum:#26131e;--cream:#f8f4ee;--paper:#fffdf9;--ink:#292128;--muted:#625962;--line:#ded5d4;--rose:#9c5974}
+    *{box-sizing:border-box}html,body{overflow-x:clip}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.65 'DM Sans',system-ui,sans-serif}a{color:inherit}a:focus-visible{outline:3px solid var(--rose);outline-offset:4px}.wrap{width:min(1120px,calc(100% - 40px));margin:auto}
+    header{background:var(--paper);border-bottom:1px solid var(--line)}header .wrap{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{text-decoration:none;font:600 24px 'Playfair Display',Georgia,serif}.brand span{color:var(--rose)}nav{display:flex;gap:24px;align-items:center}nav a{text-decoration:none;font-size:14px;font-weight:700}
+    .hero{background:linear-gradient(90deg,#26131ef5 0%,#26131ed9 54%,#26131e55 100%),var(--plum) url('hero-botanical-v2.png') center 42%/cover no-repeat;color:#fff;padding:70px 0 78px}.hero .wrap{max-width:1120px}.hero h1{font:500 clamp(50px,7vw,80px)/1.04 'Playfair Display',Georgia,serif;letter-spacing:-.055em;max-width:780px;margin:0 0 22px;overflow-wrap:break-word}.hero p{max-width:660px;font-size:19px;color:#e9dce2;margin:0}
+    main .wrap{padding-block:70px 100px}.intro{max-width:700px;margin:0 0 35px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.product{min-width:0;background:var(--paper);border:1px solid var(--line);display:grid;grid-template-columns:190px minmax(0,1fr);min-height:320px}.cover{background:radial-gradient(circle at 75% 15%,#bf879d,transparent 43%),linear-gradient(145deg,#311725,#704354);color:white;padding:22px;display:flex;flex-direction:column;justify-content:space-between;font:500 25px/1.15 'Playfair Display',Georgia,serif}.cover small{font:600 11px 'DM Sans',system-ui,sans-serif;letter-spacing:.08em}.content{padding:28px;display:flex;flex-direction:column;align-items:start}.status{color:var(--rose);font-size:13px;font-weight:700}.product h2{font:500 30px/1.17 'Playfair Display',Georgia,serif;letter-spacing:-.035em;margin:10px 0;overflow-wrap:break-word}.format{font-size:13px;color:var(--muted);margin:0}.summary{color:var(--muted);margin:18px 0 22px}.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:auto}.button{display:inline-flex;align-items:center;min-height:42px;padding:9px 15px;background:var(--plum);color:white;text-decoration:none;font-size:13px;font-weight:700}.button.secondary{background:transparent;border:1px solid var(--plum);color:var(--plum)}.empty{padding:34px;background:var(--paper);border:1px solid var(--line)}.note{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}footer{background:#1f111b;color:#d7c6ce;padding:27px 0;font-size:13px}footer .wrap{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}.hero{padding:75px 0}.product{max-width:650px}}
+    @media(max-width:500px){header .wrap{min-height:66px}.brand{font-size:21px}nav{gap:12px}nav a{font-size:12px}.product{grid-template-columns:1fr}.cover{min-height:200px}.content{padding:24px}.hero h1{font-size:52px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><a class="brand" href="index.html">Bản Thảo<span>.</span></a><nav aria-label="Điều hướng chính"><a href="index.html">Trang chủ</a><a href="handbook.html">Đọc thử</a></nav></div></header>
+  <section class="hero"><div class="wrap"><h1>Sản phẩm số.</h1><p>Ở đây chỉ có những sản phẩm đã được mô tả thật. Bản Thảo 28 ngày đang được viết, nên chưa có giá, nút mua hay nhận đặt trước.</p></div></section>
+  <main><div class="wrap"><p class="intro">Bạn có thể xem bản thực hành minh họa miễn phí ngay bây giờ. Danh mục sẽ được bổ sung khi các sản phẩm số khác có nội dung, định dạng và điều kiện giao rõ ràng.</p><div class="grid" id="products"><div class="empty">Đang tải danh mục…</div></div><p class="note">Trang này không thu thông tin cá nhân hoặc xử lý thanh toán. Không có sản phẩm vật chất.</p></div></main>
+  <footer><div class="wrap"><span>© Bản Thảo · Sản phẩm số</span><span>Chưa mở bán</span></div></footer>
+  <script>
+    const root = document.getElementById('products');
+    const statuses = {draft:'Đang biên tập', preview:'Có bản xem trước', available:'Đã phát hành'};
+    function link(label, href, secondary) {
+      const a = document.createElement('a'); a.className = secondary ? 'button secondary' : 'button'; a.href = href; a.textContent = label; return a;
+    }
+    function card(product) {
+      const article = document.createElement('article'); article.className = 'product';
+      const cover = document.createElement('div'); cover.className = 'cover'; cover.setAttribute('aria-hidden','true');
+      const mark = document.createElement('small'); mark.textContent = 'Bản Thảo.'; cover.append(mark, document.createTextNode(product.name));
+      const body = document.createElement('div'); body.className = 'content';
+      const status = document.createElement('div'); status.className = 'status'; status.textContent = statuses[product.status] || 'Thông tin đang cập nhật';
+      const title = document.createElement('h2'); title.textContent = product.name;
+      const format = document.createElement('p'); format.className = 'format'; format.textContent = product.format;
+      const summary = document.createElement('p'); summary.className = 'summary'; summary.textContent = product.summary;
+      const links = document.createElement('div'); links.className = 'links';
+      if (product.detail_url) links.append(link('Xem chi tiết', product.detail_url, false));
+      if (product.sample_url) links.append(link('Xem bản mẫu', product.sample_url, true));
+      body.append(status,title,format,summary,links); article.append(cover,body); return article;
+    }
+    fetch('products.json').then(response => {if (!response.ok) throw Error('catalog unavailable'); return response.json()})
+      .then(data => {root.replaceChildren(...data.products.map(card)); if (!data.products.length) root.replaceChildren(Object.assign(document.createElement('div'),{className:'empty',textContent:'Chưa có sản phẩm được giới thiệu.'}));})
+      .catch(() => {root.replaceChildren(Object.assign(document.createElement('div'),{className:'empty',textContent:'Chưa tải được danh mục. Hãy thử mở lại trang sau.'}));});
+  </script>
+</body>
+</html>

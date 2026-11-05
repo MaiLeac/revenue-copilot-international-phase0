@@ -1,4 +1,5 @@
 # System Architecture & Safety Boundaries
+> **Architecture reference, not proof that a daemon or safety filter is running now.** Verify code and process state before operational claims; demo only. See [`PROJECT_STATE.md`](../../PROJECT_STATE.md).
 
 ## 1. Core Architectural Principle
 **The LLM never holds account keys or order execution permissions.**

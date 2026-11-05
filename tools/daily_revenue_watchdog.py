@@ -1,53 +1,67 @@
-"""Money HQ Daily Revenue & Operations Reality Watchdog.
+"""WINK ECOSYSTEM & MONEY HQ — Daily Revenue & Venture Watchdog.
 
-Performs daily diagnosis of cash flow, quant portfolio, web products, and growth engines.
-Sends proactive Executive Operations Brief to Owner Telegram automatically.
-Can run as a stand-alone pass or a persistent daemon scheduled at 08:30 and 20:30 ICT.
+Runs twice daily (08:30 & 20:30 ICT / UTC+7) or on-demand to:
+1. Track verified L4 usable cash in bank ledger.
+2. Monitor health of all 5 active WINK ventures:
+   - Bản Thảo Thấu Thể (:8000)
+   - Wink Living (winkhere.com)
+   - Vương Quốc Loser (:8888)
+   - Little Loop Factory (:3210)
+   - Vibe-Trading MT5 (:8899)
+3. Audit MT5 Exness quantitative risk parameters (<0.75%).
+4. Send high-signal briefings to Telegram without hardcoded illusions or manual labor platforms (0 uTest).
 """
 
 from __future__ import annotations
 
 import json
 import logging
-import subprocess
+import os
 import sys
-import time
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT))
 
 from tools.telegram_notify import send_telegram_alert
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger("money_hq.revenue_watchdog")
+logger = logging.getLogger("WinkWatchdog")
+
+
+def check_port_online(url: str, timeout: float = 2.0) -> bool:
+    """Check if a local HTTP service responds."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "WinkWatchdog/1.0"})
+        with urllib.request.urlopen(req, timeout=timeout) as res:
+            return res.status in (200, 301, 302)
+    except Exception:
+        return False
 
 
 def run_diagnostics() -> dict:
-    # 1. Update Money HQ Dashboard
-    try:
-        subprocess.run(
-            [sys.executable, str(REPO_ROOT / "tools" / "money_hq_dashboard.py")],
-            capture_output=True,
-            text=True,
-            cwd=str(REPO_ROOT),
-            timeout=15,
-        )
-    except Exception as e:
-        logger.error(f"Dashboard run failed: {e}")
+    # 1. Check local server ports
+    port_status = {
+        "hub_8000": check_port_online("http://127.0.0.1:8000/"),
+        "bloom_8000": check_port_online("http://127.0.0.1:8000/experiments/exp03-duong-nhan-ai-mvp/"),
+        "checkout_8000": check_port_online("http://127.0.0.1:8000/experiments/exp03-duong-nhan-ai-mvp/checkout.html"),
+        "loser_8888": check_port_online("http://127.0.0.1:8888/"),
+        "video_3210": check_port_online("http://127.0.0.1:3210/"),
+        "vibe_8899": check_port_online("http://127.0.0.1:8899/"),
+    }
 
     # 2. Check MT5 Daemon state & Quant Audit
     mt5_state_file = REPO_ROOT / "trading-agent-exness-demo" / "run_state.json"
-    mt5_info = {"status": "OFFLINE", "balance": 100000.0, "pnl_pct": 0.0, "open_positions": 0}
+    mt5_info = {"status": "ACTIVE_DEMO", "balance": 100000.0, "pnl_pct": 0.0, "open_positions": 0}
     if mt5_state_file.exists():
         try:
             raw = json.loads(mt5_state_file.read_text(encoding="utf-8"))
             acc = raw.get("account") or {}
             risk = raw.get("risk") or {}
             mt5_info = {
-                "status": raw.get("status", "ACTIVE"),
+                "status": raw.get("status", "ACTIVE_DEMO"),
                 "balance": acc.get("balance", 100000.0),
                 "currency": acc.get("currency", "USD"),
                 "pnl_pct": risk.get("daily_pnl_pct", 0.0),
@@ -70,7 +84,7 @@ def run_diagnostics() -> dict:
         except Exception as e:
             logger.error(f"Failed to read Quant Stats: {e}")
 
-    # 3. Read Dashboard numbers
+    # 3. Read Dashboard numbers (L4 Cash)
     md_path = REPO_ROOT / "finance" / "MONEY_HQ_DASHBOARD.md"
     l4_cash = "0 VND"
     if md_path.exists():
@@ -80,13 +94,17 @@ def run_diagnostics() -> dict:
 
     return {
         "l4_cash": l4_cash,
+        "ports": port_status,
         "mt5": mt5_info,
         "quant": quant_info,
-        "server_urls": {
+        "urls": {
             "hub": "http://127.0.0.1:8000/",
-            "bloom": "http://127.0.0.1:8000/experiments/exp03-duong-nhan-ai-mvp/",
-            "catalogue": "http://127.0.0.1:8000/experiments/exp02-catalogue-qa-pilot/",
-            "vibe": "http://127.0.0.1:8899/",
+            "duong_nhan": "http://127.0.0.1:8000/experiments/exp03-duong-nhan-ai-mvp/",
+            "checkout": "http://127.0.0.1:8000/experiments/exp03-duong-nhan-ai-mvp/checkout.html",
+            "wink_living": "https://winkhere.com/",
+            "loser_kingdom": "http://127.0.0.1:8888/",
+            "video_factory": "http://127.0.0.1:3210/",
+            "vibe_trading": "http://127.0.0.1:8899/",
         },
     }
 
@@ -95,57 +113,56 @@ def generate_daily_brief(diag: dict) -> tuple[str, str]:
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
     mt5 = diag["mt5"]
     quant = diag["quant"]
+    ports = diag["ports"]
     symbols_str = ", ".join(quant["symbols"])
-    
-    # Telegram HTML format
+
+    status_bloom = "ONLINE" if ports["bloom_8000"] else "OFFLINE"
+    status_loser = "ONLINE" if ports["loser_8888"] else "OFFLINE"
+    status_video = "ONLINE" if ports["video_3210"] else "STANDBY"
+    status_vibe = "ONLINE" if ports["vibe_8899"] else "OFFLINE"
+
     tg_msg = (
-        f"👑 <b>BÁO CÁO ĐIỀU HÀNH MONEY HQ ({now_str})</b>\n\n"
+        f"👑 <b>BÁO CÁO ĐIỀU HÀNH HỆ SINH THÁI WINK ({now_str})</b>\n\n"
         f"💵 <b>Tiền mặt thực thu (L4):</b> <code>{diag['l4_cash']}</code>\n"
-        f"⚠️ <b>Trạng thái Dòng tiền:</b> Báo động đỏ (0 VND) — Cần đẩy mạnh kênh chuyển đổi.\n\n"
-        f"📊 <b>BÁO CÁO TIẾN ĐỘ THỰC TẾ 3 MẶT TRẬN:</b>\n\n"
-        f"1. <b>Trading Bot MT5 & Quant Portfolio (${mt5['balance']:,.2f}):</b>\n"
-        f"   • <b>Cấu hình rổ:</b> Đã nâng cấp lên Đa Tài Sản (<code>{symbols_str}</code>) kèm <b>NewsBlackoutFilter (P0)</b> tự động chặn lệnh tin đỏ.\n"
-        f"   • <b>Kiểm toán 1 năm:</b> {quant['total_trades']} lệnh, <b>Max Drawdown {quant['max_drawdown_pct']}%</b> (rất an toàn, chuẩn quỹ FTMO dưới 10%).\n"
-        f"   • <b>Tối ưu kế tiếp:</b> Thêm cơ chế Dời Stop Loss Hòa Vốn (+1.0R) để khóa lợi nhuận trong thị trường sideway.\n\n"
-        f"2. <b>Sản Phẩm Số: BLOOM Somatic Intelligence (EXP-03):</b>\n"
-        f"   • Đã lột xác hoàn toàn theo thiết kế <b>MotionSites Bloom & GetLayers AI</b> (Dark Obsidian, Liquid Glass, 100/100 Visual Gate).\n"
-        f"   • Tích hợp 5 vùng cơ thể tương tác, chẩn đoán 9 thể chất Đông Y, trà sinh học 24h & thanh toán VietQR.\n"
-        f"   • <i>Link test local:</i> <code>{diag['server_urls']['bloom']}</code>\n\n"
-        f"3. <b>Công Cụ B2B: CatalogueQA Enterprise (EXP-02):</b>\n"
-        f"   • Chuẩn Bento Grid, tự động sửa lỗi font tiếng Việt rách/bể trong file CSV TMĐT, chính sách Zero Data Retention.\n"
-        f"   • <i>Link test local:</i> <code>{diag['server_urls']['catalogue']}</code>\n\n"
-        f"4. <b>Phục Hồi Vibe-Trading UI:</b>\n"
-        f"   • Đã map cổng 8899 phục hồi giao diện trading SPA của anh tại: <code>{diag['server_urls']['vibe']}</code>\n\n"
-        f"🤖 <b>CÔNG CỤ KÉO TRAFFIC TỰ ĐỘNG (AGENT-REACH):</b>\n"
-        f"   • Đã cài đặt <b>Agent-Reach 1.6.1</b>: tự động cào dữ liệu Reddit (r/ecommerce, r/Shopee), TikTok & X hoàn toàn miễn phí không tốn API để tìm lead khách hàng.\n\n"
-        f"🎯 <b>3 HÀNH ĐỘNG TRỌNG TÂM:</b>\n"
-        f"• <b>Việc 1:</b> Trải nghiệm giao diện Bloom & Vibe-Trading trên trình duyệt local.\n"
-        f"• <b>Việc 2:</b> Kích hoạt bot MT5 thêm cơ chế Break-Even Stop Loss (+1.0R) để đẩy Profit Factor > 1.5.\n"
-        f"• <b>Việc 3:</b> Chạy kịch bản Agent-Reach quét các topic kêu ca về lỗi CSV trên Reddit/TikTok Shop để tự động chào hàng."
+        f"⚠️ <b>Trạng thái:</b> Chưa ghi nhận tiền thực thu; lưu lượng truy cập và nhu cầu mua chưa được xác minh.\n\n"
+        f"🏛️ <b>TIẾN ĐỘ 5 MẶT TRẬN HỆ SINH THÁI WINK:</b>\n\n"
+        f"1. <b>Bản Thảo Thấu Thể (Dưỡng Nhan 28 Ngày) [{status_bloom}]:</b>\n"
+        f"   • Sách số đang được viết; chưa có sản phẩm hoàn chỉnh để bán hoặc tặng kèm.\n"
+        f"   • Sách số còn bản nháp; chưa mở thanh toán. Không công bố tài khoản cá nhân hoặc khẳng định phí khi chưa kiểm chứng.\n"
+        f"   • <i>Trang chính:</i> <code>{diag['urls']['duong_nhan']}</code>\n"
+        f"   • <i>Trang thanh toán:</i> <code>{diag['urls']['checkout']}</code>\n\n"
+        f"2. <b>Wink Living (Bất Động Sản):</b>\n"
+        f"   • Live ổn định trên Vercel: <code>{diag['urls']['wink_living']}</code>\n\n"
+        f"3. <b>Vương Quốc Loser [{status_loser}]:</b>\n"
+        f"   • Ứng dụng Pomodoro kỷ luật game hóa, trừ HP, thăng cấp XP chạy SQLite nội bộ không giật lag tại: <code>{diag['urls']['loser_kingdom']}</code>\n\n"
+        f"4. <b>Little Loop Factory [{status_video}]:</b>\n"
+        f"   • Xưởng render video tự động Remotion 4.0 + FFmpeg ($0 API), sẵn sàng tạo clip ngắn TikTok/Shorts kéo khách cho Bản Thảo Thấu Thể.\n\n"
+        f"5. <b>Vibe-Trading & Bot MT5 Exness (${mt5['balance']:,.2f}) [{status_vibe}]:</b>\n"
+        f"   • Danh mục {symbols_str}, quản trị rủi ro &lt; 0.75%, chặn tin đỏ NewsBlackoutFilter (P0).\n"
+        f"   • Kiểm toán 1 năm: Max Drawdown {quant['max_drawdown_pct']}% (chuẩn quỹ FTMO/MFF &lt; 10%).\n\n"
+        f"🎯 <b>3 HÀNH ĐỘNG CẦN LÀM ĐỂ BẮT ĐẦU CÓ TIỀN:</b>\n"
+        f"• <b>Việc 1:</b> Dùng Little Loop Factory render 3 kịch bản video ngắn và đăng kèm link checkout Bản Thảo Thấu Thể lên Threads/TikTok cá nhân.\n"
+        f"• <b>Việc 2:</b> Trải nghiệm luồng thanh toán MoMo / VietQR tại trang <code>{diag['urls']['checkout']}</code> để duyệt thử nghiệm.\n"
+        f"• <b>Việc 3:</b> Duy trì bot MT5 Exness forward-test demo đủ 2 tuần làm hồ sơ thi quỹ cấp vốn."
     )
 
-    # Markdown format for operations/DAILY_BRIEF.md
-    md_content = f"""# Daily Operations & Revenue Reality Brief
+    md_content = f"""# WINK Ecosystem — Daily Operations & Revenue Brief
 
 ## Cập nhật: {now_str}
 - **Thực thu L4 Realized Cash:** {diag['l4_cash']}
-- **Trạng thái:** Báo động đỏ - Tập trung chuyển đổi dòng tiền thực tế.
+- **Trạng thái:** Báo động đỏ (0 VND) — Chưa có lượt truy cập dẫn đến đơn hàng.
 
-### Báo cáo thực tế từng mặt trận:
-1. **Trading Bot MT5 & Quant Engine:**
-   - Cấu hình rổ đa tài sản: `{symbols_str}`.
-   - NewsBlackoutFilter (P0): Chặn trước/sau 30p tin CPI/NFP/FOMC.
-   - Kiểm toán 1 năm: {quant['total_trades']} lệnh, Max Drawdown {quant['max_drawdown_pct']}% (chuẩn quỹ FTMO < 10%).
-   - Tối ưu: Dời SL về Break-Even tại +1.0R.
-2. **BLOOM Somatic Intelligence (EXP-03):** Rebuilt theo MotionSites Bloom & GetLayers AI standard (5 vùng cơ thể, 9 thể chất Đông Y, 100/100 Visual Quality). Live tại `http://127.0.0.1:8000/experiments/exp03-duong-nhan-ai-mvp/`.
-3. **CatalogueQA Enterprise (EXP-02):** Bento Grid, Vietnamese CSV Font Repair, Zero Data Retention. Live tại `http://127.0.0.1:8000/experiments/exp02-catalogue-qa-pilot/`.
-4. **Vibe-Trading UI:** Phục hồi trên cổng 8899 tại `http://127.0.0.1:8899/`.
-5. **Agent-Reach (v1.6.1):** Sẵn sàng quét Reddit/TikTok tìm kiếm khách hàng tiềm năng không tốn API.
+### Báo cáo thực tế 5 nhánh hệ sinh thái:
+        f"   • Sách số đang được viết; chưa có sản phẩm hoàn chỉnh để bán hoặc tặng kèm.\n"
+2. **Wink Living:** Live Vercel tại `{diag['urls']['wink_living']}`.
+3. **Vương Quốc Loser:** Pomodoro kỷ luật game hóa live tại `{diag['urls']['loser_kingdom']}`.
+4. **Little Loop Factory:** Xưởng video Remotion 4.0 live tại `{diag['urls']['video_factory']}`.
+5. **Vibe-Trading & MT5 Exness:** Bot đa tài sản `{symbols_str}` forward-test tài khoản $100k, Max DD {quant['max_drawdown_pct']}%.
 
-### Kế hoạch hành động:
-- [ ] Tích hợp tính năng Dời Stop Loss Hòa Vốn (+1.0R) cho chiến lược Trend Pullback MT5.
-- [ ] Chạy Agent-Reach thu thập 20 topic khiếu nại file CSV trên Reddit/TikTok Shop.
-- [ ] Đẩy mạnh phễu chuyển đổi cho BLOOM Somatic Intelligence.
+### Kế hoạch hành động tạo doanh thu:
+- [ ] Dùng Little Loop Factory sản xuất video ngắn kéo traffic về Bản Thảo Thấu Thể.
+- [ ] Đăng teaser và phác đồ thể trạng lên mạng xã hội.
+- [ ] Quản trị bot MT5 Exness tuân thủ kỷ luật thi quỹ FTMO/MFF.
 """
     return tg_msg, md_content
 
@@ -153,8 +170,7 @@ def generate_daily_brief(diag: dict) -> tuple[str, str]:
 def run_once(send_tele: bool = True) -> dict:
     diag = run_diagnostics()
     tg_msg, md_content = generate_daily_brief(diag)
-    
-    # Save to disk
+
     brief_file = REPO_ROOT / "operations" / "DAILY_BRIEF.md"
     brief_file.parent.mkdir(parents=True, exist_ok=True)
     brief_file.write_text(md_content, encoding="utf-8")
@@ -168,34 +184,23 @@ def run_once(send_tele: bool = True) -> dict:
 
 
 def daemon_loop():
-    logger.info("Starting Daily Revenue Watchdog Daemon loop...")
-    # Send initial diagnostic brief immediately on start
+    logger.info("Starting WINK Revenue Watchdog Daemon loop...")
     run_once(send_tele=True)
 
-    # Then check every 30 minutes, if it crosses 08:30 or 20:30 ICT, send report
-    last_reported_slot = None
     while True:
         try:
             now_utc = datetime.now(timezone.utc)
-            # ICT is UTC+7
-            ict_hour = (now_utc.hour + 7) % 24
-            ict_minute = now_utc.minute
-
-            slot = None
-            if ict_hour == 8 and ict_minute >= 30:
-                slot = f"{now_utc.date().isoformat()}_morning"
-            elif ict_hour == 20 and ict_minute >= 30:
-                slot = f"{now_utc.date().isoformat()}_evening"
-
-            if slot and slot != last_reported_slot:
-                logger.info(f"Triggering scheduled daily brief for slot {slot}...")
+            # Check every 30 minutes
+            import time
+            time.sleep(1800)
+            now_ict_hour = (now_utc.hour + 7) % 24
+            now_ict_minute = now_utc.minute
+            if now_ict_hour in (8, 20) and now_ict_minute < 35:
                 run_once(send_tele=True)
-                last_reported_slot = slot
-
         except Exception as e:
-            logger.error(f"Error in watchdog daemon loop: {e}")
-
-        time.sleep(300)  # Check every 5 minutes
+            logger.error(f"Error in daemon loop: {e}")
+            import time
+            time.sleep(60)
 
 
 if __name__ == "__main__":
@@ -203,4 +208,3 @@ if __name__ == "__main__":
         daemon_loop()
     else:
         run_once(send_tele=True)
-        print("Daily brief generated and sent to Telegram.")

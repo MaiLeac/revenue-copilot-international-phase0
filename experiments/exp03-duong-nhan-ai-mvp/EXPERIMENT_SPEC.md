@@ -1,5 +1,7 @@
 # EXP-03 (`PROD-01`) — Dưỡng Nhan AI Companion & VietQR Funnel MVP
 
+> **Historical plan, superseded 2026-11-05.** The current product direction is digital-only Bản Thảo, with the owner still writing the book. No tea or other physical gift, quiz diagnosis, claimed price, checkout, VietQR automation or paid file delivery in this document describes the current website. Use `products.json`, `CATALOG_OPERATIONS.md` and the live HTML pages for current status. Retained below to preserve the original evidence trail.
+
 **Mô hình:** Sao chép cơ chế kinh doanh đã chứng minh dòng tiền của `biquyetduongnhan.vn` (`299.000₫` Impulse Buy + VietQR/SePay tự động + Affiliate KOC), đồng thời **giải quyết triệt để 3 lỗ hổng chí mạng của đối thủ** với chi phí vận hành **`0 VND`**.
 
 ---

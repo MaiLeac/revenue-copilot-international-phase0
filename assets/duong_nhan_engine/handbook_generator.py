@@ -631,7 +631,7 @@ def render_handbook_html() -> str:
         <h4>Hỗ Trợ & Thanh Toán Tự Động</h4>
         <ul>
           <li>Thanh toán tự động: VietQR & Payoneer Quốc Tế</li>
-          <li>Hỗ trợ khách hàng: <a href="mailto:lethanhmaicombo@gmail.com">lethanhmaicombo@gmail.com</a></li>
+          <li>Hỗ trợ: kênh liên hệ sẽ được công bố khi phát hành.</li>
           <li>Giao nhận tài liệu: Mở tức thì trên trình duyệt sau khi quét mã</li>
         </ul>
       </div>

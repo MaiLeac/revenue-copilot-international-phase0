@@ -1,47 +1,21 @@
-# Agent Zero v2.13 — Money HQ Runtime, Scheduler & Telegram Setup
+# Agent Zero và Telegram — trạng thái cấu hình
 
-**Endpoint:** `http://localhost:5080`  
-**Docker Image:** `agent0ai/agent-zero:v2.13`  
-**Mounted Persistent State:** `C:\Users\ACER\agent-zero\agent-zero\usr` $\rightarrow$ `/a0/usr`  
-**Mounted Repository Project:** `C:\Users\ACER\Documents\Codex\revenue-copilot-international-phase0` $\rightarrow$ `/a0/usr/projects/money-hq`
+**Kiểm tra 05/11/2026, khoảng 08:55 ICT:** cổng Agent Zero `5080` không lắng nghe. Sự tồn tại của profile, skill hoặc file lịch **không chứng minh** Agent Zero đang chạy. Lượt scheduled trước đã báo sai rằng checkout xác nhận thanh toán tự động; xem [`operations/EXECUTION_HANDOFF.md`](../../operations/EXECUTION_HANDOFF.md). Không kích hoạt lại lịch tiêu token chỉ để tạo báo cáo.
 
----
+**Kiểm tra lại 12:37 ICT:** container Agent Zero đang chạy trong WSL, dù cổng Windows không lắng nghe. Một lượt thử thủ công trên CatalogueQA đã chạy bằng task `Money HQ - Revenue Execution`: kết quả chỉ báo 5 test cũ qua, **không sửa file**, nên không đạt yêu cầu thực thi. Task đã được tắt lại; ba lịch trong runtime đều `disabled`. Chưa có worker AI tự làm hằng ngày. Gemini 3.5 Flash-Lite có free tier theo [bảng giá Google](https://ai.google.dev/gemini-api/docs/pricing?hl=en), nhưng trạng thái billing/quota thực tế cần kiểm tra trước khi bật lịch lặp lại.
 
-## 1. Activated Agent Profile & Skills
+## Nguồn cấu hình
 
-### Profile: `money-coo` (`/a0/usr/agents/money-coo/`)
-- **`agent.yaml`**: Defines the **Money HQ COO (`money-coo`)** profile.
-- **`prompts/agent.system.main.specifics.md`**: Enforces `OPERATING_SYSTEM.md`, `agents/AI_ROUTING_POLICY.md`, `agents/COST_OPTIMIZATION_POLICY.md`, and the `500,000 VND` experimental budget cap.
+- Repo được dự kiến gắn vào container tại `/a0/usr/projects/money-hq`; xác minh mount khi Docker chạy trước khi dùng.
+- Prompt `money-coo` cục bộ đã được bổ sung hướng dẫn đọc [`AGENTS.md`](../../AGENTS.md) và [danh mục công cụ](../../assets/web_capability_library/CAPABILITY_ROUTING.md). Script đồng bộ: `sync_capability_profile.ps1`. Đây mới là thay đổi cấu hình trên đĩa, chưa xác minh lượt agent dùng đúng.
+- [`tasks.json`](tasks.json) là **bản mẫu lịch cũ**, có tác vụ pytest/báo cáo; không dùng làm chỉ dẫn hiện hành. [`usr_config/scheduler/tasks.json`](usr_config/scheduler/tasks.json) hiện là danh sách rỗng trong repo. Trạng thái lịch thật trong runtime phải đọc trực tiếp trước khi tuyên bố hoạt động.
+- Telegram chỉ là kênh nhận lệnh/thông báo. Tin nhắn của bot không chứng minh đã có khách, thanh toán, giao file hoặc doanh thu.
 
-### Installed Skills (`/a0/usr/skills/`)
-1. **`catalogue-qa-audit`**: Runs `assets/catalogue_qa_engine/catalogue_qa.py` and `assets/catalogue_qa_engine/report_generator.py` (`0 VND` marginal LLM cost).
-2. **`qa-earnings-tracker`**: Runs `assets/qa_workflow_toolkit/bug_report_preflight.py` and `assets/qa_workflow_toolkit/qa_earnings_tracker.py`.
-3. **`opportunity-scout`**: Enforces `L0–L4` evidence scoring and the `1 Primary + 1 Supporting` anti-fragmentation rule.
-4. **`financial-reporting`**: Runs `tools/money_hq_dashboard.py` and monitors the `500,000 VND` budget cap and early-warning triggers.
-5. **`repository-qa`**: Runs `python -m pytest -q` and checks secret/PII hygiene.
+## Điều kiện cho một lượt agent hữu ích
 
----
+1. Đọc README, PROJECT_STATE và sổ tiền; chọn một điểm nghẽn gần giao dịch thật.
+2. Chỉ chạy việc được phép, có đầu ra, giới hạn thời gian/token; không chạy nhiều agent trùng việc.
+3. Kiểm tra file hoặc hành vi đã thay đổi. Ghi kết quả thật và bước tiếp theo vào `operations/EXECUTION_HANDOFF.md`.
+4. Nếu chỉ có report/test pass hoặc không thể làm, ghi `BLOCKED` cùng lý do; không báo hoàn thành.
 
-## 2. Scheduled Low-Cost Tasks (`/a0/usr/scheduler/tasks.json`)
-
-Two recurring low-cost daily tasks are configured in `usr/scheduler/tasks.json` (timezone `Asia/Saigon`, `dedicated_context: true`, bounded to deterministic local scripts first):
-
-1. **`Money HQ — Daily Operational & Opportunity Review`**
-   - **Schedule:** `30 8 * * *` (`08:30` Asia/Saigon daily)
-   - **Project:** `money-hq`
-   - **Action:** Runs `python -m pytest -q`, checks `EXP-01` (`uTest` / `JOB-01`) and `EXP-02` (`SVC-01` Catalogue QA) against stop conditions, and updates `operations/DAILY_BRIEF.md` only if actionable changes exist.
-2. **`Money HQ — Daily Financial & Blocker Report`**
-   - **Schedule:** `30 20 * * *` (`20:30` Asia/Saigon daily)
-   - **Project:** `money-hq`
-   - **Action:** Runs `python tools/money_hq_dashboard.py`, verifies `L4` realized cash vs `L3` pending payouts and the `500,000 VND` budget cap, and escalates any blocker to `operations/OWNER_ACTIONS.md`.
-
----
-
-## 3. Non-Blocking Telegram Alert Integration (`/a0/plugins/_telegram_integration`)
-
-Agent Zero v2.13 includes the official `_telegram_integration` plugin (`webui/config.html`). It is pre-installed and ready to activate in **2 minutes** whenever the owner wants mobile push alerts:
-
-1. Open `http://localhost:5080` $\rightarrow$ click **Connect Telegram** on the dashboard (or **Plugins** $\rightarrow$ **Telegram Integration**).
-2. Paste a Telegram Bot Token from `@BotFather` (stored in `/a0/usr/plugins/_telegram_integration/config.yaml` locally — **never committed to Git**).
-3. Set `allowed_users` to Mai's Telegram `@username` or numeric user ID, and set `default_project` to `money-hq`.
-4. Use `/commands` or `/send` in Telegram to receive daily financial briefs and immediate red-flag blocker alerts on mobile.
+Không đưa token, tài khoản hay thông tin thanh toán vào repo. Không chạy giao dịch thật, chi tiền, đăng bài hoặc liên hệ khách chỉ vì scheduler nhắc tới.

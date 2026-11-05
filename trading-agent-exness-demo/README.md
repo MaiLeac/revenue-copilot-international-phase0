@@ -1,9 +1,11 @@
 # 🏛️ Money HQ — Quantitative Treasury & Algorithmic Trading Wing
 
+> **Architecture/history, not proof of live trading or profit (checked 2026-11-05).** This branch is demo research only and excluded from first-cash planning. `run_state.json` recorded a demo account and a last heartbeat at 08:02 ICT; it does not prove the process is still running. All prop-firm targets and performance thresholds below are hypotheses, not a launch decision. See [`PROJECT_STATE.md`](../PROJECT_STATE.md) and the dated audit in `research/AUDIT_2026-11-05.md`.
+
 > **Parent Monorepo:** [`MaiLeac/revenue-copilot-international-phase0`](https://github.com/MaiLeac/revenue-copilot-international-phase0)  
 > **Ecosystem:** Money HQ Autonomous Asset Holding & Cashflow Operations  
 > **Role within Ecosystem:** Systematic Treasury Management & Capital Compounding (`TRD-01`)  
-> **Status:** Live Demo Verified (`Exness-MT5Trial17` Account `#464160066`, \$100,000 USD virtual capital)  
+> **Status:** Live Demo Verified (`Exness-MT5Trial17` Account `<DEMO_ID_REDACTED>`, \$100,000 USD virtual capital)  
 
 [![Tests](https://img.shields.io/badge/pytest-22%20passed-brightgreen.svg)]()
 [![Platform](https://img.shields.io/badge/platform-MetaTrader%205-blue.svg)]()
@@ -47,7 +49,7 @@ graph TD
 2. **Why Zero LLM Involvement in Order Execution?**
    In Money HQ's constitution, **Capital Preservation overrides profit seeking**. LLMs are brilliant at language synthesis, macro news summarization, and competitor research, but disastrous at high-frequency time-series price prediction. Therefore, order entry is locked to **deterministic mathematics** ($EMA_{20}/EMA_{50}$ crossover + ATR volatility stops) with sub-millisecond execution.
 3. **Why Is It Strictly Locked to Demo Mode (M0–M2)?**
-   Under Money HQ's **Fail-Closed Governance**, no real money is ever deployed until a strategy passes statistical out-of-sample audits (Profit Factor > 1.5, Max Drawdown < 3.0%) and completes live paper validation on Exness Demo (Account `#464160066`, \$100k virtual capital).
+   Under Money HQ's **Fail-Closed Governance**, no real money is ever deployed until a strategy passes statistical out-of-sample audits (Profit Factor > 1.5, Max Drawdown < 3.0%) and completes live paper validation on Exness Demo (Account `<DEMO_ID_REDACTED>`, \$100k virtual capital).
 
 ---
 
@@ -86,7 +88,7 @@ To solve this, our system strictly enforces a **Two-Tier Separation of Concerns*
 └────────────────────────────────────────────────────────┘
           │
           ▼
-[Exness MT5 Demo Terminal Execution (Ticket #464160066)]
+[Exness MT5 Demo Terminal Execution (Ticket <DEMO_ID_REDACTED>)]
 ```
 
 ---

@@ -4,7 +4,7 @@
 import json
 from pathlib import Path
 
-src = Path(r"C:\Users\ACER\Documents\Codex\revenue-copilot-international-phase0\data\scraped_telegram\khoahoctaichinh_Vuongtolinh.json")
+src = Path(__file__).resolve().parents[1] / "data" / "scraped_telegram" / "khoahoctaichinh_Vuongtolinh.json"
 posts = json.loads(src.read_text(encoding="utf-8"))
 
 out_lines = [f"Total posts: {len(posts)}"]

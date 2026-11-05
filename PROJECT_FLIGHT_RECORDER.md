@@ -1,4 +1,6 @@
 # 📜 SỔ TAY TIẾN TRÌNH & LỊCH SỬ THỬ NGHIỆM DỰ ÁN
+
+> **Hồ sơ lịch sử, không phải trạng thái hiện tại (gắn nhãn 05/11/2026).** Các câu như “EXP-03 đã khai tử”, “TRD-01 là trọng tâm hiện tại”, “checkout đã có”, hay kế hoạch thi quỹ phản ánh thời điểm viết cũ. Nhận định pháp lý và hiệu quả trading trong hồ sơ cũng chưa được xác minh độc lập. Hướng Bản Thảo hiện là sách số đang viết, checkout đóng; trạng thái mới ở [`PROJECT_STATE.md`](./PROJECT_STATE.md). Giữ nguyên diễn biến bên dưới để không xóa dấu vết pivot.
 # (PROJECT FLIGHT RECORDER & EXPERIMENT POST-MORTEM)
 
 > **MỤC ĐÍCH CỐT TỬ CỦA TÀI LIỆU NÀY:**  
@@ -82,7 +84,7 @@ flowchart TD
 * **Kết quả:** **THẤT BẠI HOÀN TOÀN — ĐÃ KHAI TỬ (KILLED / ARCHIVED).**
 * **Nguyên nhân thất bại & Lỗ hổng nghiêm trọng:**
   1. **RỦI RO PHÁP LÝ Y TẾ CHÍ MẠNG:** Sản phẩm chẩn đoán sức khỏe, bốc thuốc, phân loại thể chất mà không có giấy phép hành nghề y dược, không kiểm duyệt y tế, thiếu Điều khoản dịch vụ (TOS), Chính sách bảo mật (Privacy Policy) và Tuyên bố miễn trừ trách nhiệm y tế (Medical Disclaimer). Vi phạm nghiêm trọng *Nghị định 117/2020/NĐ-CP*.
-  2. **THANH TOÁN ẢO (MOCK):** Số tài khoản VietQR trong code là `MB-0000000000`. Hệ thống chưa có cổng thanh toán thật.
+  2. **THANH TOÁN ẢO (MOCK):** Số tài khoản VietQR trong code là `<MOCK_ACCOUNT_REDACTED>`. Hệ thống chưa có cổng thanh toán thật.
   3. **SẢN PHẨM KHÔNG CÓ GIÁ TRỊ CẠNH TRANH:** Chỉ là mấy bài thuốc/trà sâm nhặt nhạnh trên mạng mà ai cũng Google miễn phí được.
   4. **SAI LẦM VỀ VAI TRÒ:** AI lại đi bắt chủ dự án phải tự đi copy rải link dạo trên mạng xã hội và bắt chủ dự án tự đi làm tester.
 * **Bài học xương máu cho AI tiếp theo:** **TUYỆT ĐỐI KHÔNG BAO GIỜ BƯỚC CHÂN VÀO NGÀNH Y TẾ / SỨC KHỎE / DƯỢC PHẨM** khi không có chuyên môn y khoa và giấy phép. Mọi sản phẩm gắn mác "hoàn thiện" phải qua kiểm duyệt pháp lý, chính sách và cổng thanh toán thật trước khi công bố.

@@ -1,29 +1,13 @@
-# MONEY HQ SUPERAGENT — ATTENTION PANEL
+# Điểm cần chú ý — 05/11/2026
 
-- **Policy Version:** `2026-11-01.v1` | **Accept Mode:** `observe` | **Budget Cap:** `0 VND` (`0 VND` spend enforced)
-- **Updated At (UTC):** `2026-11-03T09:00:55+00:00`
+**Đích:** một khoản tiền thật được nhận và ghi bằng chứng, tiến tới mục tiêu 15 tỷ VND của Mai. Hai sổ `finance/CASH_LEDGER.csv` và `finance/COST_LEDGER.csv` hiện chỉ có tiêu đề. Không suy ra traffic hoặc doanh thu ngoài sổ.
 
----
+| Ưu tiên | Điểm nghẽn | Việc AI có thể làm ngay | Điều kiện kết thúc |
+|---|---|---|---|
+| 1 | Sách Bản Thảo chưa hoàn tất; web chỉ có minh họa | Giữ catalog trung thực, kiểm tra luồng đọc thử, chuẩn bị cách đưa file thật vào khi tác giả giao | Sản phẩm/file/quyền sử dụng được xác nhận |
+| 2 | Checkout và giao file chưa được kiểm thử | Chuẩn bị quy trình đơn → xác nhận chuyển khoản thủ công → giao file riêng tư; không nhận tiền khi chưa sẵn sàng | Một dry run không thu tiền đi hết luồng, thông tin giá và liên hệ chính xác |
+| 3 | Nhu cầu mua và traffic chưa đo | Khi có sản phẩm giao được, thử một kênh phân phối được phép, ghi nguồn và phản hồi | Có quan sát người thật hoặc kết luận thử nghiệm thất bại có dữ liệu |
 
-## 1. Does anything need the Owner (Mai) right now?
+Danh sách trên là các nghẽn của đường sách số, không loại trừ đường tạo tiền khác. MT5 cần một vòng riêng để chẩn đoán lỗi chạy và kiểm định lợi thế sau phí trong demo. Little Loop, Agent Zero, Telegram và repo khác dùng khi giúp thực thi, đo hoặc sửa một nghẽn cụ thể. Không báo `healthy` hoặc `100% ready` chỉ vì script qua test hay cổng local từng mở.
 
-- **Quiet / Healthy:** `0` tickets waiting for owner intervention. No manual action needed.
-
----
-
-## 2. Is the system healthy and doing the right things?
-
-- **Open / Working Tickets:** `0`
-- **Completed / Verified Tickets:** `2`
-- **Total Eval Decisions Recorded:** `2`
-- **Total Isolated Worker Assignments:** `3`
-- **Financial Guardrails:** `L4 Realized Cash = 0 VND` | `L3 Pending Payout = 0 VND` | `Incremental Spend = 0 VND`
-
----
-
-## 3. Work History (Trigger → Eval → Mandate → Ticket → Assignment)
-
-| Ticket ID | Trigger ID | Priority Score | Stage / Status | Outcome | Retries | Latest Verified Report |
-|---|---|---:|---|---|---:|---|
-| `TKT-098A76D1` | `TRG-REV-STOREFRONT-SEO-01` | `1171.81` | `ended` | `completed_verified_observe_staged` | `1` | All 4 acceptance criteria verified in assignment ASN-098A76D1-02 (mode=local_execute_external_observe, cost=0 VND). |
-| `TKT-CA4F99B8` | `TRG-WATCHDOG-mhqfin02-2026-11-01T20:31` | `450.00` | `ended` | `completed_verified` | `0` | All 2 acceptance criteria verified in assignment ASN-CA4F99B8-01 (mode=local_autonomous, cost=0 VND). |
+**Trạng thái máy tại 08:55 ICT:** các cổng `5080`, `8000`, `8888`, `3210`, `8899` không lắng nghe. Kiểm tra lại trước khi dùng; dòng này không phải theo dõi thời gian thực. Xem [`PROJECT_STATE.md`](../PROJECT_STATE.md).

@@ -1,5 +1,5 @@
 $ErrorActionPreference = 'Stop'
-$logPath = 'C:\Users\ACER\Documents\Codex\2026-09-30\stop-rebuilding-the-agent-from-scratch-2\work\recover-wsl.log'
+$logPath = (Join-Path $PSScriptRoot 'recover-wsl.log')
 
 try {
     Get-Process -Name 'vmmemWSL' -ErrorAction SilentlyContinue | ForEach-Object {

@@ -1,10 +1,11 @@
 $ErrorActionPreference = 'SilentlyContinue'
 
-$workspaceRoot = 'C:\Users\ACER\Documents\Codex\2026-09-30\stop-rebuilding-the-agent-from-scratch-2'
-$moneyHqRepo = 'C:\Users\ACER\Documents\Codex\revenue-copilot-international-phase0'
+$moneyHqRepo = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$logDirectory = Join-Path $env:LOCALAPPDATA 'MoneyHQ\logs'
+New-Item -ItemType Directory -Path $logDirectory -Force | Out-Null
 $a0Path = Join-Path $env:USERPROFILE '.local\bin\a0.exe'
-$stdoutLog = Join-Path $workspaceRoot 'work\a0-connector.log'
-$stderrLog = Join-Path $workspaceRoot 'work\a0-connector.err.log'
+$stdoutLog = Join-Path $logDirectory 'a0-connector.log'
+$stderrLog = Join-Path $logDirectory 'a0-connector.err.log'
 
 $wslKeepalive = Get-CimInstance Win32_Process | Where-Object {
     $_.Name -eq 'wsl.exe' -and (
@@ -20,8 +21,11 @@ if (-not $wslKeepalive) {
     Start-Process -FilePath 'wsl.exe' -ArgumentList $wslArgs -WindowStyle Hidden | Out-Null
 }
 
-$transportPatch = '/mnt/c/Users/ACER/Documents/Codex/2026-09-30/stop-rebuilding-the-agent-from-scratch-2/agent-zero/helpers/litellm_transport.py'
-& wsl.exe -d Ubuntu-24.04 -u root -- docker cp $transportPatch agent-zero:/a0/helpers/litellm_transport.py | Out-Null
+# Optional local patch; do not load a machine-specific file by default.
+if ($env:AGENT_ZERO_TRANSPORT_PATCH -and (Test-Path -LiteralPath $env:AGENT_ZERO_TRANSPORT_PATCH)) {
+    $transportPatch = $env:AGENT_ZERO_TRANSPORT_PATCH
+    & wsl.exe -d Ubuntu-24.04 -u root -- docker cp $transportPatch agent-zero:/a0/helpers/litellm_transport.py | Out-Null
+}
 
 for ($attempt = 0; $attempt -lt 60; $attempt++) {
     try {

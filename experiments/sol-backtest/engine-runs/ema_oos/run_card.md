@@ -1,7 +1,7 @@
 # Backtest Run Card
 
 Generated: 2026-09-28T11:33:05.511230Z
-Run directory: `C:\Users\ACER\.vibe-trading\runs\verified_sol_20260928\ema_oos`
+Run directory: `<LOCAL_USER_HOME>\.vibe-trading\runs\verified_sol_20260928\ema_oos`
 
 ## Backtest Summary
 - codes: ['SOL-USDT']

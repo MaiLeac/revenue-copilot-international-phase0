@@ -1,4 +1,5 @@
 # Exness Candidate Trading Strategies Specification (R&D)
+> **Research candidates only.** No candidate is approved for live trading or counted toward collected cash; see [`PROJECT_STATE.md`](../../PROJECT_STATE.md).
 
 **System:** Money HQ Quantitative Strategy Lab  
 **Evaluation Criteria:** Out-of-sample Expectancy, Realistic Friction Deductions, Max Drawdown < 3%  

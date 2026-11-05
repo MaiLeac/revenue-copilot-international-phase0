@@ -74,7 +74,7 @@ def main() -> None:
         "# MT5 AUTONOMOUS TRADING AGENT (EXNESS DEMO) — AUDIT DOSSIER",
         "\n> **Mục đích:** Tài liệu kỹ thuật tổng hợp toàn bộ mã nguồn, cấu hình và kiểm thử của hệ thống MT5 trading bot để gửi cho AI độc lập (ChatGPT / Claude / Grok) thực hiện adversarial audit phản biện đa chiều.",
         "\n## 1. THÔNG TIN HỆ THỐNG & NGUYÊN TẮC BẤT BIẾN (INVARIANTS)",
-        "- **Môi trường hoạt động:** DEMO ONLY (`Exness-MT5Trial17`, Login `#464160066`, Balance `$100,000 USD`).",
+        "- **Môi trường hoạt động:** DEMO ONLY (`Exness-MT5Trial17`, Login `<DEMO_ID_REDACTED>`, Balance `$100,000 USD`).",
         "- **Chặn Live Account:** Khóa cứng ở tầng Execution Adapter, kiểm tra `trade_mode == DEMO`, `trade_allowed`, `trade_expert`, chặn tên server chứa 'real/live'.",
         "- **Quản trị rủi ro cố định:** 0.25%/lệnh, SL cứng bắt buộc mọi lệnh, làm tròn lot XUỐNG (`math.floor`), từ chối lệnh nếu `min_vol` vượt ngân sách rủi ro.",
         "- **Cross-check MT5 Native:** Gọi `order_calc_profit()` đối soát với broker trước khi gửi lệnh.",

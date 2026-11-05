@@ -1,5 +1,7 @@
 # GetLayers Cinematic UI Architecture
 
+> **Design reference snapshot.** Claims below that a style was injected into a current page must be checked against that page's source. The EXP-03 site was replaced with a digital-only draft page; this file is not current product or integration evidence. See [`CAPABILITY_ROUTING.md`](../web_capability_library/CAPABILITY_ROUTING.md).
+
 Extracted and reverse-engineered from [GetLayers AI](https://getlayers.ai) (Textura Agency) for the Money HQ Autonomous Product Ecosystem.
 
 ## What is GetLayers AI?

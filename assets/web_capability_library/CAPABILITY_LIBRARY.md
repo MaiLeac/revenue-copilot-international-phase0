@@ -1,5 +1,7 @@
 # Money HQ Web Capability Library & Anti-AI-Slop Visual Quality Gate
 
+> **Catalog snapshot, not a current installation or revenue report (2026-11-05).** Star counts, maintenance dates and paths below may have changed. The current task map is [`CAPABILITY_ROUTING.md`](CAPABILITY_ROUTING.md); verify each candidate before reuse. VietQR/Payoneer hooks mentioned below are historical ideas, not a working EXP-03 checkout.
+
 > **Core Mandate:** Never generate generic, AI-looking web interfaces. Before writing any CSS or layout code, query this library, reuse approved components and design tokens from MaiLeac's GitHub stars and repositories, and pass the independent visual quality gate (`tools/web_quality_gate.py`).
 
 ---
@@ -24,9 +26,9 @@
 
 | ID | Repository & Local Path | Language | License | What It Provides to the Capability Library |
 | :--- | :--- | :--- | :--- | :--- |
-| **`OWN-01`** | [**`MaiLeac/flow-scout-core`**](https://github.com/MaiLeac/flow-scout-core)<br>`C:\Users\ACER\Documents\Codex\flow-scout-core` | TypeScript | Proprietary (Owner) | **Direct Reuse:** 15 battle-tested UX/QA failure patterns (`PAT-01` to `PAT-15`) including dead link prevention (`PAT-08`), filter-detail contradictions (`PAT-01`), and unrecoverable empty states (`PAT-05`). |
-| **`OWN-02`** | [**`MaiLeac/Sisan`**](https://github.com/MaiLeac/Sisan)<br>`C:\Users\ACER\Sisan` | React 19, TS, Tailwind v4, Vite 6 | Proprietary (Owner) | **Direct Reuse:** Touch-swipeable `RoomCard.tsx` image carousel, OSRM route distance service (`distance.ts`), multi-criteria `FilterBar.tsx` with mobile bottom sheet, and CTV referral link tracker (`referral.ts`). |
-| **`OWN-03`** | [**`MaiLeac/vuong-quoc-loser`**](https://github.com/MaiLeac/vuong-quoc-loser)<br>`C:\Users\ACER\.codex\worktrees\backup-task-ids\Loser Kingdom` | Python, Vanilla JS, CSS | Proprietary (Owner) | **Adapt Pattern:** Isolated SVG motion layers (`banner-flag-svg`, `cloak-svg`) over static high-res artboards, ambient canvas particle system (`kingdom-magic`, `kingdom-petals`) with explicit pause toggle (`.motion-toggle`). |
+| **`OWN-01`** | [**`MaiLeac/flow-scout-core`**](https://github.com/MaiLeac/flow-scout-core)<br>`<LOCAL_USER_HOME>\Documents\Codex\flow-scout-core` | TypeScript | Proprietary (Owner) | **Direct Reuse:** 15 battle-tested UX/QA failure patterns (`PAT-01` to `PAT-15`) including dead link prevention (`PAT-08`), filter-detail contradictions (`PAT-01`), and unrecoverable empty states (`PAT-05`). |
+| **`OWN-02`** | [**`MaiLeac/Sisan`**](https://github.com/MaiLeac/Sisan)<br>`<LOCAL_USER_HOME>\Sisan` | React 19, TS, Tailwind v4, Vite 6 | Proprietary (Owner) | **Direct Reuse:** Touch-swipeable `RoomCard.tsx` image carousel, OSRM route distance service (`distance.ts`), multi-criteria `FilterBar.tsx` with mobile bottom sheet, and CTV referral link tracker (`referral.ts`). |
+| **`OWN-03`** | [**`MaiLeac/vuong-quoc-loser`**](https://github.com/MaiLeac/vuong-quoc-loser)<br>`<LOCAL_USER_HOME>\.codex\worktrees\backup-task-ids\Loser Kingdom` | Python, Vanilla JS, CSS | Proprietary (Owner) | **Adapt Pattern:** Isolated SVG motion layers (`banner-flag-svg`, `cloak-svg`) over static high-res artboards, ambient canvas particle system (`kingdom-magic`, `kingdom-petals`) with explicit pause toggle (`.motion-toggle`). |
 | **`OWN-04`** | [**`MaiLeac/awesome-ai-video-code`**](https://github.com/MaiLeac/awesome-ai-video-code) | Markdown | Proprietary (Owner) | **Direct Reuse:** Curated handbook & integration matrix for 8 code-driven video/animation skills (Remotion, GSAP, hyperframes, edge-tts). |
 | **`OWN-05`** | [**`MaiLeac/revenue-copilot-international-phase0`**](https://github.com/MaiLeac/revenue-copilot-international-phase0) | Python, HTML, JS | Proprietary (Owner) | **Direct Reuse:** Root commercial storefront (`index.html`), SEO sitemap (`sitemap.xml`), client-side CSV auditor (`EXP-02`), and 7-constitution health engine (`EXP-03`). |
 
@@ -55,7 +57,7 @@
 
 1. **Premium UI components & design systems:** [`assets/web_capability_library/tokens.css`](./tokens.css) (multi-material variables: Swiss Ledger, Apothecary Paper, Hospitality Warm; strict zero-slop rules).
 2. **Landing page and website templates:** Commercial Storefront Hub (`index.html`), Dưỡng Nhan Quiz Funnel (`EXP-03`), and Catalogue QA Tool (`EXP-02`).
-3. **Dashboard and application layouts:** `C:\Users\ACER\Sisan\src\components\BookingsDashboard.tsx` and `AdminRevenuePanel.tsx`.
+3. **Dashboard and application layouts:** `<LOCAL_USER_HOME>\Sisan\src\components\BookingsDashboard.tsx` and `AdminRevenuePanel.tsx`.
 4. **Typography, color systems & visual design references:** `Nutlope/hallmark/skills/hallmark/references/fonts.md` (banned fonts list, non-default display pairings: Newsreader, Rethink Sans, EB Garamond, JetBrains Mono; display-to-body font scale ratio $\ge 2.0\times$).
 5. **Animation & micro-interaction libraries:** `motion` (`^12.23.24`), Loser Kingdom isolated SVG motion layers (`banner-flag-svg`, `cloak-svg` with zero background distortion), and `.motion-toggle` pause control.
 6. **Charts, data visualization & interactive elements:** `HowToLiveBetter` evidence cards, Money HQ KPI grid, and SVG metric sparklines.
@@ -120,7 +122,7 @@ python tools/web_quality_gate.py <html-file> --browser-render --screenshot-dir o
 
 ## 6. Concrete Improvement Plans for Existing Projects
 
-### A. Sisan / Wink Home (`C:\Users\ACER\Sisan`)
+### A. Sisan / Wink Home (`<LOCAL_USER_HOME>\Sisan`)
 
 | Priority | Defect / Problem | Root Cause | Recommended Fix from Capability Library |
 | :--- | :--- | :--- | :--- |
@@ -129,7 +131,7 @@ python tools/web_quality_gate.py <html-file> --browser-render --screenshot-dir o
 | **Medium** | AI neon gradient borders & emojis in `RoomCard.tsx` and `Header.tsx` (`✨ Vì sao Sisan gợi ý`, `animate-border-flow`, `🎁 Săn thưởng`, `👑 Admin`) | AI-generated design cliché | Replace emojis with clean `lucide-react` icons (`Sparkles`, `Gift`, `Crown`); replace neon cyan/teal animated gradient with subtle solid `border border-emerald-200 bg-emerald-50/50`. |
 | **Medium** | Missing `:focus-visible` styling on room cards and search inputs | Accessibility barrier | Inherit `:focus-visible` from `tokens.css` with 2px emerald outline offset. |
 
-### B. Loser Kingdom (`C:\Users\ACER\.codex\worktrees\backup-task-ids\Loser Kingdom`)
+### B. Loser Kingdom (`<LOCAL_USER_HOME>\.codex\worktrees\backup-task-ids\Loser Kingdom`)
 
 | Priority | Defect / Problem | Root Cause | Recommended Fix from Capability Library |
 | :--- | :--- | :--- | :--- |

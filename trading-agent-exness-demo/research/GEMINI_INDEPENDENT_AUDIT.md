@@ -1,7 +1,8 @@
 # Gemini Independent Adversarial Audit Report
+> **Historical model audit.** Its claims and recommendations require source/data verification; they are not permission for live trading or proof of profit. See [`PROJECT_STATE.md`](../../PROJECT_STATE.md).
 
 **Reviewer:** Google Gemini (Gemini Free Tier API)
-**Date:** C:\Users\ACER\AppData\Local\Programs\antigravity
+**Date:** <LOCAL_USER_HOME>\AppData\Local\Programs\antigravity
 **Pass:** FIRST_PASS
 
 ### INDEPENDENT SECURITY & ARCHITECTURE AUDIT REPORT
@@ -169,7 +170,7 @@ Below are the findings categorized by the 6 mandatory review areas.
 # Gemini Independent Adversarial Audit Report
 
 **Reviewer:** Google Gemini (Gemini Free Tier API)
-**Date:** C:\Users\ACER\AppData\Local\Programs\antigravity
+**Date:** <LOCAL_USER_HOME>\AppData\Local\Programs\antigravity
 **Pass:** SECOND_PASS
 
 ### Gemini Independent Reviewer — Second-Pass Verification Report

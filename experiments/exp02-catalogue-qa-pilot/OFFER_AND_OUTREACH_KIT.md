@@ -1,5 +1,7 @@
 # Catalogue QA Pilot — Offer Spec, SOP & Opt-In Outreach Templates (`EXP-02`)
 
+> **Draft, not a live offer (status checked 2026-11-05).** The price and turnaround below are hypotheses. No paid customer or approved outreach is recorded. See [`PROJECT_STATE.md`](../../PROJECT_STATE.md).
+
 > **Governance Gate:** Do NOT send any outreach or quote a binding price without owner approval and verified payment rail readiness. All portfolio attachments use the **100% Synthetic 120-Row Sample** (`sample_portfolio/SYNTHETIC_CASE_STUDY_REPORT.md`).
 
 ---

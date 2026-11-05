@@ -1,9 +1,11 @@
 # MT5 AUTONOMOUS TRADING AGENT (EXNESS DEMO) — AUDIT DOSSIER
 
+> **Historical audit packet.** Account figures and implementation claims below are a snapshot, not evidence of current uptime, real profit, or readiness for funded trading. Current status: [`PROJECT_STATE.md`](PROJECT_STATE.md).
+
 > **Mục đích:** Tài liệu kỹ thuật tổng hợp toàn bộ mã nguồn, cấu hình và kiểm thử của hệ thống MT5 trading bot để gửi cho AI độc lập (ChatGPT / Claude / Grok) thực hiện adversarial audit phản biện đa chiều.
 
 ## 1. THÔNG TIN HỆ THỐNG & NGUYÊN TẮC BẤT BIẾN (INVARIANTS)
-- **Môi trường hoạt động:** DEMO ONLY (`Exness-MT5Trial17`, Login `#464160066`, Balance `$100,000 USD`).
+- **Môi trường hoạt động:** DEMO ONLY (`Exness-MT5Trial17`, Login `<DEMO_ID_REDACTED>`, Balance `$100,000 USD`).
 - **Chặn Live Account:** Khóa cứng ở tầng Execution Adapter, kiểm tra `trade_mode == DEMO`, `trade_allowed`, `trade_expert`, chặn tên server chứa 'real/live'.
 - **Quản trị rủi ro cố định:** 0.25%/lệnh, SL cứng bắt buộc mọi lệnh, làm tròn lot XUỐNG (`math.floor`), từ chối lệnh nếu `min_vol` vượt ngân sách rủi ro.
 - **Cross-check MT5 Native:** Gọi `order_calc_profit()` đối soát với broker trước khi gửi lệnh.
@@ -72,9 +74,9 @@ trading-agent-exness-demo/
 ## 3. KẾT QUẢ KIỂM THỬ TỰ ĐỘNG (PYTEST TEST SUITE)
 ```text
 ============================= test session starts =============================
-platform win32 -- Python 3.12.10, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\ACER\AppData\Local\Programs\Python\Python312\python.exe
+platform win32 -- Python 3.12.10, pytest-9.2.0, pluggy-1.7.0 -- <LOCAL_USER_HOME>\AppData\Local\Programs\Python\Python312\python.exe
 cachedir: .pytest_cache
-rootdir: C:\Users\ACER\Documents\Codex\revenue-copilot-international-phase0
+rootdir: <LOCAL_USER_HOME>\Documents\Codex\revenue-copilot-international-phase0
 configfile: pytest.ini
 plugins: anyio-4.12.1, langsmith-0.14.1
 collecting ... collected 47 items
@@ -3066,7 +3068,7 @@ def test_pinbar_requires_dominant_lower_wick_and_small_opposite_wick() -> None:
 # Single Strategy Specification: H4/H1 Trend-Following Pullback Engine
 **Document Version:** 2.0 (Institutional Focus Pilot)  
 **Target Instrument:** `EURUSD` (Primary Pilot — Most liquid, lowest spread, zero slippage footprint)  
-**Execution Environment:** Exness MT5 Demo (`#464160066`, Server: `Exness-MT5Trial17`)  
+**Execution Environment:** Exness MT5 Demo (`<DEMO_ID_REDACTED>`, Server: `Exness-MT5Trial17`)  
 **Design Philosophy:** "Cá nhỏ bơi theo dấu chân Cá Voi" — Giảm tần số giao dịch, loại bỏ cuộc đua tốc độ, ưu tiên bảo toàn vốn, biến khả năng đứng ngoài thành lợi thế cấu trúc.
 
 ---

@@ -1,5 +1,7 @@
 # Independent QA / Risk Audit Report — Cycle 1 Deliverables
 
+> **Historical audit (2026-11-01), not current operational status.** Test counts, product direction, owner actions and payment assumptions below are superseded by [`PROJECT_STATE.md`](../PROJECT_STATE.md). This report is retained as evidence of the earlier audit, including any claims that later checks contradicted.
+
 **Auditor Role:** Independent QA / Risk Auditor (`OPERATING_SYSTEM.md` §8 & `agents/ROLE_CHARTER.md`)  
 **Audit Date:** 2026-11-01  
 **Automated Test Verification:** `30/30 PASSED` (`python -m pytest -v`)

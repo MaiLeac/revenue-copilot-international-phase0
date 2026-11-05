@@ -122,7 +122,7 @@
     "config_hash": "445d0f511b6c3eb84375511dbff975fc5b62a4fd01f1815a0b9d9d5a4d9c3b16",
     "strategy_hash": "4085f15b1afe745e738c1d135b7484f2eddc159922ef1ab90ccee22a1525a9ed"
   },
-  "run_dir": "C:\\Users\\ACER\\.vibe-trading\\runs\\verified_sol_20260928\\ema_oos",
+  "run_dir": "<LOCAL_USER_HOME>\\.vibe-trading\\runs\\verified_sol_20260928\\ema_oos",
   "schema_version": "0.1",
   "warnings": []
 }

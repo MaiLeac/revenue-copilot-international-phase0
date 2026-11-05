@@ -1,7 +1,7 @@
 # Backtest Run Card
 
 Generated: 2026-09-28T11:32:44.909619Z
-Run directory: `C:\Users\ACER\.vibe-trading\runs\verified_sol_20260928\buy_hold`
+Run directory: `<LOCAL_USER_HOME>\.vibe-trading\runs\verified_sol_20260928\buy_hold`
 
 ## Backtest Summary
 - codes: ['SOL-USDT']
